@@ -1,0 +1,146 @@
+@startuml
+
+' skinparam backgroundColor #1e1e1e
+' skinparam classBackgroundColor #2d2d2d
+' skinparam classBorderColor White
+' skinparam classFontColor White
+' skinparam classAttributeIconColor White
+' skinparam classArrowColor White
+
+package "Sean"{
+    class Vector{
+
+    }
+
+    class UniquePtr{}
+
+    enum Direction{
+        North
+        South
+        East
+        West
+    }
+
+    enum ObjectType{
+        Gold
+        Weapon
+        Armor
+        Consumable
+    }
+}
+
+
+package "Backend"{
+    
+class Location{
+    - mNaam :char[]
+    - mDescription : char[]
+    - mVisableObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
+    - mInvisableObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
+    - mEnemies : Sean:Vector<Sean::UniquePtr<Enemy>>
+    - mExits : &Location[]
+
+
+    'short description. Enemies
+    + printShortDescription() : void
+    'long description. Enemies. visable Items 
+    + printLongDescription() : void 
+    + update() : void
+}
+
+
+class LocationFactory{
+    +{static} CreateLocation() : *Location
+}
+
+class GameObjectFactory{
+    +{static} CreateGameObject() : *GameObject
+}
+
+class EnemyFactory{
+    +{static} CreateEnemy() : *Enemy
+}
+
+class GameObject{
+    -mName : char[]
+    -mDescription : char[]
+    -mType : ObjectType
+}
+
+class GoldObject{
+    - mAmount : int
+}
+
+class WeaponObject{
+    - mMinimumDamage : int
+    - mMaximumDamage : int
+}
+
+class ArmorObject{
+    - mArmor : int
+}
+
+class Enemy{
+    - mHealth : int
+    - mAttackPercentage : int
+    - mHiddenObjects : Sean:Vector<Sean::UniquePtr<GameObject>>
+    - mMinimumDamage : int
+    - mMaximumDamage : int
+}
+
+class ConsumableObject{}
+
+class Map{
+    - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
+    
+    + update() : void
+}
+
+class Game{
+    - mPlayer : Sean::UniquePtr<Player>
+    - mMap : Sean::UniquePtr<Map>
+
+    + run() : void
+    - update() : void
+    - initialize() : void
+}
+
+}
+
+
+
+    Location -- "Visable objects 0..*" GameObject
+    Location -- "Hidden Objects 0..*"GameObject
+
+    Enemy -- "Hidden Objects 0..*" GameObject
+
+    Location <.. LocationFactory
+    GameObject <.. GameObjectFactory
+    GameObject <.. EnemyFactory
+
+    GameObject <|-- GoldObject
+    GameObject <|-- WeaponObject
+    GameObject <|-- ArmorObject
+    GameObject <|-- ConsumableObject
+
+    Map o-- "Locations 0..*" Location
+
+    Game o-- Player
+    Game o-- Map
+
+
+package "Frontend"{
+
+class Player{
+    - mHealth : int
+    - mAttackPercentage : int
+}
+
+}
+
+' Misc
+
+
+
+
+@enduml
