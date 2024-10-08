@@ -12,8 +12,8 @@ namespace Sean
     class Vector
     {
     private:
-        T *mData; ///< Pointer to the array of elements.
-        size_t mSize; ///< Number of elements in the vector.
+        T *mData;         ///< Pointer to the array of elements.
+        size_t mSize;     ///< Number of elements in the vector.
         size_t mCapacity; ///< Capacity of the vector.
 
         /**
@@ -26,7 +26,7 @@ namespace Sean
             T *newData = new T[aNewCapacity];
             for (size_t i = 0; i < mSize; ++i)
             {
-                newData[i] = mData[i];
+                newData[i] = std::move(mData[i]);
             }
             delete[] mData;
             mData = newData;
@@ -134,6 +134,23 @@ namespace Sean
                 resize(mCapacity == 0 ? 1 : mCapacity * 2);
             }
             mData[mSize++] = aValue;
+        }
+
+        /**
+         * @brief Adds an element to the end of the vector using move semantics.
+         *
+         * This function is used to add an element to the vector by moving it, which is more efficient
+         * than copying when the element is a temporary object or an object that supports move semantics.
+         *
+         * @param aValue The value to add to the vector.
+         */
+        void push_back(T &&aValue)
+        {
+            if (mSize == mCapacity)
+            {
+                resize(mCapacity == 0 ? 1 : mCapacity * 2);
+            }
+            mData[mSize++] = std::move(aValue);
         }
 
         /**

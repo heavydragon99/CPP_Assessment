@@ -2,8 +2,9 @@
 #define GAME_H
 
 #include "Player.h"
-#include "Map.h"
 #include "Sean.h"
+
+#include <memory>
 
 class Game
 {
@@ -13,12 +14,13 @@ public: // public functions
     void run();
 
 private: // private functions
-    void update();
     void initialize();
+    void loadDungeon();
+    void generateDungeon();
 
 private: // private variables
-    Sean::UniquePtr<Player> mPlayer;
-    Sean::UniquePtr<Map> mMap;
+    std::unique_ptr<Player> mPlayer;
+    //std::unique_ptr<DungeonFacade> mDungeon;
 };
 
 #endif // GAME_H

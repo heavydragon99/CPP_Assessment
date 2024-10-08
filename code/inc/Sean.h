@@ -17,6 +17,7 @@ namespace Sean
 
     enum class Direction
     {
+        Undefined,
         North,
         East,
         South,
@@ -31,7 +32,7 @@ namespace Sean
         Vector<CharArray> mVisibleObjects;
         CharArray mName;
         CharArray mDescription;
-    }
+    };
 
 } // namespace Sean
 
