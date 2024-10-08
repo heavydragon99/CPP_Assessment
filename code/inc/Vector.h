@@ -1,0 +1,205 @@
+#include <iostream>
+#include <stdexcept>
+
+namespace Sean
+{
+    /**
+     * @brief A dynamic array implementation similar to std::vector.
+     *
+     * @tparam T The type of the elements stored in the vector.
+     */
+    template <typename T>
+    class Vector
+    {
+    private:
+        T *mData; ///< Pointer to the array of elements.
+        size_t mSize; ///< Number of elements in the vector.
+        size_t mCapacity; ///< Capacity of the vector.
+
+        /**
+         * @brief Resizes the vector to a new capacity.
+         *
+         * @param aNewCapacity The new capacity of the vector.
+         */
+        void resize(size_t aNewCapacity)
+        {
+            T *newData = new T[aNewCapacity];
+            for (size_t i = 0; i < mSize; ++i)
+            {
+                newData[i] = mData[i];
+            }
+            delete[] mData;
+            mData = newData;
+            mCapacity = aNewCapacity;
+        }
+
+    public:
+        /**
+         * @brief Default constructor that initializes an empty vector.
+         */
+        Vector() : mData(nullptr), mSize(0), mCapacity(0) {}
+
+        /**
+         * @brief Destructor that deletes the array of elements.
+         */
+        ~Vector()
+        {
+            delete[] mData;
+        }
+
+        /**
+         * @brief Copy constructor that creates a new vector as a copy of an existing one.
+         * @param aOther The vector to copy from.
+         */
+        Vector(const Vector &aOther) : mData(nullptr), mSize(aOther.mSize), mCapacity(aOther.mCapacity)
+        {
+            if (mCapacity > 0)
+            {
+                mData = new T[mCapacity];
+                for (size_t i = 0; i < mSize; ++i)
+                {
+                    mData[i] = aOther.mData[i];
+                }
+            }
+        }
+
+        /**
+         * @brief Copy assignment operator that assigns the contents of one vector to another.
+         * @param aOther The vector to assign from.
+         * @return Reference to the assigned vector.
+         */
+        Vector &operator=(const Vector &aOther)
+        {
+            if (this != &aOther)
+            {
+                delete[] mData;
+                mSize = aOther.mSize;
+                mCapacity = aOther.mCapacity;
+                if (mCapacity > 0)
+                {
+                    mData = new T[mCapacity];
+                    for (size_t i = 0; i < mSize; ++i)
+                    {
+                        mData[i] = aOther.mData[i];
+                    }
+                }
+                else
+                {
+                    mData = nullptr;
+                }
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Move constructor that transfers ownership from a temporary vector to a new one.
+         * @param aOther The vector to move from.
+         */
+        Vector(Vector &&aOther) noexcept : mData(aOther.mData), mSize(aOther.mSize), mCapacity(aOther.mCapacity)
+        {
+            aOther.mData = nullptr;
+            aOther.mSize = 0;
+            aOther.mCapacity = 0;
+        }
+
+        /**
+         * @brief Move assignment operator that transfers ownership from a temporary vector to an existing one.
+         * @param aOther The vector to move from.
+         * @return Reference to the assigned vector.
+         */
+        Vector &operator=(Vector &&aOther) noexcept
+        {
+            if (this != &aOther)
+            {
+                delete[] mData;
+                mData = aOther.mData;
+                mSize = aOther.mSize;
+                mCapacity = aOther.mCapacity;
+                aOther.mData = nullptr;
+                aOther.mSize = 0;
+                aOther.mCapacity = 0;
+            }
+            return *this;
+        }
+
+        /**
+         * @brief Adds an element to the end of the vector.
+         *
+         * @param aValue The value to add to the vector.
+         */
+        void push_back(const T &aValue)
+        {
+            if (mSize == mCapacity)
+            {
+                resize(mCapacity == 0 ? 1 : mCapacity * 2);
+            }
+            mData[mSize++] = aValue;
+        }
+
+        /**
+         * @brief Removes the last element from the vector.
+         *
+         * @throws std::out_of_range if the vector is empty.
+         */
+        void pop_back()
+        {
+            if (mSize == 0)
+            {
+                throw std::out_of_range("Vector is empty");
+            }
+            --mSize;
+        }
+
+        /**
+         * @brief Returns the number of elements in the vector.
+         *
+         * @return The number of elements in the vector.
+         */
+        size_t size() const
+        {
+            return mSize;
+        }
+
+        /**
+         * @brief Returns the capacity of the vector.
+         *
+         * @return The capacity of the vector.
+         */
+        size_t capacity() const
+        {
+            return mCapacity;
+        }
+
+        /**
+         * @brief Accesses the element at the given index.
+         *
+         * @param aIndex The index of the element to access.
+         * @return A reference to the element at the given index.
+         * @throws std::out_of_range if the index is out of range.
+         */
+        T &operator[](size_t aIndex)
+        {
+            if (aIndex >= mSize)
+            {
+                throw std::out_of_range("Index out of range");
+            }
+            return mData[aIndex];
+        }
+
+        /**
+         * @brief Accesses the element at the given index (const version).
+         *
+         * @param aIndex The index of the element to access.
+         * @return A const reference to the element at the given index.
+         * @throws std::out_of_range if the index is out of range.
+         */
+        const T &operator[](size_t aIndex) const
+        {
+            if (aIndex >= mSize)
+            {
+                throw std::out_of_range("Index out of range");
+            }
+            return mData[aIndex];
+        }
+    };
+} // namespace Sean
