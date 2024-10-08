@@ -62,21 +62,23 @@ package "Backend"{
 
 
     class LocationFactory{
-        +{static} CreateLocation() : *Location
+        +{static} CreateLocation(const char* alocation) : *Location
     }
 
     class GameObjectFactory{
-        +{static} CreateGameObject() : *GameObject
+        +{static} CreateGameObject(const char* aGameObject) : *GameObject
     }
 
     class EnemyFactory{
-        +{static} CreateEnemy() : *Enemy
+        +{static} CreateEnemy(const char* aEnemy) : *Enemy
     }
 
     class GameObject{
         -mName : char[]
         -mDescription : char[]
         -mType : ObjectType
+
+        + printDescription() : void
     }
 
     class GoldObject{
@@ -102,27 +104,22 @@ package "Backend"{
 
     class ConsumableObject{}
 
-    class Map{
-        - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
-
-        + update() : void
-    }
-
     class Dungeon{
         + Dungeon(&std::vector<ParsedLocations> aLocations) : void
         + Dungeon(int aLocations) : void
 
         + update() : void
 
-        - mMap : Sean::UniquePtr<Map>
+        - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
+        - mCurrentLocation : &Location
     }
 
     class sqlReader{}
 
-    Location -- "Visible objects 0..*" GameObject
-    Location -- "Hidden Objects 0..*"GameObject
+    Location o-- "Visible objects 0..*" GameObject
+    Location o-- "Hidden Objects 0..*"GameObject
 
-    Enemy -- "Hidden Objects 0..*" GameObject
+    Enemy o-- "Hidden Objects 0..*" GameObject
 
     Location <.. LocationFactory
     GameObject <.. GameObjectFactory
@@ -133,9 +130,11 @@ package "Backend"{
     GameObject <|-- ArmorObject
     GameObject <|-- ConsumableObject
 
-    Map o-- "Locations 0..*" Location
+    Dungeon o-- "0..*" Location
 
-    Dungeon o-- Map
+    GameObjectFactory <-- sqlReader
+    EnemyFactory <-- sqlReader
+    LocationFactory <-- sqlReader
 
 }
 
@@ -149,15 +148,26 @@ package "Frontend"{
     class Player{
         - mHealth : int
         - mAttackPercentage : int
+        - mGameObjects : std::vector<GameObjectFacade>>
+        - mGold : int
+        - mArmor : std::unique_ptr<ArmorObject>
+        - mWeapon : std::unique_ptr<WeaponObject>
+        - mGodMode : bool
+
+        + printDescription() : void
+        + equipWeapon(const char* aItem) : void
+        + consumeConsumable(const char* aConsumable) : void
     }
 
     class Game{
-        - initialize() : void
         + run() : void
+        - initialize() : void
         - loadDungeon(char *aPath) : void
         - generateDungeon() : void
+        - playerInput() : void
 
-        - mDungeonFacade : DungeonFacade
+        - mDungeonFacade : std::uniqueptr<DungeonFacade>
+        - mCurrentLocation : &LocationFacade
     }
 
     class xmlReader{
@@ -167,6 +177,10 @@ package "Frontend"{
         - mParsedLocations : std::vector<Sean::ParsedLocations>
     }
 
+    Game o-- Player
+
+    Game <-- xmlReader
+
 }
 
 ' Misc
@@ -175,6 +189,16 @@ class DungeonFacade{
 
     + createDungeon(const &std::vector<Sean::ParsedLocations> aLocations) : void
     + generateDungeon(int aLocations) : void
+
+    + printLongDescription() : void
+    + printShortDescription() : void
+    + moveHiddenObjects() : void
+    + getGameObject(const char* aGameObject) : Sean::UniquePtr<GameObject>
+    + putGameObject(Sean::UniquePtr<GameObject>) : bool
+    + printGameObjectDescription(const char* aGameObject) : bool
+    + printEnemyDescription(const char* aEnemy) : bool
+    + moveLocation(Direction aDirection) : bool
+    + attackEnemy(const char* aEnemy, &WeaponObject aWeapon) : bool
 }
 
 class GameObjectFacade{
@@ -182,13 +206,27 @@ class GameObjectFacade{
 
 }
 
+class GameObjectFactoryFacade{
+    + createGameObject(std::string aObject) : void
+}
 
-Game -- DungeonFacade
-Game o-- Player
+class LocationFacade{
+    - mLocation : &Location
 
-Game -- xmlReader
+    + getLocation : &Location
+    + setLocation(&Location aLocation) : void
+}
 
-DungeonFacade o-- Dungeon
+
+Game o-- "0..1" DungeonFacade
+
+Player o-- "0..*" GameObjectFacade
+Player <-- GameObjectFactoryFacade
+
+GameObjectFactoryFacade <-- GameObjectFactory
+
+DungeonFacade o--"0..1" Dungeon
+GameObjectFacade o--"0..1" GameObject
 
 
 
