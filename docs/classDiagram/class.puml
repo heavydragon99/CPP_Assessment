@@ -14,6 +14,8 @@ package "Sean"{
 
     class UniquePtr{}
 
+    class CharArray{}
+
     enum Direction{
         North
         South
@@ -27,89 +29,97 @@ package "Sean"{
         Armor
         Consumable
     }
+
+    struct ParsedLocations{
+        - mId : int
+        - mExits : Direction[4]
+        - mEnemies : Sean::Vector<Sean::CharArray>
+        - mHiddenObjects : Sean::Vector<Sean::CharArray>
+        - mVisibleObjects : Sean::Vector<Sean::CharArray>
+        - mName : Sean::CharArray
+        - mDescription : Sean::CharArray
+    }
 }
 
 
 package "Backend"{
-    
-class Location{
-    - mNaam :char[]
-    - mDescription : char[]
-    - mVisableObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
-    - mInvisableObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
-    - mEnemies : Sean:Vector<Sean::UniquePtr<Enemy>>
-    - mExits : &Location[]
+
+    class Location{
+        - mNaam :char[]
+        - mDescription : char[]
+        - mVisibleObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
+        - mInVisibleObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
+        - mEnemies : Sean:Vector<Sean::UniquePtr<Enemy>>
+        - mExits : &Location[]
 
 
-    'short description. Enemies
-    + printShortDescription() : void
-    'long description. Enemies. visable Items 
-    + printLongDescription() : void 
-    + update() : void
-}
+        'short description. Enemies
+        + printShortDescription() : void
+        'long description. Enemies. Visible Items
+        + printLongDescription() : void
+        + update() : void
+    }
 
 
-class LocationFactory{
-    +{static} CreateLocation() : *Location
-}
+    class LocationFactory{
+        +{static} CreateLocation() : *Location
+    }
 
-class GameObjectFactory{
-    +{static} CreateGameObject() : *GameObject
-}
+    class GameObjectFactory{
+        +{static} CreateGameObject() : *GameObject
+    }
 
-class EnemyFactory{
-    +{static} CreateEnemy() : *Enemy
-}
+    class EnemyFactory{
+        +{static} CreateEnemy() : *Enemy
+    }
 
-class GameObject{
-    -mName : char[]
-    -mDescription : char[]
-    -mType : ObjectType
-}
+    class GameObject{
+        -mName : char[]
+        -mDescription : char[]
+        -mType : ObjectType
+    }
 
-class GoldObject{
-    - mAmount : int
-}
+    class GoldObject{
+        - mAmount : int
+    }
 
-class WeaponObject{
-    - mMinimumDamage : int
-    - mMaximumDamage : int
-}
+    class WeaponObject{
+        - mMinimumDamage : int
+        - mMaximumDamage : int
+    }
 
-class ArmorObject{
-    - mArmor : int
-}
+    class ArmorObject{
+        - mArmor : int
+    }
 
-class Enemy{
-    - mHealth : int
-    - mAttackPercentage : int
-    - mHiddenObjects : Sean:Vector<Sean::UniquePtr<GameObject>>
-    - mMinimumDamage : int
-    - mMaximumDamage : int
-}
+    class Enemy{
+        - mHealth : int
+        - mAttackPercentage : int
+        - mHiddenObjects : Sean:Vector<Sean::UniquePtr<GameObject>>
+        - mMinimumDamage : int
+        - mMaximumDamage : int
+    }
 
-class ConsumableObject{}
+    class ConsumableObject{}
 
-class Map{
-    - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
-    
-    + update() : void
-}
+    class Map{
+        - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
 
-class Game{
-    - mPlayer : Sean::UniquePtr<Player>
-    - mMap : Sean::UniquePtr<Map>
+        + update() : void
+    }
 
-    + run() : void
-    - update() : void
-    - initialize() : void
-}
+    class Dungeon{
+        + Dungeon(&std::vector<ParsedLocations> aLocations) : void
+        + Dungeon(int aLocations) : void
 
-}
+        + update() : void
 
+        - mMap : Sean::UniquePtr<Map>
+    }
 
+    class sqlReader{}
 
-    Location -- "Visable objects 0..*" GameObject
+    Location -- "Visible objects 0..*" GameObject
     Location -- "Hidden Objects 0..*"GameObject
 
     Enemy -- "Hidden Objects 0..*" GameObject
@@ -125,20 +135,61 @@ class Game{
 
     Map o-- "Locations 0..*" Location
 
-    Game o-- Player
-    Game o-- Map
+    Dungeon o-- Map
+
+}
+
+
+
+
 
 
 package "Frontend"{
 
-class Player{
-    - mHealth : int
-    - mAttackPercentage : int
-}
+    class Player{
+        - mHealth : int
+        - mAttackPercentage : int
+    }
+
+    class Game{
+        - initialize() : void
+        + run() : void
+        - loadDungeon(char *aPath) : void
+        - generateDungeon() : void
+
+        - mDungeonFacade : DungeonFacade
+    }
+
+    class xmlReader{
+        + xmlReader(char *aPath) : void
+        + getLocations() : &std::vector<Sean::ParsedLocations>
+
+        - mParsedLocations : std::vector<Sean::ParsedLocations>
+    }
 
 }
 
 ' Misc
+class DungeonFacade{
+    - mDungeon : std::unique_ptr<Dungeon>
+
+    + createDungeon(const &std::vector<Sean::ParsedLocations> aLocations) : void
+    + generateDungeon(int aLocations) : void
+}
+
+class GameObjectFacade{
+    - mGameObject : std::unique_ptr<GameObject>
+
+}
+
+
+Game -- DungeonFacade
+Game o-- Player
+
+Game -- xmlReader
+
+DungeonFacade o-- Dungeon
+
 
 
 

@@ -1,5 +1,5 @@
 <locaties>
-    <locatie id="1" noord="2" objectenverborgen="klein levenselixer">Kasteelpoort<beschrijving></beschrijving>Je staat voor de poort van de ruine van een kasteel. De poorten staan open en het valhek is omhoog.</locatie>
+    <locatie id="1" noord="2" objectenverborgen="klein levenselixer">Kasteelpoort<beschrijving>Je staat voor de poort van de ruine van een kasteel. De poorten staan open en het valhek is omhoog.</beschrijving></locatie>
     <locatie id="2" noord="8" oost="3" zuid="1" west="4" vijand="Grote Rat;Grote Rat" objectenverborgen="kleine buidel">Binnenplaats<beschrijving>Je staat op de binnenplaats van het kasteel. Aan de west en oostkant staat een toren. Noord is de Donjon te zien. De stal staat daar links van en de waterput rechts.</beschrijving></locatie>
     <locatie id="3" noord="9" oost="5" west="2" objectenverborgen="middelgroot levenselixer">Torendeur Oost<beschrijving>Je staat voor de deur van de Oostertoren. Noord is de waterput. Je kunt ook west de binnenplaats oplopen.</beschrijving></locatie>
     <locatie id="4" noord="7" oost="2" west="6" vijand="Skeletstrijder">Torendeur West<beschrijving>Je staat voor de deur van de Westertoren. Noord is de stal. Je kunt ook oost de binnenplaats oplopen.</beschrijving></locatie>

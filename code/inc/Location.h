@@ -1,9 +1,7 @@
 #ifndef LOCATION_H
 #define LOCATION_H
 
-#include "CharArray.h"
-#include "Vector.h"
-#include "UniquePtr.h"
+#include "Sean.h"
 #include "GameObject.h"
 #include "Enemy.h"
 

@@ -2,9 +2,7 @@
 #define Enemy_H
 
 #include "GameObject.h"
-#include "Vector.h"
-#include "UniquePtr.h"
-#include "CharArray.h"
+#include "Sean.h"
 
 class Enemy
 {

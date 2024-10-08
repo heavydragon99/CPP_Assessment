@@ -1,7 +1,7 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-#include "CharArray.h"
+#include "Sean.h"
 
 enum class ObjectType
 {
