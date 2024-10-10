@@ -2,7 +2,7 @@
 #define SEAN_H
 
 #include "Vector.h"
-#include "CharArray.h"
+#include "String.h"
 #include "SeanObject.h"
 
 namespace Sean
@@ -17,21 +17,26 @@ namespace Sean
 
     enum class Direction
     {
-        Undefined,
         North,
         East,
         South,
         West
     };
 
+    struct DirectionInfo
+    {
+        Direction mDirection;
+        int mID;
+    };
+
     struct ParsedLocations{
         int mId;
-        Direction mDirections[4];
-        Vector<CharArray> mEnemies;
-        Vector<CharArray> mHiddenObjects;
-        Vector<CharArray> mVisibleObjects;
-        CharArray mName;
-        CharArray mDescription;
+        DirectionInfo mDirections[4];
+        Vector<String> mEnemies;
+        Vector<String> mHiddenObjects;
+        Vector<String> mVisibleObjects;
+        String mName;
+        String mDescription;
     };
 
 } // namespace Sean

@@ -2,22 +2,27 @@
 
 #include "SqlReader.h"
 
-Location *LocationFactory::createLocation(const char *aLocation, const char *aDescription)
+int LocationFactory::mCounter = 0;
+
+Location *LocationFactory::createLocation(Sean::String aLocation, Sean::String aDescription)
 {
-    // SQLReader& sqlReader = SQLReader::getInstance();
-    // Sean::CharArray name;
-    // Sean::CharArray description;
+    return new Location(aLocation, aDescription, mCounter++);
+}
 
-    // if (sqlReader.getLocationInfo(aLocation, name, description))
-    // {
-    //     return new Location(name.get(), description.get());
-    // }
-    // else
-    // {
-    //     std::cerr << "Location not found in database: " << aLocation << std::endl;
-    //     return nullptr;
-    // }
+Location *LocationFactory::createLocation()
+{
+    SQLReader& sqlReader = SQLReader::getInstance();
+    Sean::String name;
+    Sean::String description;
 
-    return new Location(aLocation, aDescription);
+    if (sqlReader.getRandomLocation(name, description))
+    {
+        return new Location(name.get(), description.get(), mCounter++);
+    }
+    else
+    {
+        std::cerr << "Location not found in database" << std::endl;
+        return nullptr;
+    }
 }
 

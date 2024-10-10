@@ -9,7 +9,11 @@ public:
     LocationFactory() = default;
     virtual ~LocationFactory() = default;
 
-    static Location *createLocation(const char *aLocation, const char *aDescription);
+    static Location *createLocation(const Sean::String aLocation, const Sean::String aDescription);
+    static Location *createLocation();
+
+    private:
+    static int mCounter;
 };
 
 #endif // LOCATIONFACTORY_H

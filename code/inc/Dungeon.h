@@ -15,10 +15,10 @@ public:
     Dungeon& operator=(const Dungeon& other); // Copy assignment operator
     Dungeon(Dungeon&& other) = delete; // Move constructor
     Dungeon& operator=(Dungeon&& other) = delete; // Move assignment operator
-    virtual ~Dungeon();
+    virtual ~Dungeon() = default;
 
 private:
-    std::vector<Location*> mMap;
+    std::vector<Location> mMap;
     Location *mCurrentLocation;
 };
 

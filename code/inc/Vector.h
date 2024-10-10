@@ -33,6 +33,8 @@ namespace Sean
             mCapacity = aNewCapacity;
         }
 
+        
+
     public:
         /**
          * @brief Default constructor that initializes an empty vector.

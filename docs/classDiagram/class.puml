@@ -74,8 +74,8 @@ package "Backend"{
     }
 
     class GameObject{
-        -mName : char[]
-        -mDescription : char[]
+        -mName : Sean::String
+        -mDescription : Sean::String
         -mType : ObjectType
 
         + printDescription() : void
@@ -102,7 +102,10 @@ package "Backend"{
         - mMaximumDamage : int
     }
 
-    class ConsumableObject{}
+    class ConsumableObject{
+        - mMinimum : int
+        - mMaximum : int
+    }
 
     class Dungeon{
         + Dungeon(&std::vector<ParsedLocations> aLocations) : void
@@ -131,10 +134,10 @@ package "Backend"{
 
     Dungeon o-- "0..*" Location
     Dungeon <-- LocationFactory
+    Dungeon <-- GameObjectFactory
+    Dungeon <-- EnemyFactory
 
     Location <.. LocationFactory
-    Location <-- GameObjectFactory
-    Location <-- EnemyFactory
 
     GameObjectFactory <-- sqlReader
     EnemyFactory <-- sqlReader

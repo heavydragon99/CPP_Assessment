@@ -54,5 +54,9 @@ void Game::loadDungeon()
 // Placeholder for generateDungeon method
 void Game::generateDungeon()
 {
-    std::cout << "Kerker genereren is nog niet geïmplementeerd." << std::endl;
+    int locations;
+    std::cout << "Geeft aantal locaties op: ";
+    std::cin >> locations;
+
+    mDungeon->generateDungeon(locations);
 }

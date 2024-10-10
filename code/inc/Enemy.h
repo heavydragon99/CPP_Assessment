@@ -7,17 +7,20 @@
 class Enemy
 {
 public:
+    Enemy() = default;
+    Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAttackPercent, int aMinimumDamage, int aMaximumDamage, int aID);
 
-    Sean::CharArray getName() const; 
+    Sean::String getName() const;
 
 private:
-    Sean::CharArray mName; // Name of the enemy
-    Sean::CharArray mDescription; // Description of the enemy
-    int mHealth; // Health of the enemy
-    int mAttackPercent; // Attack percentage of the enemy
+    Sean::String mName;                      // Name of the enemy
+    int mID;                                 // ID of the enemy
+    Sean::String mDescription;               // Description of the enemy
     Sean::Vector<GameObject> mHiddenObjects; // Objects that are hidden in the enemy
-    int mMinimumDamage; // Minimum damage the enemy can deal
-    int mMaximumDamage; // Maximum damage the enemy can deal
+    int mHealth;                             // Health of the enemy
+    int mAttackPercent;                      // Attack percentage of the enemy
+    int mMinimumDamage;                      // Minimum damage the enemy can deal
+    int mMaximumDamage;                      // Maximum damage the enemy can deal
 };
 
 #endif // Enemy_H

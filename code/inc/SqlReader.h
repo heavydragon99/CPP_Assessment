@@ -13,7 +13,13 @@ public:
     SQLReader(const SQLReader &) = delete;
     SQLReader &operator=(const SQLReader &) = delete;
 
-    bool getLocationInfo(const char* locationName, Sean::CharArray& name, Sean::CharArray& description);
+    bool getLocationInfo(Sean::String& aName, Sean::String& aDescription);
+    bool getRandomLocation(Sean::String& aName, Sean::String& aDescription);
+    bool getEnemyInfo(Sean::String& aName, Sean::String& aDescription, int& aHealth, int& aAttackPercent, int& aMinDamage, int& aMaxDamage);
+    bool getRandomEnemy(Sean::String& aName, Sean::String& aDescription, int& aHealth, int& aAttackPercent, int& aMinDamage, int& aMaxDamage);
+    bool getObjectInfo(Sean::String& aName, Sean::String& aDescription, Sean::String& aType, int& aMinValue, int& aMaxValue, int& aProtection);
+    bool getObjectAmount(Sean::String aName, int& aMinimum, int& aMaximum);
+    bool getRandomObject(Sean::String& aName, Sean::String& aDescription, Sean::String& aType, int& aMinValue, int& aMaxValue, int& aProtection);
 
 private:
     SQLReader();  // Private constructor

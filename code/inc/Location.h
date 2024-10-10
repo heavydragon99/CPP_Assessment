@@ -5,31 +5,35 @@
 #include "GameObject.h"
 #include "Enemy.h"
 
-#define MAX_EXITS 4
-
-class Location {
+class Location
+{
 public:
-    Location(const char* aName, const char* aDescription);
-    virtual ~Location();
+    Location(const Sean::String aName, const Sean::String aDescription, int aID);
+    virtual ~Location() = default;
 
-    void setName(const char* aName);
-    void setDescription(const char* aDescription);
+    Sean::String getName() const;
+
     void addVisibleObject(GameObject aObject);
     void addHiddenObject(GameObject aObject);
     void addEnemy(Enemy aEnemy);
+    void setExit(Sean::Direction aDirection, Location *aLocation);
 
     void printDescriptionShort() const;
     void printDescriptionLong() const;
     void update();
 
-
 private:
-    Sean::CharArray mName; // Name of the location
-    Sean::CharArray mDescription; // Description of the location
+    Sean::String mName;                       // Name of the location
+    int mID;                                  // ID of the location
+    Sean::String mDescription;                // Description of the location
     Sean::Vector<GameObject> mVisibleObjects; // Objects that are visible in the location
-    Sean::Vector<GameObject> mHiddenObjects; // Objects that are hidden in the location
-    Sean::Vector<Enemy> mEnemies; // Enemies in the location
-    //Location& mExits[MAX_EXITS]; // TODO
+    Sean::Vector<GameObject> mHiddenObjects;  // Objects that are hidden in the location
+    Sean::Vector<Enemy> mEnemies;             // Enemies in the location
+
+    Location *mNorth;
+    Location *mEast;
+    Location *mSouth;
+    Location *mWest;
 };
 
 #endif // LOCATION_H

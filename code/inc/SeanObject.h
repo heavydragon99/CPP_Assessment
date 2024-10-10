@@ -15,16 +15,16 @@ namespace Sean
         /**
          * @brief Constructs an Object with an optional raw pointer.
          *
-         * @param ptr A raw pointer to the object to manage. Defaults to nullptr.
+         * @param aPtr A raw pointer to the object to manage. Defaults to nullptr.
          */
-        explicit Object(T *ptr = nullptr) : ptr_(ptr) {}
+        explicit Object(T *aPtr = nullptr) : mPtr(aPtr) {}
 
         /**
          * @brief Destructor that deletes the managed object.
          */
         ~Object()
         {
-            delete ptr_;
+            delete mPtr;
         }
 
         // Disable copy constructor and copy assignment
@@ -34,23 +34,23 @@ namespace Sean
         /**
          * @brief Move constructor that transfers ownership from another Object.
          *
-         * @param other The Object to move from.
+         * @param aOther The Object to move from.
          */
-        Object(Object&& other) noexcept : ptr_(other.ptr_) {
-            other.ptr_ = nullptr;
+        Object(Object&& aOther) noexcept : mPtr(aOther.mPtr) {
+            aOther.mPtr = nullptr;
         }
 
         /**
          * @brief Move assignment operator that transfers ownership from another Object.
          *
-         * @param other The Object to move from.
+         * @param aOther The Object to move from.
          * @return A reference to this Object.
          */
-        Object& operator=(Object&& other) noexcept {
-            if (this != &other) {
-                delete ptr_;
-                ptr_ = other.ptr_;
-                other.ptr_ = nullptr;
+        Object& operator=(Object&& aOther) noexcept {
+            if (this != &aOther) {
+                delete mPtr;
+                mPtr = aOther.mPtr;
+                aOther.mPtr = nullptr;
             }
             return *this;
         }
@@ -62,11 +62,24 @@ namespace Sean
          */
         T *get() const
         {
-            return ptr_;
+            return mPtr;
+        }
+
+                /**
+         * @brief Resets the managed pointer to a new pointer.
+         *
+         * @param aPtr A raw pointer to the new object to manage.
+         */
+        void reset(T *aPtr = nullptr)
+        {
+            if (mPtr != aPtr) {
+                delete mPtr;
+                mPtr = aPtr;
+            }
         }
 
     private:
-        T *ptr_; ///< The raw pointer to the managed object.
+        T *mPtr; ///< The raw pointer to the managed object.
     };
 
 } // namespace Sean

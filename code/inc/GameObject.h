@@ -8,20 +8,29 @@ enum class ObjectType
     Gold,
     Weapon,
     Armor,
-    Consumable
+    Consumable_Health,
+    Consumable_Experience,
+    Consumable_Teleport
 };
 
 class GameObject
 {
 public:
+    GameObject() = default;
+    GameObject(const Sean::String &aName, const Sean::String &aDescription, ObjectType aType, int aID)
+        : mName(aName), mDescription(aDescription), mType(aType), mID(aID)
+    {}
+    virtual ~GameObject() = default;
 
-Sean::CharArray getName() const { return mName; }
-Sean::CharArray getDescription() const { return mDescription; }
+    virtual const Sean::String getName() const { return mName + std::to_string(mID).c_str(); }
+    virtual const Sean::String getDescription() const { return mDescription; }
+    virtual ObjectType getType() const { return mType; }
 
-private:
-Sean::CharArray mName; // Name of the object
-Sean::CharArray mDescription; // Description of the object
-ObjectType mType; // Type of the object
+protected:
+    Sean::String mName;        // Name of the object
+    int mID;                   // ID of the object
+    Sean::String mDescription; // Description of the object
+    ObjectType mType;          // Type of the object
 };
 
 #endif // GAMEOBJECT_H

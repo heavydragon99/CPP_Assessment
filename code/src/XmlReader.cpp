@@ -44,22 +44,22 @@ XmlReader::XmlReader(const char *aPath)
 
         if (noord != nullptr)
         {
-            location.mDirections[indexCounter] = Sean::Direction::North;
+            location.mDirections[indexCounter] = {Sean::Direction::North, std::stoi(noord)};
             indexCounter++;
         }
         if (oost != nullptr)
         {
-            location.mDirections[indexCounter] = Sean::Direction::East;
+            location.mDirections[indexCounter] = {Sean::Direction::East, std::stoi(oost)};
             indexCounter++;
         }
         if (zuid != nullptr)
         {
-            location.mDirections[indexCounter] = Sean::Direction::South;
+            location.mDirections[indexCounter] = {Sean::Direction::South, std::stoi(zuid)};
             indexCounter++;
         }
         if (west != nullptr)
         {
-            location.mDirections[indexCounter] = Sean::Direction::West;
+            location.mDirections[indexCounter] = {Sean::Direction::West, std::stoi(west)};
             indexCounter++;
         }
 
