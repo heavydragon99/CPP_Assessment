@@ -3,6 +3,12 @@
 #include <iostream>
 #include <string>
 
+Game::Game()
+{
+    mPlayer = std::make_unique<Player>();
+    mDungeon = std::make_unique<DungeonFacade>();
+}
+
 void Game::run()
 {
     initialize();
@@ -42,8 +48,7 @@ void Game::loadDungeon()
     XmlReader xmlReader(path.c_str());
     auto locations = xmlReader.getLocations();
 
-    // Process the loaded locations as needed
-    std::cout << "Kerker geladen van " << path << std::endl;
+    mDungeon->createDungeon(locations);    
 }
 
 // Placeholder for generateDungeon method

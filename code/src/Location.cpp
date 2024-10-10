@@ -1,54 +1,44 @@
 #include "Location.h"
-
 #include <iostream>
 
-void Location::setName(const char* aName)
-{
-    mName = aName;
+Location::Location(const char* aName, const char* aDescription)
+    : mName(aName), mDescription(aDescription)
+{}
+
+Location::~Location() {
+    // Destructor
 }
 
-void Location::setDescription(const char* aDescription)
-{
-    mDescription = aDescription;
+void Location::addVisibleObject(GameObject aObject) {
+    mVisibleObjects.push_back(aObject);
 }
 
-void Location::addVisibleObject(Sean::UniquePtr<GameObject> aObject)
-{
-    mVisibleObjects.push_back(aObject.move());
+void Location::addHiddenObject(GameObject aObject) {
+    mHiddenObjects.push_back(aObject);
 }
 
-void Location::addHiddenObject(Sean::UniquePtr<GameObject> aObject)
-{
-    mHiddenObjects.push_back(aObject.move());
+void Location::addEnemy(Enemy aEnemy) {
+    mEnemies.push_back(aEnemy);
 }
 
-void Location::addEnemy(Sean::UniquePtr<Enemy> aEnemy)
-{
-    mEnemies.push_back(aEnemy.move());
-}
-
-void Location::printDescriptionShort()
-{
+void Location::printDescriptionShort() const {
     std::cout << "Name: " << mName << std::endl;
-    for(int i = 0; i < mEnemies.size(); i++)
-    {
-        std::cout << "Enemies: " << mEnemies[i]->getName() << std::endl;
+    for (const auto& enemy : mEnemies) {
+        std::cout << "Enemies: " << enemy.getName() << std::endl;
     }
 }
 
-void Location::printDescriptionLong()
-{
+void Location::printDescriptionLong() const {
     std::cout << "Name: " << mName << std::endl;
     std::cout << "Description: " << mDescription << std::endl;
-    for(int i = 0; i < mVisibleObjects.size(); i++)
-    {
-        std::cout << "Visible Objects: " << mVisibleObjects[i]->getName() << std::endl;
+    for (const auto& obj : mVisibleObjects) {
+        std::cout << "Visible Objects: " << obj.getName() << std::endl;
     }
-    for(int i = 0; i < mEnemies.size(); i++)
-    {
-        std::cout << "Enemies: " << mEnemies[i]->getName() << std::endl;
+    for (const auto& enemy : mEnemies) {
+        std::cout << "Enemies: " << enemy.getName() << std::endl;
     }
 }
 
-void Location::update()
-{}
+void Location::update() {
+    // Implementation for update
+}

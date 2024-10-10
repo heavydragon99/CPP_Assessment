@@ -72,21 +72,20 @@ namespace Sean
         {
             if (this != &aOther)
             {
+                // Create a copy of the other vector
+                T *newData = new T[aOther.mCapacity];
+                for (size_t i = 0; i < aOther.mSize; ++i)
+                {
+                    newData[i] = aOther.mData[i];
+                }
+
+                // Release the current object's resources
                 delete[] mData;
+
+                // Assign the new data to the current object
+                mData = newData;
                 mSize = aOther.mSize;
                 mCapacity = aOther.mCapacity;
-                if (mCapacity > 0)
-                {
-                    mData = new T[mCapacity];
-                    for (size_t i = 0; i < mSize; ++i)
-                    {
-                        mData[i] = aOther.mData[i];
-                    }
-                }
-                else
-                {
-                    mData = nullptr;
-                }
             }
             return *this;
         }
@@ -217,6 +216,88 @@ namespace Sean
                 throw std::out_of_range("Index out of range");
             }
             return mData[aIndex];
+        }
+
+        /**
+         * @brief Checks if the vector is empty.
+         *
+         * @return True if the vector is empty, false otherwise.
+         */
+        bool empty() const
+        {
+            if (mSize == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /**
+         * @brief Returns a pointer to the first element of the vector.
+         *
+         * This function returns a pointer to the first element of the vector. If the vector is empty,
+         * it returns a nullptr.
+         *
+         * @return A pointer to the first element of the vector.
+         */
+        T *begin()
+        {
+            return mData;
+        }
+
+        /**
+         * @brief Returns a pointer to the element following the last element of the vector.
+         *
+         * This function returns a pointer to the element following the last element of the vector.
+         * This pointer acts as a placeholder; attempting to dereference it results in undefined behavior.
+         *
+         * @return A pointer to the element following the last element of the vector.
+         */
+        T *end()
+        {
+            return mData + mSize;
+        }
+
+        /**
+         * @brief Returns a pointer to the first element of the vector.
+         *
+         * This function returns a pointer to the first element of the vector. If the vector is empty,
+         * it returns a nullptr.
+         *
+         * @return A pointer to the first element of the vector.
+         */
+        const T *begin() const
+        {
+            return mData;
+        }
+
+        /**
+         * @brief Returns a pointer to the element following the last element of the vector.
+         *
+         * This function returns a pointer to the element following the last element of the vector.
+         * This pointer acts as a placeholder; attempting to dereference it results in undefined behavior.
+         *
+         * @return A pointer to the element following the last element of the vector.
+         */
+        const T *end() const
+        {
+            return mData + mSize;
+        }
+
+        /**
+         * @brief Clears the vector.
+         *
+         * This function deallocates the memory used by the vector's elements and resets the size and capacity to zero.
+         */
+        void clear()
+        {
+            delete[] mData;
+            mData = nullptr;
+            mSize = 0;
+            mCapacity = 0;
         }
     };
 } // namespace Sean

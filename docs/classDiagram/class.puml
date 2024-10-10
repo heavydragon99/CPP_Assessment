@@ -6,6 +6,7 @@
 ' skinparam classFontColor White
 ' skinparam classAttributeIconColor White
 ' skinparam classArrowColor White
+skinparam linetype ortho
 
 package "Sean"{
     class Vector{
@@ -45,19 +46,18 @@ package "Sean"{
 package "Backend"{
 
     class Location{
+        + printShortDescription() : void
+        + printLongDescription() : void
+        + CreateEnemy(const char* aEnemy) : void
+        + CreateVisibleGameObject(const char* aGameObject) : void
+        + CreateHiddenGameObject(const char* aGameObject) : void
+
         - mNaam :char[]
         - mDescription : char[]
-        - mVisibleObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
-        - mInVisibleObjects : Sean::Vector<Sean::UniquePtr<GameObject>>
-        - mEnemies : Sean:Vector<Sean::UniquePtr<Enemy>>
+        - mVisibleObjects : Sean::Vector<GameObject>
+        - mInVisibleObjects : Sean::Vector<GameObject>
+        - mEnemies : Sean::Vector<Enemy>
         - mExits : &Location[]
-
-
-        'short description. Enemies
-        + printShortDescription() : void
-        'long description. Enemies. Visible Items
-        + printLongDescription() : void
-        + update() : void
     }
 
 
@@ -97,7 +97,7 @@ package "Backend"{
     class Enemy{
         - mHealth : int
         - mAttackPercentage : int
-        - mHiddenObjects : Sean:Vector<Sean::UniquePtr<GameObject>>
+        - mHiddenObjects : Sean::Vector<GameObject>
         - mMinimumDamage : int
         - mMaximumDamage : int
     }
@@ -110,7 +110,7 @@ package "Backend"{
 
         + update() : void
 
-        - mLocations : Sean:Vector<Sean::UniquePtr<Location>>
+        - mLocations : Sean::Vector<Location>
         - mCurrentLocation : &Location
     }
 
@@ -121,7 +121,6 @@ package "Backend"{
 
     Enemy o-- "Hidden Objects 0..*" GameObject
 
-    Location <.. LocationFactory
     GameObject <.. GameObjectFactory
     GameObject <.. EnemyFactory
 
@@ -131,17 +130,17 @@ package "Backend"{
     GameObject <|-- ConsumableObject
 
     Dungeon o-- "0..*" Location
+    Dungeon <-- LocationFactory
+
+    Location <.. LocationFactory
+    Location <-- GameObjectFactory
+    Location <-- EnemyFactory
 
     GameObjectFactory <-- sqlReader
     EnemyFactory <-- sqlReader
     LocationFactory <-- sqlReader
 
 }
-
-
-
-
-
 
 package "Frontend"{
 
@@ -193,8 +192,8 @@ class DungeonFacade{
     + printLongDescription() : void
     + printShortDescription() : void
     + moveHiddenObjects() : void
-    + getGameObject(const char* aGameObject) : Sean::UniquePtr<GameObject>
-    + putGameObject(Sean::UniquePtr<GameObject>) : bool
+    + getGameObject(const char* aGameObject) : GameObject*
+    + putGameObject(GameObject*) : bool
     + printGameObjectDescription(const char* aGameObject) : bool
     + printEnemyDescription(const char* aEnemy) : bool
     + moveLocation(Direction aDirection) : bool

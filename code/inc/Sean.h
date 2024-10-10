@@ -2,8 +2,8 @@
 #define SEAN_H
 
 #include "Vector.h"
-#include "UniquePtr.h"
 #include "CharArray.h"
+#include "SeanObject.h"
 
 namespace Sean
 {

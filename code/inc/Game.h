@@ -3,13 +3,14 @@
 
 #include "Player.h"
 #include "Sean.h"
+#include "DungeonFacade.h"
 
 #include <memory>
 
 class Game
 {
 public: // public functions
-    Game() = default;;
+    Game();
     virtual ~Game() = default;
     void run();
 
@@ -20,7 +21,7 @@ private: // private functions
 
 private: // private variables
     std::unique_ptr<Player> mPlayer;
-    //std::unique_ptr<DungeonFacade> mDungeon;
+    std::unique_ptr<DungeonFacade> mDungeon;
 };
 
 #endif // GAME_H
