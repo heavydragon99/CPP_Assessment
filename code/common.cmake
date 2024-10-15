@@ -12,6 +12,7 @@ set(MAIN_SOURCES
     ${CMAKE_SOURCE_DIR}/src/EnemyFactory.cpp
     ${CMAKE_SOURCE_DIR}/src/Game.cpp
     ${CMAKE_SOURCE_DIR}/src/GameObject.cpp
+    ${CMAKE_SOURCE_DIR}/src/GameObjectFacade.cpp
     ${CMAKE_SOURCE_DIR}/src/GameObjectFactory.cpp
     ${CMAKE_SOURCE_DIR}/src/GoldObject.cpp
     ${CMAKE_SOURCE_DIR}/src/Location.cpp

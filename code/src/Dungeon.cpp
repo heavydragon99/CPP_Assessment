@@ -180,3 +180,11 @@ Dungeon::Dungeon(int aLocations)
         throw std::runtime_error("No locations provided");
     }
 }
+
+void Dungeon::update(){
+    throw std::runtime_error("Not implemented");
+}
+
+GameObject* Dungeon::getGameObject(const Sean::String &aName){
+    return std::move(GameObjectFactory::createGameObject(aName)); 
+}

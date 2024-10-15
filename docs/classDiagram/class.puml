@@ -78,6 +78,8 @@ package "Backend"{
         -mDescription : Sean::String
         -mType : ObjectType
 
+        + getName() : Sean::String
+        + printName() : void
         + printDescription() : void
     }
 
@@ -112,6 +114,8 @@ package "Backend"{
         + Dungeon(int aLocations) : void
 
         + update() : void
+
+        + getGameObject(const char* aGameObject) : GameObject*
 
         - mLocations : Sean::Vector<Location>
         - mCurrentLocation : &Location
@@ -148,17 +152,20 @@ package "Backend"{
 package "Frontend"{
 
     class Player{
+        - mName : string
         - mHealth : int
         - mAttackPercentage : int
-        - mGameObjects : std::vector<GameObjectFacade>>
+        - mInventory : std::vector<GameObjectFacade>>
         - mGold : int
-        - mArmor : std::unique_ptr<ArmorObject>
-        - mWeapon : std::unique_ptr<WeaponObject>
+        - mEquippedArmor : std::unique_ptr<ArmorObject>
+        - mEquippedWeapon : std::unique_ptr<WeaponObject>
         - mGodMode : bool
 
         + printDescription() : void
         + equipWeapon(const char* aItem) : void
+        + equipArmor(const char* aItem) : void
         + consumeConsumable(const char* aConsumable) : void
+        + addObject(GameObjectFacade* aObject) : void
     }
 
     class Game{
@@ -169,7 +176,7 @@ package "Frontend"{
         - playerInput() : void
 
         - mDungeonFacade : std::uniqueptr<DungeonFacade>
-        - mCurrentLocation : &LocationFacade
+        - mPlayer : std::unique_ptr<Player>
     }
 
     class xmlReader{
@@ -201,31 +208,22 @@ class DungeonFacade{
     + printEnemyDescription(const char* aEnemy) : bool
     + moveLocation(Direction aDirection) : bool
     + attackEnemy(const char* aEnemy, &WeaponObject aWeapon) : bool
+    + getGameObject(const char* aGameObject) : GameObject*
 }
 
 class GameObjectFacade{
     - mGameObject : std::unique_ptr<GameObject>
 
+    + getName : string
+    + printName() : void
+    + printDescription() : void
+    + getType() : ObjectType
+
 }
-
-class GameObjectFactoryFacade{
-    + createGameObject(std::string aObject) : void
-}
-
-class LocationFacade{
-    - mLocation : &Location
-
-    + getLocation : &Location
-    + setLocation(&Location aLocation) : void
-}
-
 
 Game o-- "0..1" DungeonFacade
 
 Player o-- "0..*" GameObjectFacade
-Player <-- GameObjectFactoryFacade
-
-GameObjectFactoryFacade <-- GameObjectFactory
 
 DungeonFacade o--"0..1" Dungeon
 GameObjectFacade o--"0..1" GameObject

@@ -26,6 +26,7 @@ public:
     bool printEnemy(const char *aEnemyName);
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, GameObjectFacade &aWeapon);
+    GameObject* getGameObject(const Sean::String &aName);
 
 private:
     std::unique_ptr<Dungeon> mDungeon;

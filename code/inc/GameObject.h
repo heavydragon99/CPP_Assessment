@@ -22,9 +22,10 @@ public:
     {}
     virtual ~GameObject() = default;
 
-    virtual const Sean::String getName() const { return mName + std::to_string(mID).c_str(); }
-    virtual const Sean::String getDescription() const { return mDescription; }
-    virtual ObjectType getType() const { return mType; }
+    Sean::String getName() const;
+    void printName() const;;
+    virtual void printDescription() const;
+    ObjectType getType() const;
 
 protected:
     Sean::String mName;        // Name of the object

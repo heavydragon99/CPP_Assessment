@@ -70,3 +70,8 @@ bool DungeonFacade::attackEnemy(const char *aEnemyName, GameObjectFacade &aWeapo
 {
     throw std::runtime_error("Function not implemented");
 }
+
+GameObject* DungeonFacade::getGameObject(const Sean::String &aName)
+{
+    return std::move(mDungeon->getGameObject(aName));
+}

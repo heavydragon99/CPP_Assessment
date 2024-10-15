@@ -18,10 +18,13 @@ private: // private functions
     void initialize();
     void loadDungeon();
     void generateDungeon();
+    void printCurrentSetting();
 
 private: // private variables
     std::unique_ptr<Player> mPlayer;
     std::unique_ptr<DungeonFacade> mDungeon;
+
+    inline static const std::string StartingWeapon{"dolk"};
 };
 
 #endif // GAME_H

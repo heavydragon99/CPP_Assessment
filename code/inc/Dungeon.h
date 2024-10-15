@@ -17,6 +17,10 @@ public:
     Dungeon& operator=(Dungeon&& other) = delete; // Move assignment operator
     virtual ~Dungeon() = default;
 
+    public:
+    void update();
+    GameObject* getGameObject(const Sean::String &aName);
+
 private:
     std::vector<Location> mMap;
     Location *mCurrentLocation;
