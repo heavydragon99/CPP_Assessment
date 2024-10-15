@@ -24,7 +24,10 @@ namespace Sean
          */
         ~Object()
         {
-            delete mPtr;
+            if (mPtr != nullptr)
+            {
+                delete mPtr;
+            }
         }
 
         // Disable copy constructor and copy assignment
@@ -36,7 +39,8 @@ namespace Sean
          *
          * @param aOther The Object to move from.
          */
-        Object(Object&& aOther) noexcept : mPtr(aOther.mPtr) {
+        Object(Object &&aOther) noexcept : mPtr(aOther.mPtr)
+        {
             aOther.mPtr = nullptr;
         }
 
@@ -46,8 +50,10 @@ namespace Sean
          * @param aOther The Object to move from.
          * @return A reference to this Object.
          */
-        Object& operator=(Object&& aOther) noexcept {
-            if (this != &aOther) {
+        Object &operator=(Object &&aOther) noexcept
+        {
+            if (this != &aOther)
+            {
                 delete mPtr;
                 mPtr = aOther.mPtr;
                 aOther.mPtr = nullptr;
@@ -65,14 +71,15 @@ namespace Sean
             return mPtr;
         }
 
-                /**
+        /**
          * @brief Resets the managed pointer to a new pointer.
          *
          * @param aPtr A raw pointer to the new object to manage.
          */
         void reset(T *aPtr = nullptr)
         {
-            if (mPtr != aPtr) {
+            if (mPtr != aPtr)
+            {
                 delete mPtr;
                 mPtr = aPtr;
             }

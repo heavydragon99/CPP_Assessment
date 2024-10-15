@@ -12,8 +12,6 @@ void DungeonFacade::createDungeon(std::vector<Sean::ParsedLocations> &aLocations
     {
         throw std::runtime_error("Dungeon already created");
     }
-
-    throw std::runtime_error("Function not implemented fully");
 }
 
 void DungeonFacade::generateDungeon(int aLocations)
@@ -26,7 +24,6 @@ void DungeonFacade::generateDungeon(int aLocations)
     {
         throw std::runtime_error("Dungeon already created");
     }
-    throw std::runtime_error("Function not implemented");
 }
 
 void DungeonFacade::printLongDescription()

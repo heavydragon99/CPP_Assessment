@@ -16,24 +16,33 @@ project(dungeon_crawler)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Include directories
-include_directories(inc)
-include_directories(external/sqlite3/inc)  # Include SQLite3 headers
+# Include common settings
+include(${CMAKE_SOURCE_DIR}/common.cmake)
 
 # Add subdirectory
 add_subdirectory(external/tinyxml2) # Include TinyXML2
 
-# Find all source files
-file(GLOB_RECURSE SOURCES "src/*.cpp" "external/sqlite3/src/*.c")  # Include SQLite3 source
-
-# Exclude specific files
-list(REMOVE_ITEM SOURCES
-    ${CMAKE_SOURCE_DIR}/external/sqlite3/src/shell.c
-)
-
-
 # Add the executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${MAIN_SOURCES} ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
 # Link library
 target_link_libraries(${PROJECT_NAME} tinyxml2)
+
+# Add subdirectory for tests
+add_subdirectory(tests)
+
+# Add custom target to run Valgrind
+add_custom_target(run_valgrind
+    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_NAME}
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    COMMENT "Running Valgrind to check for memory leaks"
+)
+
+# Add custom target to run the main program
+add_custom_target(run
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
+    DEPENDS ${PROJECT_NAME}
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    COMMENT "Running the main program"
+)
