@@ -33,7 +33,7 @@ add_subdirectory(tests)
 
 # Add custom target to run Valgrind
 add_custom_target(run_valgrind
-    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
+    COMMAND valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
     DEPENDS ${PROJECT_NAME}
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMMENT "Running Valgrind to check for memory leaks"

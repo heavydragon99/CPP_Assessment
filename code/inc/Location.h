@@ -20,6 +20,7 @@ public:
 
     void printDescriptionShort() const;
     void printDescriptionLong() const;
+    void printExits() const;
     void update();
 
 private:

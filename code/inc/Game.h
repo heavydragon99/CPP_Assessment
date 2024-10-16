@@ -7,6 +7,24 @@
 
 #include <memory>
 
+enum class PlayerAction
+{
+    Kijk,
+    Zoek,
+    Ga,
+    Pak,
+    Leg,
+    Bekijk,
+    Sla,
+    Draag,
+    Wacht,
+    Consumeer,
+    Help,
+    Godmode,
+    Quit,
+    Invalid
+};
+
 class Game
 {
 public: // public functions
@@ -19,6 +37,21 @@ private: // private functions
     void loadDungeon();
     void generateDungeon();
     void printCurrentSetting();
+    void playerInput(bool *aQuit);
+    PlayerAction getPlayerAction(const std::string &aInput);
+
+    void lookAction();
+    void searchAction();
+    void goAction(const std::string &aDirection);
+    void takeAction(const std::string &aObject);
+    void dropAction(const std::string &aObject);
+    void examineAction(const std::string &aObject);
+    void hitAction(const std::string &aTarget);
+    void wearAction(const std::string &aObject);
+    void waitAction();
+    void consumeAction(const std::string &aObject);
+    void helpAction();
+    void godmodeAction();
 
 private: // private variables
     std::unique_ptr<Player> mPlayer;

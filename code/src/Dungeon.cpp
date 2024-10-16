@@ -188,3 +188,16 @@ void Dungeon::update(){
 GameObject* Dungeon::getGameObject(const Sean::String &aName){
     return std::move(GameObjectFactory::createGameObject(aName)); 
 }
+
+void Dungeon::placeObject(GameObject *aObject){
+    mCurrentLocation->addVisibleObject(*aObject);
+}
+
+void Dungeon::printShortDescription() const{
+    mCurrentLocation->printDescriptionShort();
+}
+
+void Dungeon::printLongDescription() const{
+    mCurrentLocation->printDescriptionLong();
+    mCurrentLocation->printExits();
+}

@@ -42,21 +42,38 @@ void Location::setExit(Sean::Direction aDirection, Location* aLocation) {
 }
 
 void Location::printDescriptionShort() const {
-    std::cout << "Name: " << mName << std::endl;
+    std::cout << "Naam: " << mName << std::endl;
     for (const auto& enemy : mEnemies) {
-        std::cout << "Enemies: " << enemy.getName() << std::endl;
+        std::cout << "Vijanden: " << enemy.getName() << std::endl;
     }
 }
 
 void Location::printDescriptionLong() const {
-    std::cout << "Name: " << mName << std::endl;
-    std::cout << "Description: " << mDescription << std::endl;
+    std::cout << "Naam: " << mName << std::endl;
+    std::cout << "Omschrijving: " << mDescription << std::endl;
     for (const auto& obj : mVisibleObjects) {
-        std::cout << "Visible Objects: " << obj.getName() << std::endl;
+        std::cout << "Objecten: " << obj.getName() << std::endl;
     }
     for (const auto& enemy : mEnemies) {
-        std::cout << "Enemies: " << enemy.getName() << std::endl;
+        std::cout << "Vijanden: " << enemy.getName() << std::endl;
     }
+}
+
+void Location::printExits() const {
+    std::cout << "Uitgangen: ";
+    if (mNorth != nullptr) {
+        std::cout << "Noord ";
+    }
+    if (mEast != nullptr) {
+        std::cout << "Oost ";
+    }
+    if (mSouth != nullptr) {
+        std::cout << "Zuid ";
+    }
+    if (mWest != nullptr) {
+        std::cout << "West ";
+    }
+    std::cout << std::endl;
 }
 
 void Location::update() {

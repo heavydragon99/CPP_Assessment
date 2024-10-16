@@ -15,19 +15,18 @@ public:
 
 public:
     void printDescription();
-    void equipWeapon(const char *aItem);
-    void equipArmor(const char *aItem);
+    std::unique_ptr<GameObjectFacade> equipObject(const char *aItem);
     void consumeConsumable(const char *aConsumable);
-    void addObject(std::unique_ptr<GameObjectFacade> aObject);
+    void addObject(GameObjectFacade&& aObject);
 
 private:
     std::string mName;
     int mHealth;
     int mAttackPercentage;
-    std::vector<std::unique_ptr<GameObjectFacade>> mInventory;
+    std::vector<GameObjectFacade> mInventory;
     int mGold;
-    std::unique_ptr<GameObjectFacade> mEquippedWeapon;
-    std::unique_ptr<GameObjectFacade> mEquippedArmor;
+    GameObjectFacade* mEquippedWeapon;
+    GameObjectFacade* mEquippedArmor;
     bool mGodMode;
 };
 

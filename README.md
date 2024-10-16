@@ -31,7 +31,7 @@ assessment-cplus-24-25-heavydragon99 created by GitHub Classroom
 
 5. Alternatively, you can build and run the main program using:
     ```sh
-    cmake --build . --target run
+    cmake --build . --target run -- -j 64
     ```
 
 ### Running Valgrind to Check for Memory Leaks
@@ -43,7 +43,7 @@ assessment-cplus-24-25-heavydragon99 created by GitHub Classroom
 
 2. Run Valgrind with the main program:
     ```sh
-    cmake --build . --target run_valgrind
+    cmake --build . --target run_valgrind -- -j 64
     ```
 
 ### Building and Running the Tests
@@ -70,7 +70,7 @@ assessment-cplus-24-25-heavydragon99 created by GitHub Classroom
 
 5. Alternatively, you can build and run the tests using:
     ```sh
-    cmake --build . --target run_tests
+    cmake --build . --target run_tests -- -j 64
     ```
 
 The tests will be executed, and the results will be displayed in the terminal.

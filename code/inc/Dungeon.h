@@ -20,6 +20,9 @@ public:
     public:
     void update();
     GameObject* getGameObject(const Sean::String &aName);
+    void placeObject(GameObject *aObject);
+    void printShortDescription() const;
+    void printLongDescription() const;
 
 private:
     std::vector<Location> mMap;

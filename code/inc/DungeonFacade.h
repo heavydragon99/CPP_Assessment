@@ -21,12 +21,13 @@ public:
     void printShortDescription();
     void moveHiddenObjects();
     GameObjectFacade* pickUpObject(const char *aObjectName);
-    bool placeObject(GameObjectFacade* aObject);
+    bool placeObject(std::unique_ptr<GameObjectFacade> aObject);
     bool printGameObject(const char *aObjectName);
     bool printEnemy(const char *aEnemyName);
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, GameObjectFacade &aWeapon);
     GameObject* getGameObject(const Sean::String &aName);
+    void update();
 
 private:
     std::unique_ptr<Dungeon> mDungeon;

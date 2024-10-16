@@ -37,6 +37,8 @@ namespace Sean
         Vector<String> mVisibleObjects;
         String mName;
         String mDescription;
+
+        ParsedLocations() : mId(0), mDirections{{Direction::North, 0}, {Direction::East, 0}, {Direction::South, 0}, {Direction::West, 0}}, mEnemies(), mHiddenObjects(), mVisibleObjects(), mName(), mDescription() {}
     };
 
 } // namespace Sean

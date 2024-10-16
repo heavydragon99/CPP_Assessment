@@ -22,7 +22,6 @@ void SQLReader::openDatabase()
 
     if (sqlite3_open(dbPathStr.c_str(), &db) == SQLITE_OK)
     {
-        std::cout << "Database opened successfully!" << std::endl;
     }
     else
     {
