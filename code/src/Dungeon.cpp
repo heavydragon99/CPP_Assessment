@@ -16,10 +16,10 @@ static Location dummyLocation("dummy", "dummy", 0);
 Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
-    for (auto &parsedLocation : aLocations)
+    for (Sean::ParsedLocations &parsedLocation : aLocations)
     {
         // Create a new Location using the LocationFactory
-        Sean::Object<Location> location(LocationFactory::createLocation(parsedLocation.mName.get(), parsedLocation.mDescription.get()));
+        Sean::Object<Location> location(LocationFactory::createLocation(parsedLocation.mName.get(), parsedLocation.mDescription.get(), parsedLocation.mId));
         if (location.get() == nullptr)
         {
             throw std::runtime_error("Location not found");
@@ -29,7 +29,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
         mMap.push_back(*location.get());
 
         // Add the enemies to the Location
-        for (auto &enemy : parsedLocation.mEnemies)
+        for (Sean::String &enemy : parsedLocation.mEnemies)
         {
             Sean::Object<Enemy> newEnemy(EnemyFactory::createEnemy(enemy.get()));
             if (newEnemy.get() == nullptr)
@@ -40,7 +40,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
         }
 
         // Add the objects to the Location
-        for (auto &object : parsedLocation.mVisibleObjects)
+        for (Sean::String &object : parsedLocation.mVisibleObjects)
         {
             Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
             if (newObject.get() == nullptr)
@@ -50,7 +50,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
             mMap.back().addVisibleObject(*newObject.get());
         }
 
-        for (auto &object : parsedLocation.mHiddenObjects)
+        for (Sean::String &object : parsedLocation.mHiddenObjects)
         {
             Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
             if (newObject.get() == nullptr)
@@ -62,24 +62,30 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
     }
 
     // Second pass: Set the exits for each location
-    for (auto &parsedLocation : aLocations)
+    for (Sean::ParsedLocations &parsedLocation : aLocations)
     {
-        Location &currentLocation = mMap[parsedLocation.mId];
-        for (auto &direction : parsedLocation.mDirections)
+        Location &currentLocation = mMap[parsedLocation.mId-1];
+        for (Sean::DirectionInfo &direction : parsedLocation.mDirections)
         {
+            if(direction.mID > aLocations.size()){
+                throw std::runtime_error("Invalid location ID");
+            }
+            if(direction.mID == 0){
+                break;
+            }
             switch (direction.mDirection)
             {
             case Sean::Direction::North:
-                currentLocation.setExit(Sean::Direction::North, &mMap[direction.mID]);
+                currentLocation.setExit(Sean::Direction::North, &mMap[direction.mID-1]);
                 break;
             case Sean::Direction::East:
-                currentLocation.setExit(Sean::Direction::East, &mMap[direction.mID]);
+                currentLocation.setExit(Sean::Direction::East, &mMap[direction.mID-1]);
                 break;
             case Sean::Direction::South:
-                currentLocation.setExit(Sean::Direction::South, &mMap[direction.mID]);
+                currentLocation.setExit(Sean::Direction::South, &mMap[direction.mID-1]);
                 break;
             case Sean::Direction::West:
-                currentLocation.setExit(Sean::Direction::West, &mMap[direction.mID]);
+                currentLocation.setExit(Sean::Direction::West, &mMap[direction.mID-1]);
                 break;
             }
         }

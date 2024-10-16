@@ -10,6 +10,7 @@ public:
     virtual ~LocationFactory() = default;
 
     static Location *createLocation(const Sean::String aLocation, const Sean::String aDescription);
+    static Location *createLocation(const Sean::String aLocation, const Sean::String aDescription, int aId);
     static Location *createLocation();
 
     private:

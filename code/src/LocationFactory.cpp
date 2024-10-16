@@ -9,6 +9,11 @@ Location *LocationFactory::createLocation(Sean::String aLocation, Sean::String a
     return new Location(aLocation, aDescription, mCounter++);
 }
 
+Location *LocationFactory::createLocation(Sean::String aLocation, Sean::String aDescription, int aId)
+{
+    return new Location(aLocation, aDescription, aId);
+}
+
 Location *LocationFactory::createLocation()
 {
     SQLReader& sqlReader = SQLReader::getInstance();

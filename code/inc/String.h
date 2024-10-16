@@ -70,9 +70,14 @@ namespace Sean
         {
             if (this != &aOther)
             {
+                // Free existing resource
                 delete[] mData;
+
+                // Transfer ownership of resource
                 mData = aOther.mData;
                 mSize = aOther.mSize;
+
+                // Nullify the source object
                 aOther.mData = nullptr;
                 aOther.mSize = 0;
             }

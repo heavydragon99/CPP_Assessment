@@ -33,8 +33,6 @@ namespace Sean
             mCapacity = aNewCapacity;
         }
 
-        
-
     public:
         /**
          * @brief Default constructor that initializes an empty vector.
@@ -300,6 +298,36 @@ namespace Sean
             mData = nullptr;
             mSize = 0;
             mCapacity = 0;
+        }
+
+        /**
+         * @brief Returns a reference to the last element in the vector.
+         *
+         * @return A reference to the last element in the vector.
+         * @throws std::out_of_range if the vector is empty.
+         */
+        T &back()
+        {
+            if (mSize == 0)
+            {
+                throw std::out_of_range("Vector is empty");
+            }
+            return mData[mSize - 1];
+        }
+
+        /**
+         * @brief Returns a const reference to the last element in the vector.
+         *
+         * @return A const reference to the last element in the vector.
+         * @throws std::out_of_range if the vector is empty.
+         */
+        const T &back() const
+        {
+            if (mSize == 0)
+            {
+                throw std::out_of_range("Vector is empty");
+            }
+            return mData[mSize - 1];
         }
     };
 } // namespace Sean

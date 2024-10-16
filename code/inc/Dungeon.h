@@ -25,7 +25,7 @@ public:
     void printLongDescription() const;
 
 private:
-    std::vector<Location> mMap;
+    Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!
     Location *mCurrentLocation;
 };
 

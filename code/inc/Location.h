@@ -8,6 +8,7 @@
 class Location
 {
 public:
+    Location() = default;
     Location(const Sean::String aName, const Sean::String aDescription, int aID);
     virtual ~Location() = default;
 
