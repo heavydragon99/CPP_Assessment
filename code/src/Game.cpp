@@ -115,10 +115,9 @@ void Game::printCurrentSetting()
 void Game::playerInput(bool *aQuit)
 {
     std::string input;
-    
+
     std::cout << "Voer een actie in: ";
     std::getline(std::cin, input);
-    
 
     size_t spacePos = input.find(' ');
     std::string action = input.substr(0, spacePos);
@@ -224,8 +223,34 @@ void Game::searchAction()
 
 void Game::goAction(const std::string &aDirection)
 {
-    mDungeon->update();
-    throw std::runtime_error("Actie 'Ga' is nog niet geïmplementeerd.");
+    Sean::Direction direction;
+    if (aDirection == "noord")
+    {
+        direction = Sean::Direction::North;
+    }
+    else if (aDirection == "oost")
+    {
+        direction = Sean::Direction::East;
+    }
+    else if (aDirection == "zuid")
+    {
+        direction = Sean::Direction::South;
+    }
+    else if (aDirection == "west")
+    {
+        direction = Sean::Direction::West;
+    }
+    else
+    {
+        std::cout << "Ongeldige invoer" << std::endl;
+        return;
+    }
+    if (mDungeon->moveLocation(direction))
+    {
+        //mDungeon->update(); // Only update if the location was moved
+        clearConsole();
+        printCurrentSetting();
+    }
 }
 
 void Game::takeAction(const std::string &aObject)
@@ -254,15 +279,16 @@ void Game::wearAction(const std::string &aObject)
     auto previousItem = mPlayer->equipObject(aObject.c_str());
     if (previousItem)
     {
-        mDungeon->placeObject(std::move(previousItem));
+        if (mDungeon->placeObject(std::move(previousItem)))
+        {
+            mDungeon->update(); // Only update if the object was placed in the dungeon
+        }
     }
-    mDungeon->update();
 }
 
 void Game::waitAction()
 {
     mDungeon->update();
-    throw std::runtime_error("Actie 'Wacht' is nog niet geïmplementeerd.");
 }
 
 void Game::consumeAction(const std::string &aObject)

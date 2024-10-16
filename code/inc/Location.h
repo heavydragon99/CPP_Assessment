@@ -18,6 +18,7 @@ public:
     void addHiddenObject(GameObject aObject);
     void addEnemy(Enemy aEnemy);
     void setExit(Sean::Direction aDirection, Location *aLocation);
+    Location *getExit(Sean::Direction aDirection) const;
 
     void printDescriptionShort() const;
     void printDescriptionLong() const;

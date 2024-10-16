@@ -23,6 +23,7 @@ public:
     void placeObject(GameObject *aObject);
     void printShortDescription() const;
     void printLongDescription() const;
+    bool moveLocation(Sean::Direction aDirection);
 
 private:
     Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!

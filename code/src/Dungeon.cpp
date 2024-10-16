@@ -188,7 +188,7 @@ Dungeon::Dungeon(int aLocations)
 }
 
 void Dungeon::update(){
-    throw std::runtime_error("Not implemented");
+    throw std::runtime_error("Dungeon update Not implemented");
 }
 
 GameObject* Dungeon::getGameObject(const Sean::String &aName){
@@ -206,4 +206,14 @@ void Dungeon::printShortDescription() const{
 void Dungeon::printLongDescription() const{
     mCurrentLocation->printDescriptionLong();
     mCurrentLocation->printExits();
+}
+
+bool Dungeon::moveLocation(Sean::Direction aDirection){
+    Location *newLocation = mCurrentLocation->getExit(aDirection);
+    if(newLocation){
+        mCurrentLocation = newLocation;
+        return true;
+    }
+    std::cout << "Er is geen locatie in die richting" << std::endl;
+    return false;
 }

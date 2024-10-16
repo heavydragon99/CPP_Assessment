@@ -41,6 +41,20 @@ void Location::setExit(Sean::Direction aDirection, Location* aLocation) {
     }
 }
 
+Location* Location::getExit(Sean::Direction aDirection) const {
+    switch (aDirection) {
+        case Sean::Direction::North:
+            return mNorth;
+        case Sean::Direction::East:
+            return mEast;
+        case Sean::Direction::South:
+            return mSouth;
+        case Sean::Direction::West:
+            return mWest;
+    }
+    return nullptr;
+}
+
 void Location::printDescriptionShort() const {
     std::cout << "Naam: " << mName << std::endl;
     for (const auto& enemy : mEnemies) {
