@@ -14,8 +14,8 @@ public:
 
     Sean::String getName() const;
 
-    void addVisibleObject(GameObject aObject);
-    void addHiddenObject(GameObject aObject);
+    void addVisibleObject(GameObject* aObject);
+    void addHiddenObject(GameObject* aObject);
     void addEnemy(Enemy aEnemy);
     void setExit(Sean::Direction aDirection, Location *aLocation);
     Location *getExit(Sean::Direction aDirection) const;
@@ -33,8 +33,8 @@ private:
     Sean::String mName;                       // Name of the location
     int mID;                                  // ID of the location
     Sean::String mDescription;                // Description of the location
-    Sean::Vector<GameObject> mVisibleObjects; // Objects that are visible in the location
-    Sean::Vector<GameObject> mHiddenObjects;  // Objects that are hidden in the location
+    Sean::Vector<Sean::Object<GameObject>> mVisibleObjects; // Objects that are visible in the location
+    Sean::Vector<Sean::Object<GameObject>> mHiddenObjects;  // Objects that are hidden in the location
     Sean::Vector<Enemy> mEnemies;             // Enemies in the location
 
     Location *mNorth;

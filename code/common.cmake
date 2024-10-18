@@ -17,6 +17,7 @@ set(MAIN_SOURCES
     ${CMAKE_SOURCE_DIR}/src/Location.cpp
     ${CMAKE_SOURCE_DIR}/src/LocationFactory.cpp
     ${CMAKE_SOURCE_DIR}/src/Player.cpp
+    ${CMAKE_SOURCE_DIR}/src/RandomGenerator.cpp
     ${CMAKE_SOURCE_DIR}/src/SqlReader.cpp
     ${CMAKE_SOURCE_DIR}/src/WeaponObject.cpp
     ${CMAKE_SOURCE_DIR}/src/XmlReader.cpp

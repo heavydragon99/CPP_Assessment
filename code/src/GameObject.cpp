@@ -3,12 +3,51 @@
 #include <iostream>
 
 GameObject::GameObject(const Sean::String &aName, const Sean::String &aDescription, ObjectType aType, int aID)
-        : mName(aName), mDescription(aDescription), mType(aType), mID(aID)
-    {}
-
-IGameObject* GameObject::clone() const
+    : mName(aName), mDescription(aDescription), mType(aType), mID(aID)
 {
-    return new GameObject(*this); // Copy constructor
+}
+
+// Copy Constructor
+GameObject::GameObject(const GameObject &other)
+    : mName(other.mName), mID(other.mID), mDescription(other.mDescription), mType(other.mType)
+{
+}
+
+// Copy Assignment Operator
+GameObject &GameObject::operator=(const GameObject &other)
+{
+    if (this != &other)
+    {
+        mName = other.mName;
+        mID = other.mID;
+        mDescription = other.mDescription;
+        mType = other.mType;
+    }
+    return *this;
+}
+
+// Move Constructor
+GameObject::GameObject(GameObject &&other) noexcept
+    : mName(std::move(other.mName)), mID(other.mID), mDescription(std::move(other.mDescription)), mType(other.mType)
+{
+    other.mID = 0;
+    other.mType = ObjectType::Gold; // Default type
+}
+
+// Move Assignment Operator
+GameObject &GameObject::operator=(GameObject &&other) noexcept
+{
+    if (this != &other)
+    {
+        mName = std::move(other.mName);
+        mID = other.mID;
+        mDescription = std::move(other.mDescription);
+        mType = other.mType;
+
+        other.mID = 0;
+        other.mType = ObjectType::Gold; // Default type
+    }
+    return *this;
 }
 
 Sean::String GameObject::getName() const
@@ -19,11 +58,6 @@ Sean::String GameObject::getName() const
 void GameObject::printName() const
 {
     std::cout << getName() << std::endl;
-}
-
-void GameObject::printDescription() const
-{
-    std::cout << mDescription << std::endl;
 }
 
 bool GameObject::isWeapon() const
@@ -59,9 +93,4 @@ bool GameObject::isMoney() const
 ObjectType GameObject::getType() const
 {
     return mType;
-}
-
-int GameObject::getValue() const
-{
-    return 0;
 }

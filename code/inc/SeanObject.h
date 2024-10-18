@@ -1,6 +1,8 @@
 #ifndef SEAN_OBJECT_H
 #define SEAN_OBJECT_H
 
+#include <utility> // For std::move
+
 namespace Sean
 {
     /**
@@ -24,10 +26,7 @@ namespace Sean
          */
         ~Object()
         {
-            if (mPtr != nullptr)
-            {
-                delete mPtr;
-            }
+            delete mPtr;
         }
 
         // Disable copy constructor and copy assignment
@@ -84,6 +83,38 @@ namespace Sean
                 mPtr = aPtr;
             }
         }
+
+        /**
+         * @brief Dereferences the managed pointer.
+         *
+         * @return A reference to the managed object.
+         */
+        T &operator*() const
+        {
+            return *mPtr;
+        }
+
+        /**
+         * @brief Accesses the managed object's members.
+         *
+         * @return A pointer to the managed object.
+         */
+        T *operator->() const
+        {
+            return mPtr;
+        }
+        /**
+         * @brief Releases ownership of the managed object without deleting it.
+         *
+         * @return A raw pointer to the managed object.
+         */
+        T *release()
+        {
+            T *temp = mPtr;
+            mPtr = nullptr;
+            return temp;
+        }
+        
 
     private:
         T *mPtr; ///< The raw pointer to the managed object.

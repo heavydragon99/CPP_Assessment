@@ -24,6 +24,8 @@ public:
     virtual bool isMoney() const = 0;
 
     virtual int getValue() const = 0;
+    virtual int getMin() const = 0;
+    virtual int getMax() const = 0;
 
 };
 

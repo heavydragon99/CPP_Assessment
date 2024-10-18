@@ -21,7 +21,7 @@ GameObject *GameObjectFactory::createGameObject(const Sean::String aObjectName)
     {
         if (type == "goudstukken")
         {
-            return new GoldObject(name, description, minValue, ObjectType::Gold, mCounter++);
+            return new GoldObject(name, description, minValue, maxValue, ObjectType::Gold, mCounter++);
         }
         else if (type == "wapen")
         {
@@ -64,7 +64,7 @@ GameObject *GameObjectFactory::createGameObject()
         name.append(std::to_string(mCounter++).c_str());
         if (type == "Gold")
         {
-            return new GoldObject(name, description, minValue, ObjectType::Gold, mCounter++);
+            return new GoldObject(name, description, minValue, maxValue, ObjectType::Gold, mCounter++);
         }
         else if (type == "Weapon")
         {

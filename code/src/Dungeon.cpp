@@ -4,6 +4,7 @@
 #include "EnemyFactory.h"
 #include "GameObjectFactory.h"
 #include "Enemy.h"
+#include "RandomGenerator.h"
 
 #include <stdexcept>
 #include <unordered_set>
@@ -26,7 +27,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
         }
 
         // Add the new Location to mMap
-        mMap.push_back(*location.get());
+        mMap.push_back(std::move(*location));
 
         // Add the enemies to the Location
         for (Sean::String &enemy : parsedLocation.mEnemies)
@@ -36,7 +37,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
             {
                 throw std::runtime_error("Enemy not found");
             }
-            mMap.back().addEnemy(*newEnemy.get());
+            mMap.back().addEnemy(std::move(*newEnemy));
         }
 
         // Add the objects to the Location
@@ -47,7 +48,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
             {
                 throw std::runtime_error("Object not found");
             }
-            mMap.back().addVisibleObject(*newObject.get());
+            mMap.back().addVisibleObject(newObject.release());
         }
 
         for (Sean::String &object : parsedLocation.mHiddenObjects)
@@ -57,7 +58,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
             {
                 throw std::runtime_error("Object not found");
             }
-            mMap.back().addHiddenObject(*newObject.get());
+            mMap.back().addHiddenObject(newObject.release());
         }
     }
 
@@ -130,16 +131,16 @@ Dungeon::Dungeon(int aLocations)
         } while (usedNames.find(location.get()->getName().c_str()) != usedNames.end());
 
         usedNames.insert(location.get()->getName().c_str());
-        mMap.push_back(*location.get());
+        mMap.push_back(std::move(*location));
 
         // Add visible objects
         int numVisibleObjects = visibleDist(gen);
         for (int j = 0; j < numVisibleObjects; ++j)
         {
-            GameObject *object = GameObjectFactory::createGameObject();
-            if (object)
+            Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
+            if (object.get())
             {
-                mMap.back().addVisibleObject(*object);
+                mMap.back().addVisibleObject(object.release());
             }
         }
 
@@ -147,10 +148,10 @@ Dungeon::Dungeon(int aLocations)
         int numHiddenObjects = hiddenDist(gen);
         for (int j = 0; j < numHiddenObjects; ++j)
         {
-            GameObject *object = GameObjectFactory::createGameObject();
-            if (object)
+            Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
+            if (object.get())
             {
-                mMap.back().addHiddenObject(*object);
+                mMap.back().addHiddenObject(object.release());
             }
         }
     }
@@ -206,7 +207,7 @@ GameObject *Dungeon::pickUpObject(const char *aObjectName)
 
 void Dungeon::placeObject(GameObject *aObject)
 {
-    mCurrentLocation->addVisibleObject(*aObject);
+    mCurrentLocation->addVisibleObject(aObject);
 }
 
 void Dungeon::printShortDescription() const
@@ -251,6 +252,7 @@ void Dungeon::teleport(int aAmount)
 
     Sean::Direction nextDirection = Sean::Direction::Invalid;
     Sean::Direction previousDirection = Sean::Direction::Invalid;
+    RandomGenerator randomEngine;
 
     while (aAmount > 0)
     {
@@ -262,7 +264,7 @@ void Dungeon::teleport(int aAmount)
 
         do
         {
-            nextDirection = static_cast<Sean::Direction>(rand() % 4); // TODO: Use a better random number generator
+            nextDirection = static_cast<Sean::Direction>(randomEngine.getRandomValue(0, 3)); 
             switch (nextDirection)
             {
             case Sean::Direction::North:

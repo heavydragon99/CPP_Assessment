@@ -2,6 +2,7 @@
 
 #include "GameObjectFactory.h"
 #include "SqlReader.h"
+#include "RandomGenerator.h"
 
 Enemy::Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAttackPercent, int aMinimumDamage, int aMaximumDamage, int aID)
     : mName(aName), mDescription(aDescription), mHealth(aHealth), mAttackPercent(aAttackPercent), mMinimumDamage(aMinimumDamage), mMaximumDamage(aMaximumDamage), mID(aID)
@@ -11,13 +12,13 @@ Enemy::Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAt
     int maxAmount;
     SQLReader::getInstance().getObjectAmount(mName, minAmount, maxAmount);
 
-    if(maxAmount <= 0)
+    if (maxAmount <= 0)
     {
         return;
     }
 
-    //TODO make different random
-    int amount = rand() % (maxAmount - minAmount + 1) + minAmount;
+    RandomGenerator randomEngine;
+    int amount = randomEngine.getRandomValue(minAmount, maxAmount);
 
     // Get the objects that the enemy has
     for (int i = 0; i < amount; i++)
@@ -34,7 +35,7 @@ Enemy::Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAt
             Sean::Object<GameObject> object(GameObjectFactory::createGameObject(name));
             if (object.get() != nullptr)
             {
-                mHiddenObjects.push_back(*object.get());
+                mHiddenObjects.push_back(std::move(object));
             }
         }
     }
@@ -60,7 +61,7 @@ bool Enemy::isDead() const
     return mHealth <= 0;
 }
 
-Sean::Vector<GameObject> &Enemy::getHiddenObjects()
+Sean::Vector<Sean::Object<GameObject>> &Enemy::getHiddenObjects()
 {
     return mHiddenObjects;
 }
@@ -72,5 +73,10 @@ void Enemy::takeDamage(int aDamage)
 
 int Enemy::getAttack()
 {
-    throw std::runtime_error("getAttack from Enemy Not implemented");
+    RandomGenerator randomEngine;
+    if (randomEngine.shouldAttack(mAttackPercent))
+    {
+        return randomEngine.getRandomValue(mMinimumDamage, mMaximumDamage);
+    }
+    return 0;
 }

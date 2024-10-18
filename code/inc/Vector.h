@@ -58,7 +58,7 @@ namespace Sean
                 mData = new T[mCapacity];
                 for (size_t i = 0; i < mSize; ++i)
                 {
-                    mData[i] = aOther.mData[i];
+                    mData[i] = std::move(aOther.mData[i]); //have to use move as Sean::object is not copyable
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace Sean
                 T *newData = new T[aOther.mCapacity];
                 for (size_t i = 0; i < aOther.mSize; ++i)
                 {
-                    newData[i] = aOther.mData[i];
+                    newData[i] = std::move(aOther.mData[i]); //have to use move as Sean::object is not copyable
                 }
 
                 // Release the current object's resources

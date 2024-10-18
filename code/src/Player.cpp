@@ -22,7 +22,6 @@ void Player::printDescription()
     if (mEquippedWeapon)
     {
         mEquippedWeapon->printName();
-        std::cout << "Omschrijving: ";
         mEquippedWeapon->printDescription();
     }
     else
@@ -175,5 +174,9 @@ int Player::getAttackPercentage() const
 
 int Player::getAttackDamage() const
 {
-    throw std::runtime_error("getAttackDamage from Player Not implemented");
+    if (mEquippedWeapon)
+    {
+        return mEquippedWeapon->getValue();
+    }
+    return 0;
 }
