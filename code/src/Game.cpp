@@ -224,7 +224,6 @@ void Game::searchAction()
 {
     mDungeon->moveHiddenObjects();
     mDungeon->update();
-    throw std::runtime_error("Actie 'Zoek' is nog niet geïmplementeerd.");
 }
 
 void Game::goAction(const std::string &aDirection)
@@ -279,10 +278,10 @@ void Game::dropAction(const std::string &aObject)
     {
         mDungeon->placeObject(std::move(item));
     }
-    else{
+    else
+    {
         std::cout << "Object " << aObject << " niet gevonden in je inventory" << std::endl;
     }
-
 }
 
 void Game::examineAction(const std::string &aObject)
@@ -304,8 +303,14 @@ void Game::examineAction(const std::string &aObject)
 
 void Game::hitAction(const std::string &aTarget)
 {
-    mDungeon->update();
-    throw std::runtime_error("Actie 'Sla' is nog niet geïmplementeerd.");
+    if(mDungeon->attackEnemy(aTarget.c_str(), mPlayer->getAttackDamage()))
+    {
+        mDungeon->update();
+    }
+    else
+    {
+        std::cout << "Vijand " << aTarget << " niet gevonden" << std::endl;
+    }
 }
 
 void Game::wearAction(const std::string &aObject)
@@ -327,7 +332,34 @@ void Game::waitAction()
 
 void Game::consumeAction(const std::string &aObject)
 {
-    throw std::runtime_error("Actie 'Consumeer' is nog niet geïmplementeerd.");
+    for (auto iter = mPlayer->getInventory().begin(); iter != mPlayer->getInventory().end(); ++iter)
+    {
+        if (iter->get()->getName().c_str() == aObject)
+        {
+            if (iter->get()->isConsumableHealth())
+            {
+                mPlayer->addHealth(iter->get()->getValue());
+                std::cout << "Je hebt " << aObject << " geconsumeerd en je levenspunten zijn nu " << mPlayer->getHealth() << std::endl;
+                mPlayer->getInventory().erase(iter);
+                return;
+            }
+            else if (iter->get()->isConsumableExperience())
+            {
+                mPlayer->addExperience(iter->get()->getValue());
+                std::cout << "Je hebt " << aObject << " geconsumeerd en je aanvalskans is nu " << mPlayer->getAttackPercentage() << "%" << std::endl;
+                mPlayer->getInventory().erase(iter);
+                return;
+            }
+            else if (iter->get()->isConsumableTeleport())
+            {
+                mDungeon->teleport(iter->get()->getValue());
+                std::cout << "Je hebt " << aObject << " geconsumeerd en je bent geteleporteerd naar een andere locatie" << std::endl;
+                mPlayer->getInventory().erase(iter);
+                return;
+            }
+        }
+    }
+    std::cout << "Object " << aObject << " niet gevonden in je inventory" << std::endl;
 }
 
 void Game::helpAction()
@@ -352,5 +384,5 @@ void Game::helpAction()
 
 void Game::godmodeAction()
 {
-    throw std::runtime_error("Actie 'Godmode' is nog niet geïmplementeerd.");
+    mPlayer->toggleGodMode();
 }

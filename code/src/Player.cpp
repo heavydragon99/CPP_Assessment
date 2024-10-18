@@ -92,14 +92,21 @@ std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
     return nullptr;
 }
 
-void Player::consumeConsumable(const char *aConsumable)
+void Player::addHealth(int aHealth)
 {
-    throw std::runtime_error("Not implemented");
+    mHealth += aHealth;
+    std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
+}
+
+void Player::addExperience(int aExperience)
+{
+    mAttackPercentage += aExperience;
+    std::cout << "Je aanvalskans is nu " << mAttackPercentage << "%" << std::endl;
 }
 
 void Player::addObject(std::unique_ptr<IGameObject> aObject)
 {
-    if (aObject->isConsumable())
+    if (aObject->isConsumableHealth())
     {
         mGold += aObject->getValue();
     }
@@ -129,10 +136,12 @@ std::unique_ptr<IGameObject> Player::dropObject(const char *aObjectName)
     {
         if (iter->get()->getName() == aObjectName)
         {
-            if(mEquippedWeapon == iter->get()){
+            if (mEquippedWeapon == iter->get())
+            {
                 mEquippedWeapon = nullptr;
             }
-            if(mEquippedArmor == iter->get()){
+            if (mEquippedArmor == iter->get())
+            {
                 mEquippedArmor = nullptr;
             }
             std::unique_ptr<IGameObject> droppedItem = std::move(*iter);
@@ -141,4 +150,30 @@ std::unique_ptr<IGameObject> Player::dropObject(const char *aObjectName)
         }
     }
     return nullptr;
+}
+
+void Player::toggleGodMode()
+{
+    mGodMode = !mGodMode;
+    std::cout << "Godmode " << (mGodMode ? "geactiveerd" : "gedeactiveerd") << std::endl;
+}
+
+std::vector<std::unique_ptr<IGameObject>> &Player::getInventory()
+{
+    return mInventory;
+}
+
+int Player::getHealth() const
+{
+    return mHealth;
+}
+
+int Player::getAttackPercentage() const
+{
+    return mAttackPercentage;
+}
+
+int Player::getAttackDamage() const
+{
+    throw std::runtime_error("getAttackDamage from Player Not implemented");
 }

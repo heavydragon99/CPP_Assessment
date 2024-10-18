@@ -20,7 +20,8 @@ namespace Sean
         North,
         East,
         South,
-        West
+        West,
+        Invalid
     };
 
     struct DirectionInfo

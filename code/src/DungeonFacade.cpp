@@ -47,8 +47,8 @@ IGameObject *DungeonFacade::pickUpObject(const char *aObjectName)
 
 bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
 {
-        // Convert IGameObject to GameObject
-    Sean::Object<GameObject> gameObject(dynamic_cast<GameObject*>(aObject.release()));
+    // Convert IGameObject to GameObject
+    Sean::Object<GameObject> gameObject(dynamic_cast<GameObject *>(aObject.release()));
     if (gameObject.get() != nullptr)
     {
         mDungeon->placeObject(gameObject.get());
@@ -72,9 +72,9 @@ bool DungeonFacade::moveLocation(Sean::Direction aDirection)
     return mDungeon->moveLocation(aDirection);
 }
 
-bool DungeonFacade::attackEnemy(const char *aEnemyName, IGameObject &aWeapon)
+bool DungeonFacade::attackEnemy(const char *aEnemyName, int aDamage)
 {
-    throw std::runtime_error("Function not implemented");
+    return mDungeon->attackEnemy(aEnemyName, aDamage);
 }
 
 IGameObject *DungeonFacade::createGameObject(const Sean::String &aName)
@@ -85,4 +85,9 @@ IGameObject *DungeonFacade::createGameObject(const Sean::String &aName)
 void DungeonFacade::update()
 {
     mDungeon->update();
+}
+
+void DungeonFacade::teleport(int aAmount)
+{
+    mDungeon->teleport(aAmount);
 }

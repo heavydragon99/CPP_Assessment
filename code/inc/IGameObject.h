@@ -18,7 +18,9 @@ public:
 
     virtual bool isWeapon() const = 0;
     virtual bool isArmor() const = 0;
-    virtual bool isConsumable() const = 0;
+    virtual bool isConsumableHealth() const = 0;
+    virtual bool isConsumableExperience() const = 0;
+    virtual bool isConsumableTeleport() const = 0;
     virtual bool isMoney() const = 0;
 
     virtual int getValue() const = 0;

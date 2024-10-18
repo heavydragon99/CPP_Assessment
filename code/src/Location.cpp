@@ -55,6 +55,10 @@ Location* Location::getExit(Sean::Direction aDirection) const {
     return nullptr;
 }
 
+Sean::Vector<Enemy>& Location::getEnemies() {
+    return mEnemies;
+}
+
 void Location::printDescriptionShort() const {
     std::cout << "Je staat in de locatie: " << mName << std::endl;
 }

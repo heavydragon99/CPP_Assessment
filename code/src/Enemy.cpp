@@ -64,3 +64,13 @@ Sean::Vector<GameObject> &Enemy::getHiddenObjects()
 {
     return mHiddenObjects;
 }
+
+void Enemy::takeDamage(int aDamage)
+{
+    mHealth -= aDamage;
+}
+
+int Enemy::getAttack()
+{
+    throw std::runtime_error("getAttack from Enemy Not implemented");
+}

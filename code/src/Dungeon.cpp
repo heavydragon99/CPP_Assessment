@@ -64,28 +64,30 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
     // Second pass: Set the exits for each location
     for (Sean::ParsedLocations &parsedLocation : aLocations)
     {
-        Location &currentLocation = mMap[parsedLocation.mId-1];
+        Location &currentLocation = mMap[parsedLocation.mId - 1];
         for (Sean::DirectionInfo &direction : parsedLocation.mDirections)
         {
-            if(direction.mID > aLocations.size()){
+            if (direction.mID > aLocations.size())
+            {
                 throw std::runtime_error("Invalid location ID");
             }
-            if(direction.mID == 0){
+            if (direction.mID == 0)
+            {
                 break;
             }
             switch (direction.mDirection)
             {
             case Sean::Direction::North:
-                currentLocation.setExit(Sean::Direction::North, &mMap[direction.mID-1]);
+                currentLocation.setExit(Sean::Direction::North, &mMap[direction.mID - 1]);
                 break;
             case Sean::Direction::East:
-                currentLocation.setExit(Sean::Direction::East, &mMap[direction.mID-1]);
+                currentLocation.setExit(Sean::Direction::East, &mMap[direction.mID - 1]);
                 break;
             case Sean::Direction::South:
-                currentLocation.setExit(Sean::Direction::South, &mMap[direction.mID-1]);
+                currentLocation.setExit(Sean::Direction::South, &mMap[direction.mID - 1]);
                 break;
             case Sean::Direction::West:
-                currentLocation.setExit(Sean::Direction::West, &mMap[direction.mID-1]);
+                currentLocation.setExit(Sean::Direction::West, &mMap[direction.mID - 1]);
                 break;
             }
         }
@@ -187,34 +189,42 @@ Dungeon::Dungeon(int aLocations)
     }
 }
 
-void Dungeon::update(){
+void Dungeon::update()
+{
     throw std::runtime_error("Dungeon update Not implemented");
 }
 
-GameObject* Dungeon::createGameObject(const Sean::String &aName){
-    return std::move(GameObjectFactory::createGameObject(aName)); 
+GameObject *Dungeon::createGameObject(const Sean::String &aName)
+{
+    return std::move(GameObjectFactory::createGameObject(aName));
 }
 
-GameObject* Dungeon::pickUpObject(const char *aObjectName){
+GameObject *Dungeon::pickUpObject(const char *aObjectName)
+{
     return mCurrentLocation->pickUpObject(aObjectName);
 }
 
-void Dungeon::placeObject(GameObject *aObject){
+void Dungeon::placeObject(GameObject *aObject)
+{
     mCurrentLocation->addVisibleObject(*aObject);
 }
 
-void Dungeon::printShortDescription() const{
+void Dungeon::printShortDescription() const
+{
     mCurrentLocation->printDescriptionShort();
 }
 
-void Dungeon::printLongDescription() const{
+void Dungeon::printLongDescription() const
+{
     mCurrentLocation->printDescriptionLong();
     mCurrentLocation->printExits();
 }
 
-bool Dungeon::moveLocation(Sean::Direction aDirection){
+bool Dungeon::moveLocation(Sean::Direction aDirection)
+{
     Location *newLocation = mCurrentLocation->getExit(aDirection);
-    if(newLocation){
+    if (newLocation)
+    {
         mCurrentLocation = newLocation;
         return true;
     }
@@ -222,10 +232,96 @@ bool Dungeon::moveLocation(Sean::Direction aDirection){
     return false;
 }
 
-void Dungeon::moveHiddenObjects(){
+void Dungeon::moveHiddenObjects()
+{
     mCurrentLocation->moveHiddenObjects();
 }
 
-bool Dungeon::printObject(const char *aObjectName){
+bool Dungeon::printObject(const char *aObjectName)
+{
     return mCurrentLocation->printObject(aObjectName);
+}
+
+void Dungeon::teleport(int aAmount)
+{
+    if (aAmount <= 0)
+    {
+        return;
+    }
+
+    Sean::Direction nextDirection = Sean::Direction::Invalid;
+    Sean::Direction previousDirection = Sean::Direction::Invalid;
+
+    while (aAmount > 0)
+    {
+        Location *nextLocation = nullptr;
+        Location *locationNorth = mCurrentLocation->getExit(Sean::Direction::North);
+        Location *locationEast = mCurrentLocation->getExit(Sean::Direction::East);
+        Location *locationSouth = mCurrentLocation->getExit(Sean::Direction::South);
+        Location *locationWest = mCurrentLocation->getExit(Sean::Direction::West);
+
+        do
+        {
+            nextDirection = static_cast<Sean::Direction>(rand() % 4); // TODO: Use a better random number generator
+            switch (nextDirection)
+            {
+            case Sean::Direction::North:
+                nextLocation = locationNorth;
+                nextDirection = Sean::Direction::North;
+                break;
+            case Sean::Direction::East:
+                nextLocation = locationEast;
+                nextDirection = Sean::Direction::East;
+                break;
+            case Sean::Direction::South:
+                nextLocation = locationSouth;
+                nextDirection = Sean::Direction::South;
+                break;
+            case Sean::Direction::West:
+                nextLocation = locationWest;
+                nextDirection = Sean::Direction::West;
+                break;
+            }
+        } while (nextLocation == nullptr);
+
+        if (nextDirection == previousDirection)
+        {
+            continue;
+        }
+        else
+        {
+            mCurrentLocation = nextLocation;
+            previousDirection = nextDirection;
+            --aAmount;
+        }
+    }
+}
+
+bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
+{
+    for (Enemy &enemy : mCurrentLocation->getEnemies())
+    {
+        if (enemy.getName() == aEnemyName)
+        {
+            if (!enemy.isDead())
+            {
+                enemy.takeDamage(aDamage);
+                if (enemy.isDead())
+                {
+                    std::cout << "Je hebt de " << enemy.getName() << " verslagen" << std::endl;
+                }
+                else
+                {
+                    std::cout << "Je hebt de " << enemy.getName() << " geraakt met "<< aDamage << " schade" << std::endl;
+                }
+                return true;
+            }
+            else
+            {
+                std::cout << "De " << enemy.getName() << " is al verslagen" << std::endl;
+            }
+        }
+    }
+    std::cout << "Er is geen vijand met de naam " << aEnemyName << std::endl;
+    return false;
 }

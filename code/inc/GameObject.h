@@ -29,7 +29,9 @@ public:
 
     bool isWeapon() const override;
     bool isArmor() const override;
-    bool isConsumable() const override;
+    bool isConsumableHealth() const override;
+    bool isConsumableExperience() const override;
+    bool isConsumableTeleport() const override;
     bool isMoney() const override;
 
     virtual int getValue() const override;

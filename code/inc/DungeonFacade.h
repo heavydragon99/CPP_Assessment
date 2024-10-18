@@ -25,9 +25,10 @@ public:
     bool printGameObject(const char *aObjectName);
     bool printEnemy(const char *aEnemyName);
     bool moveLocation(Sean::Direction aDirection);
-    bool attackEnemy(const char *aEnemyName, IGameObject &aWeapon);
+    bool attackEnemy(const char *aEnemyName, int aDamage);
     IGameObject* createGameObject(const Sean::String &aName);
     void update();
+    void teleport(int aAMount);
 
 private:
     std::unique_ptr<Dungeon> mDungeon;

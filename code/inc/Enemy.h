@@ -17,6 +17,9 @@ public:
     bool isDead() const;
     Sean::Vector<GameObject>& getHiddenObjects();
 
+    void takeDamage(int aDamage);
+    int getAttack();
+
 private:
     Sean::String mName;                      // Name of the enemy
     int mID;                                 // ID of the enemy

@@ -3,6 +3,7 @@
 
 #include "Sean.h"
 #include "Location.h"
+#include "WeaponObject.h"
 
 #include <vector>
 
@@ -27,6 +28,8 @@ public:
     bool moveLocation(Sean::Direction aDirection);
     void moveHiddenObjects();
     bool printObject(const char *aObjectName);
+    void teleport(int aAmount);
+    bool attackEnemy(const char *aEnemyName, int aDamage);
 
 private:
     Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!

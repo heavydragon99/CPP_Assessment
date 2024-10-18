@@ -19,6 +19,7 @@ public:
     void addEnemy(Enemy aEnemy);
     void setExit(Sean::Direction aDirection, Location *aLocation);
     Location *getExit(Sean::Direction aDirection) const;
+    Sean::Vector<Enemy> &getEnemies();
 
     void printDescriptionShort() const;
     void printDescriptionLong() const;

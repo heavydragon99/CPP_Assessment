@@ -16,10 +16,17 @@ public:
 public:
     void printDescription();
     std::unique_ptr<IGameObject> equipObject(const char *aItem);
-    void consumeConsumable(const char *aConsumable);
+    void addHealth(int aHealth);
+    void addExperience(int aExperience);
     void addObject(std::unique_ptr<IGameObject> aObject);
     bool printObject(const char *aObjectName);
     std::unique_ptr<IGameObject> dropObject(const char *aObjectName);
+    void toggleGodMode();
+    std::vector<std::unique_ptr<IGameObject>>& getInventory();
+    int getHealth() const;
+    int getAttackPercentage() const;
+    int getAttackDamage() const;
+
 
 private:
     std::string mName;

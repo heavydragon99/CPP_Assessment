@@ -18,7 +18,7 @@ Sean::String GameObject::getName() const
 
 void GameObject::printName() const
 {
-    std::cout << getName << std::endl;
+    std::cout << getName() << std::endl;
 }
 
 void GameObject::printDescription() const
@@ -36,9 +36,19 @@ bool GameObject::isArmor() const
     return mType == ObjectType::Armor;
 }
 
-bool GameObject::isConsumable() const
+bool GameObject::isConsumableHealth() const
 {
-    return mType == ObjectType::Consumable_Health || mType == ObjectType::Consumable_Experience || mType == ObjectType::Consumable_Teleport;
+    return mType == ObjectType::Consumable_Health;
+}
+
+bool GameObject::isConsumableExperience() const
+{
+    return mType == ObjectType::Consumable_Experience;
+}
+
+bool GameObject::isConsumableTeleport() const
+{
+    return mType == ObjectType::Consumable_Teleport;
 }
 
 bool GameObject::isMoney() const
