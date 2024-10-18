@@ -6,5 +6,6 @@ GoldObject::GoldObject(const Sean::String aName, const Sean::String aDescription
 
 int GoldObject::getValue() const
 {
-    return mAmount;
+    throw std::runtime_error("getValue of GoldObject Not implemented");
 }
+

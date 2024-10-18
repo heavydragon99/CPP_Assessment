@@ -9,6 +9,8 @@ public:
     ConsumableObject(const Sean::String aName, const Sean::String aDescription, int aMinimum, int aMaximum, ObjectType aType, int aID);
     virtual ~ConsumableObject() = default;
 
+    int getValue() const override;
+
 private:
     int mMinimum;
     int mMaximum;

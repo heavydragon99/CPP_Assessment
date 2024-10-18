@@ -191,8 +191,12 @@ void Dungeon::update(){
     throw std::runtime_error("Dungeon update Not implemented");
 }
 
-GameObject* Dungeon::getGameObject(const Sean::String &aName){
+GameObject* Dungeon::createGameObject(const Sean::String &aName){
     return std::move(GameObjectFactory::createGameObject(aName)); 
+}
+
+GameObject* Dungeon::pickUpObject(const char *aObjectName){
+    return mCurrentLocation->pickUpObject(aObjectName);
 }
 
 void Dungeon::placeObject(GameObject *aObject){
@@ -220,4 +224,8 @@ bool Dungeon::moveLocation(Sean::Direction aDirection){
 
 void Dungeon::moveHiddenObjects(){
     mCurrentLocation->moveHiddenObjects();
+}
+
+bool Dungeon::printObject(const char *aObjectName){
+    return mCurrentLocation->printObject(aObjectName);
 }

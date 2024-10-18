@@ -9,7 +9,7 @@ public:
     GoldObject(const Sean::String aName, const Sean::String aDescription, int aValue, ObjectType aType, int aID);
     virtual ~GoldObject() = default;
 
-    int getValue() const;
+    int getValue() const override;
 
 private:
     int mAmount;

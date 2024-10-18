@@ -19,12 +19,14 @@ public:
 
     public:
     void update();
-    GameObject* getGameObject(const Sean::String &aName);
+    GameObject* createGameObject(const Sean::String &aName);
+    GameObject* pickUpObject(const char *aObjectName);
     void placeObject(GameObject *aObject);
     void printShortDescription() const;
     void printLongDescription() const;
     bool moveLocation(Sean::Direction aDirection);
     void moveHiddenObjects();
+    bool printObject(const char *aObjectName);
 
 private:
     Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!

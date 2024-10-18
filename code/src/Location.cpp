@@ -107,3 +107,43 @@ void Location::moveHiddenObjects() {
     }
     mHiddenObjects.clear();
 }
+
+GameObject* Location::pickUpObject(const char *aObjectName) {
+    for (auto iter = mVisibleObjects.begin(); iter != mVisibleObjects.end(); ++iter) {
+        if (iter->getName() == aObjectName) {
+            Sean::Object<GameObject> obj(new GameObject(*iter));
+            mVisibleObjects.erase(iter);
+            return new GameObject(*obj.get());
+        }
+    }
+    return nullptr;
+}
+
+bool Location::printObject(const char *aObjectName) {
+    for (const GameObject& obj : mVisibleObjects) {
+        if (obj.getName() == aObjectName) {
+            obj.printName();
+            obj.printDescription();
+            return true;
+        }
+    }
+
+    for (Enemy& obj : mEnemies) {
+        if (obj.getName() == aObjectName) {
+            if(obj.isDead()){
+                obj.printName();
+                obj.printDescription();
+                for(GameObject& obj : obj.getHiddenObjects()){
+                    mVisibleObjects.push_back(obj);
+                }
+                obj.getHiddenObjects().clear();
+                return true;
+            } else{
+                obj.printName();
+                obj.printDescription();
+                return true;
+            }
+        }
+    }
+    return false;
+}

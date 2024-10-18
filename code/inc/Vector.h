@@ -329,5 +329,50 @@ namespace Sean
             }
             return mData[mSize - 1];
         }
+
+        /**
+         * @brief Removes the element at the given index.
+         *
+         * This function removes the element at the specified index from the vector.
+         * All elements after the specified index are shifted one position to the left.
+         *
+         * @param aIndex The index of the element to remove.
+         * @throws std::out_of_range if the index is out of range.
+         */
+        void erase(size_t aIndex)
+        {
+            if (aIndex >= mSize)
+            {
+                throw std::out_of_range("Index out of range");
+            }
+            for (size_t i = aIndex; i < mSize - 1; ++i)
+            {
+                mData[i] = std::move(mData[i + 1]);
+            }
+            --mSize;
+        }
+
+        /**
+         * @brief Removes the element at the given iterator position.
+         *
+         * This function removes the element at the specified iterator position from the vector.
+         * All elements after the specified position are shifted one position to the left.
+         *
+         * @param aPosition The iterator position of the element to remove.
+         * @throws std::out_of_range if the iterator is out of range.
+         */
+        void erase(T *aPosition)
+        {
+            if (aPosition < mData || aPosition >= mData + mSize)
+            {
+                throw std::out_of_range("Iterator out of range");
+            }
+            size_t index = aPosition - mData;
+            for (size_t i = index; i < mSize - 1; ++i)
+            {
+                mData[i] = std::move(mData[i + 1]);
+            }
+            --mSize;
+        }
     };
 } // namespace Sean

@@ -30,6 +30,9 @@ public:
     bool isWeapon() const override;
     bool isArmor() const override;
     bool isConsumable() const override;
+    bool isMoney() const override;
+
+    virtual int getValue() const override;
 
     ObjectType getType() const;
 

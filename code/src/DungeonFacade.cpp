@@ -42,7 +42,7 @@ void DungeonFacade::moveHiddenObjects()
 
 IGameObject *DungeonFacade::pickUpObject(const char *aObjectName)
 {
-    throw std::runtime_error("Function not implemented");
+    return mDungeon->pickUpObject(aObjectName);
 }
 
 bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
@@ -59,7 +59,7 @@ bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
 
 bool DungeonFacade::printGameObject(const char *aObjectName)
 {
-    throw std::runtime_error("Function not implemented");
+    return mDungeon->printObject(aObjectName);
 }
 
 bool DungeonFacade::printEnemy(const char *aEnemyName)
@@ -77,9 +77,9 @@ bool DungeonFacade::attackEnemy(const char *aEnemyName, IGameObject &aWeapon)
     throw std::runtime_error("Function not implemented");
 }
 
-IGameObject *DungeonFacade::getGameObject(const Sean::String &aName)
+IGameObject *DungeonFacade::createGameObject(const Sean::String &aName)
 {
-    return std::move(mDungeon->getGameObject(aName));
+    return std::move(mDungeon->createGameObject(aName));
 }
 
 void DungeonFacade::update()

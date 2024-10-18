@@ -41,7 +41,17 @@ bool GameObject::isConsumable() const
     return mType == ObjectType::Consumable_Health || mType == ObjectType::Consumable_Experience || mType == ObjectType::Consumable_Teleport;
 }
 
+bool GameObject::isMoney() const
+{
+    return mType == ObjectType::Gold;
+}
+
 ObjectType GameObject::getType() const
 {
     return mType;
+}
+
+int GameObject::getValue() const
+{
+    return 0;
 }

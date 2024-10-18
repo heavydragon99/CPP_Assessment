@@ -10,6 +10,7 @@ public:
     virtual ~ArmorObject() = default;
 
     int getArmor() const;
+    int getValue() const override;
 
 private:
     int mArmor;

@@ -10,6 +10,7 @@ public:
     virtual ~WeaponObject() = default;
 
     int getDamage() const;
+    int getValue() const override;
 
 private:
     int mMinDamage;

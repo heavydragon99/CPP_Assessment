@@ -26,7 +26,7 @@ public:
     bool printEnemy(const char *aEnemyName);
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, IGameObject &aWeapon);
-    IGameObject* getGameObject(const Sean::String &aName);
+    IGameObject* createGameObject(const Sean::String &aName);
     void update();
 
 private:

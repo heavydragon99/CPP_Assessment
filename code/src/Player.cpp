@@ -22,6 +22,7 @@ void Player::printDescription()
     if (mEquippedWeapon)
     {
         mEquippedWeapon->printName();
+        std::cout << "Omschrijving: ";
         mEquippedWeapon->printDescription();
     }
     else
@@ -34,6 +35,7 @@ void Player::printDescription()
     if (mEquippedArmor)
     {
         mEquippedArmor->printName();
+        std::cout << "Omschrijving: ";
         mEquippedArmor->printDescription();
     }
     else
@@ -45,9 +47,8 @@ void Player::printDescription()
     std::cout << "Inventaris: " << std::endl;
     for (auto &item : mInventory)
     {
+        std::cout << "\t";
         item->printName();
-        item->printDescription();
-        std::cout << std::endl;
     }
     std::cout << "Godmode: " << (mGodMode ? "Ja" : "Nee") << std::endl;
 }
@@ -98,5 +99,26 @@ void Player::consumeConsumable(const char *aConsumable)
 
 void Player::addObject(std::unique_ptr<IGameObject> aObject)
 {
-    mInventory.push_back(std::move(aObject));
+    if (aObject->isConsumable())
+    {
+        mGold += aObject->getValue();
+    }
+    else
+    {
+        mInventory.push_back(std::move(aObject));
+    }
+}
+
+bool Player::printObject(const char *aObjectName)
+{
+    for (const auto &obj : mInventory)
+    {
+        if (obj->getName() == aObjectName)
+        {
+            obj->printName();
+            obj->printDescription();
+            return true;
+        }
+    }
+    return false;
 }

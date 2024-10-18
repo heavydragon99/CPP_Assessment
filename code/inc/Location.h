@@ -25,6 +25,8 @@ public:
     void printExits() const;
     void update();
     void moveHiddenObjects();
+    GameObject* pickUpObject(const char *aObjectName);
+    bool printObject(const char *aObjectName);
 
 private:
     Sean::String mName;                       // Name of the location

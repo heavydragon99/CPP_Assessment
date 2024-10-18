@@ -60,7 +60,7 @@ void Game::initialize()
     clearConsole();
 
     mPlayer = std::make_unique<Player>();
-    auto dolk = std::unique_ptr<IGameObject>(mDungeon->getGameObject(StartingWeapon.c_str()));
+    auto dolk = std::unique_ptr<IGameObject>(mDungeon->createGameObject(StartingWeapon.c_str()));
     mPlayer->addObject(std::move(dolk));
     mPlayer->equipObject(StartingWeapon.c_str());
 }
@@ -261,7 +261,14 @@ void Game::goAction(const std::string &aDirection)
 
 void Game::takeAction(const std::string &aObject)
 {
-    throw std::runtime_error("Actie 'Pak' is nog niet geïmplementeerd.");
+    std::unique_ptr<IGameObject> object(mDungeon->pickUpObject(aObject.c_str()));
+    if (object)
+    {
+        mPlayer->addObject(std::move(object));
+    } else{
+        std::cout << "Object "<< aObject << " niet gevonden" << std::endl;
+    }
+
 }
 
 void Game::dropAction(const std::string &aObject)
@@ -271,7 +278,16 @@ void Game::dropAction(const std::string &aObject)
 
 void Game::examineAction(const std::string &aObject)
 {
-    throw std::runtime_error("Actie 'Bekijk' is nog niet geïmplementeerd.");
+    if(aObject.empty()){
+        mPlayer->printDescription();
+        return;
+    }
+    if(mPlayer->printObject(aObject.c_str())){
+        return;
+    }
+    if(!mDungeon->printGameObject(aObject.c_str())){
+        std::cout << "Object " << aObject << " niet gevonden" << std::endl;
+    }
 }
 
 void Game::hitAction(const std::string &aTarget)

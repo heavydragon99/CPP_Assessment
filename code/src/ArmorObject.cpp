@@ -8,3 +8,8 @@ int ArmorObject::getArmor() const
 {
     return mArmor;
 }
+
+int ArmorObject::getValue() const
+{
+    return getArmor();
+}

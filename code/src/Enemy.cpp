@@ -44,3 +44,23 @@ Sean::String Enemy::getName() const
 {
     return mName + (std::to_string(mID).c_str());;
 }
+
+void Enemy::printName() const
+{
+    std::cout << mName << std::endl;
+}
+
+void Enemy::printDescription() const
+{
+    std::cout << mDescription << std::endl;
+}
+
+bool Enemy::isDead() const
+{
+    return mHealth <= 0;
+}
+
+Sean::Vector<GameObject> &Enemy::getHiddenObjects()
+{
+    return mHiddenObjects;
+}

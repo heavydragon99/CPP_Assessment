@@ -10,3 +10,10 @@ int WeaponObject::getDamage() const
 {
     throw std::runtime_error("Function not implemented");
 }
+
+int WeaponObject::getValue() const
+{
+    return getDamage();
+}
+
+

@@ -12,6 +12,11 @@ public:
 
     Sean::String getName() const;
 
+    void printName() const;
+    void printDescription() const;
+    bool isDead() const;
+    Sean::Vector<GameObject>& getHiddenObjects();
+
 private:
     Sean::String mName;                      // Name of the enemy
     int mID;                                 // ID of the enemy
