@@ -40,15 +40,21 @@ void DungeonFacade::moveHiddenObjects()
     throw std::runtime_error("Function not implemented");
 }
 
-GameObjectFacade *DungeonFacade::pickUpObject(const char *aObjectName)
+IGameObject *DungeonFacade::pickUpObject(const char *aObjectName)
 {
     throw std::runtime_error("Function not implemented");
 }
 
-bool DungeonFacade::placeObject(std::unique_ptr<GameObjectFacade> aObject)
+bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
 {
-    mDungeon->placeObject(aObject->getGameObject());
-    return true;
+        // Convert IGameObject to GameObject
+    Sean::Object<GameObject> gameObject(dynamic_cast<GameObject*>(aObject.release()));
+    if (gameObject.get() != nullptr)
+    {
+        mDungeon->placeObject(gameObject.get());
+        return true;
+    }
+    throw std::runtime_error("Invalid object type");
 }
 
 bool DungeonFacade::printGameObject(const char *aObjectName)
@@ -66,12 +72,12 @@ bool DungeonFacade::moveLocation(Sean::Direction aDirection)
     return mDungeon->moveLocation(aDirection);
 }
 
-bool DungeonFacade::attackEnemy(const char *aEnemyName, GameObjectFacade &aWeapon)
+bool DungeonFacade::attackEnemy(const char *aEnemyName, IGameObject &aWeapon)
 {
     throw std::runtime_error("Function not implemented");
 }
 
-GameObject *DungeonFacade::getGameObject(const Sean::String &aName)
+IGameObject *DungeonFacade::getGameObject(const Sean::String &aName)
 {
     return std::move(mDungeon->getGameObject(aName));
 }

@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "GameObjectFacade.h"
+#include "IGameObject.h"
 
 #include <string>
 #include <vector>
@@ -15,18 +15,18 @@ public:
 
 public:
     void printDescription();
-    std::unique_ptr<GameObjectFacade> equipObject(const char *aItem);
+    std::unique_ptr<IGameObject> equipObject(const char *aItem);
     void consumeConsumable(const char *aConsumable);
-    void addObject(GameObjectFacade&& aObject);
+    void addObject(std::unique_ptr<IGameObject> aObject);
 
 private:
     std::string mName;
     int mHealth;
     int mAttackPercentage;
-    std::vector<GameObjectFacade> mInventory;
+    std::vector<std::unique_ptr<IGameObject>> mInventory;
     int mGold;
-    GameObjectFacade* mEquippedWeapon;
-    GameObjectFacade* mEquippedArmor;
+    IGameObject* mEquippedWeapon;
+    IGameObject* mEquippedArmor;
     bool mGodMode;
 };
 

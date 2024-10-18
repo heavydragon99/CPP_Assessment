@@ -2,6 +2,7 @@
 #define GAMEOBJECT_H
 
 #include "Sean.h"
+#include "IGameObject.h"
 
 enum class ObjectType
 {
@@ -13,18 +14,23 @@ enum class ObjectType
     Consumable_Teleport
 };
 
-class GameObject
+class GameObject : public IGameObject
 {
 public:
     GameObject() = default;
-    GameObject(const Sean::String &aName, const Sean::String &aDescription, ObjectType aType, int aID)
-        : mName(aName), mDescription(aDescription), mType(aType), mID(aID)
-    {}
+    GameObject(const Sean::String &aName, const Sean::String &aDescription, ObjectType aType, int aID);
     virtual ~GameObject() = default;
 
-    Sean::String getName() const;
-    void printName() const;;
-    virtual void printDescription() const;
+    virtual IGameObject* clone() const ;
+
+    Sean::String getName() const override;
+    void printName() const override;
+    virtual void printDescription() const override;
+
+    bool isWeapon() const override;
+    bool isArmor() const override;
+    bool isConsumable() const override;
+
     ObjectType getType() const;
 
 protected:

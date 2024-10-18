@@ -3,7 +3,7 @@
 
 #include "Dungeon.h"
 #include "Sean.h"
-#include "GameObjectFacade.h"
+#include "IGameObject.h"
 
 #include <memory>
 
@@ -20,13 +20,13 @@ public:
     void printLongDescription();
     void printShortDescription();
     void moveHiddenObjects();
-    GameObjectFacade* pickUpObject(const char *aObjectName);
-    bool placeObject(std::unique_ptr<GameObjectFacade> aObject);
+    IGameObject* pickUpObject(const char *aObjectName);
+    bool placeObject(std::unique_ptr<IGameObject> aObject);
     bool printGameObject(const char *aObjectName);
     bool printEnemy(const char *aEnemyName);
     bool moveLocation(Sean::Direction aDirection);
-    bool attackEnemy(const char *aEnemyName, GameObjectFacade &aWeapon);
-    GameObject* getGameObject(const Sean::String &aName);
+    bool attackEnemy(const char *aEnemyName, IGameObject &aWeapon);
+    IGameObject* getGameObject(const Sean::String &aName);
     void update();
 
 private:

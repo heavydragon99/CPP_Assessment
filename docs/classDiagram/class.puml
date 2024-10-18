@@ -1,4 +1,4 @@
-@startuml
+@startuml classDiagram
 
 ' skinparam backgroundColor #1e1e1e
 ' skinparam classBackgroundColor #2d2d2d
@@ -16,6 +16,8 @@ package "Sean"{
     class UniquePtr{}
 
     class CharArray{}
+
+    class SeanObject{}
 
     enum Direction{
         North
@@ -81,6 +83,7 @@ package "Backend"{
         + getName() : Sean::String
         + printName() : void
         + printDescription() : void
+        + getType() : ObjectType
     }
 
     class GoldObject{
@@ -155,17 +158,17 @@ package "Frontend"{
         - mName : string
         - mHealth : int
         - mAttackPercentage : int
-        - mInventory : std::vector<GameObjectFacade>>
+        - mInventory : std::vector<std::unique_ptr<IGameObject>>>
         - mGold : int
-        - mEquippedArmor : std::unique_ptr<ArmorObject>
-        - mEquippedWeapon : std::unique_ptr<WeaponObject>
+        - mEquippedArmor : std::unique_ptr<IGameObject>
+        - mEquippedWeapon : std::unique_ptr<IGameObject>
         - mGodMode : bool
 
         + printDescription() : void
         + equipWeapon(const char* aItem) : void
         + equipArmor(const char* aItem) : void
         + consumeConsumable(const char* aConsumable) : void
-        + addObject(GameObjectFacade* aObject) : void
+        + addObject(IGameObject* aObject) : void
     }
 
     class Game{
@@ -211,22 +214,18 @@ class DungeonFacade{
     + getGameObject(const char* aGameObject) : GameObject*
 }
 
-class GameObjectFacade{
-    - mGameObject : std::unique_ptr<GameObject>
-
-    + getName : string
+interface IGameObject{
+    + getName() : string
     + printName() : void
     + printDescription() : void
-    + getType() : ObjectType
-
 }
 
 Game o-- "0..1" DungeonFacade
 
-Player o-- "0..*" GameObjectFacade
+Player o-- "0..*" IGameObject
 
 DungeonFacade o--"0..1" Dungeon
-GameObjectFacade o--"0..1" GameObject
+GameObject --|> IGameObject
 
 
 

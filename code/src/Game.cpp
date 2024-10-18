@@ -1,7 +1,7 @@
 #include "Game.h"
 
 #include "XmlReader.h"
-#include "GameObjectFacade.h"
+#include "IGameObject.h"
 
 #include <iostream>
 #include <string>
@@ -60,9 +60,8 @@ void Game::initialize()
     clearConsole();
 
     mPlayer = std::make_unique<Player>();
-    auto dolk = std::unique_ptr<GameObject>(mDungeon->getGameObject(StartingWeapon.c_str()));
-    GameObjectFacade dolkFacade(std::move(dolk));
-    mPlayer->addObject(std::move(dolkFacade));
+    auto dolk = std::unique_ptr<IGameObject>(mDungeon->getGameObject(StartingWeapon.c_str()));
+    mPlayer->addObject(std::move(dolk));
     mPlayer->equipObject(StartingWeapon.c_str());
 }
 

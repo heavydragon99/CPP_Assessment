@@ -44,39 +44,39 @@ void Player::printDescription()
     std::cout << "Inventaris: " << std::endl;
     for (auto &item : mInventory)
     {
-        item.printName();
-        item.printDescription();
+        item->printName();
+        item->printDescription();
         std::cout << std::endl;
     }
     std::cout << "Godmode: " << (mGodMode ? "Ja" : "Nee") << std::endl;
 }
 
-std::unique_ptr<GameObjectFacade> Player::equipObject(const char *aItem)
+std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
 {
-    std::unique_ptr<GameObjectFacade> previousItem = nullptr;
+    std::unique_ptr<IGameObject> previousItem = nullptr;
 
     for (auto it = mInventory.begin(); it != mInventory.end(); ++it)
     {
-        if (it->getName() == aItem)
+        if (it->get()->getName() == aItem)
         {
-            if (it->getType() == ObjectType::Weapon)
+            if (it->get()->isWeapon())
             {
-                if (mEquippedWeapon && mEquippedWeapon->getName() == aItem)
+                if (mEquippedWeapon)
                 {
-                    previousItem = std::make_unique<GameObjectFacade>(std::move(*mEquippedWeapon));
+                    previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
                     mInventory.erase(it);
                 }
-                mEquippedWeapon = &(*it);
+                mEquippedWeapon = it->get();
                 std::cout << "Wapen uitgerust: " << aItem << std::endl;
             }
-            else if (it->getType() == ObjectType::Armor)
+            else if (it->get()->isArmor())
             {
-                if (mEquippedArmor && mEquippedArmor->getName() == aItem)
+                if (mEquippedArmor)
                 {
-                    previousItem = std::make_unique<GameObjectFacade>(std::move(*mEquippedArmor));
+                    previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
                     mInventory.erase(it);
                 }
-                mEquippedArmor = &(*it);
+                mEquippedWeapon = it->get();
                 std::cout << "Pantser uitgerust: " << aItem << std::endl;
             }
             return previousItem;
@@ -91,7 +91,7 @@ void Player::consumeConsumable(const char *aConsumable)
     throw std::runtime_error("Not implemented");
 }
 
-void Player::addObject(GameObjectFacade&& aObject)
+void Player::addObject(std::unique_ptr<IGameObject> aObject)
 {
     mInventory.push_back(std::move(aObject));
 }
