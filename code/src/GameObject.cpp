@@ -13,12 +13,12 @@ IGameObject* GameObject::clone() const
 
 Sean::String GameObject::getName() const
 {
-    return mName;
+    return mName + (std::to_string(mID).c_str());
 }
 
 void GameObject::printName() const
 {
-    std::cout << mName << std::endl;
+    std::cout << getName << std::endl;
 }
 
 void GameObject::printDescription() const

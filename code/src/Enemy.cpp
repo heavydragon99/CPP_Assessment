@@ -42,12 +42,12 @@ Enemy::Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAt
 
 Sean::String Enemy::getName() const
 {
-    return mName + (std::to_string(mID).c_str());;
+    return mName + (std::to_string(mID).c_str());
 }
 
 void Enemy::printName() const
 {
-    std::cout << mName << std::endl;
+    std::cout << getName() << std::endl;
 }
 
 void Enemy::printDescription() const

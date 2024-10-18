@@ -19,6 +19,7 @@ public:
     void consumeConsumable(const char *aConsumable);
     void addObject(std::unique_ptr<IGameObject> aObject);
     bool printObject(const char *aObjectName);
+    std::unique_ptr<IGameObject> dropObject(const char *aObjectName);
 
 private:
     std::string mName;

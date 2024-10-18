@@ -253,7 +253,7 @@ void Game::goAction(const std::string &aDirection)
     }
     if (mDungeon->moveLocation(direction))
     {
-        //mDungeon->update(); // Only update if the location was moved
+        // mDungeon->update(); // Only update if the location was moved
         clearConsole();
         printCurrentLocation();
     }
@@ -265,27 +265,39 @@ void Game::takeAction(const std::string &aObject)
     if (object)
     {
         mPlayer->addObject(std::move(object));
-    } else{
-        std::cout << "Object "<< aObject << " niet gevonden" << std::endl;
     }
-
+    else
+    {
+        std::cout << "Object " << aObject << " niet gevonden" << std::endl;
+    }
 }
 
 void Game::dropAction(const std::string &aObject)
 {
-    throw std::runtime_error("Actie 'Leg' is nog niet geïmplementeerd.");
+    auto item = mPlayer->dropObject(aObject.c_str());
+    if (item)
+    {
+        mDungeon->placeObject(std::move(item));
+    }
+    else{
+        std::cout << "Object " << aObject << " niet gevonden in je inventory" << std::endl;
+    }
+
 }
 
 void Game::examineAction(const std::string &aObject)
 {
-    if(aObject.empty()){
+    if (aObject.empty())
+    {
         mPlayer->printDescription();
         return;
     }
-    if(mPlayer->printObject(aObject.c_str())){
+    if (mPlayer->printObject(aObject.c_str()))
+    {
         return;
     }
-    if(!mDungeon->printGameObject(aObject.c_str())){
+    if (!mDungeon->printGameObject(aObject.c_str()))
+    {
         std::cout << "Object " << aObject << " niet gevonden" << std::endl;
     }
 }

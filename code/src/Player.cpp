@@ -122,3 +122,23 @@ bool Player::printObject(const char *aObjectName)
     }
     return false;
 }
+
+std::unique_ptr<IGameObject> Player::dropObject(const char *aObjectName)
+{
+    for (auto iter = mInventory.begin(); iter != mInventory.end(); ++iter)
+    {
+        if (iter->get()->getName() == aObjectName)
+        {
+            if(mEquippedWeapon == iter->get()){
+                mEquippedWeapon = nullptr;
+            }
+            if(mEquippedArmor == iter->get()){
+                mEquippedArmor = nullptr;
+            }
+            std::unique_ptr<IGameObject> droppedItem = std::move(*iter);
+            mInventory.erase(iter);
+            return droppedItem;
+        }
+    }
+    return nullptr;
+}
