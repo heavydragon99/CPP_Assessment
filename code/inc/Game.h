@@ -36,6 +36,7 @@ private: // private functions
     void initialize();
     void loadDungeon();
     void generateDungeon();
+    void printCurrentLocation();
     void printCurrentSetting();
     void playerInput(bool *aQuit);
     PlayerAction getPlayerAction(const std::string &aInput);

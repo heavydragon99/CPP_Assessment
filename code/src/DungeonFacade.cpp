@@ -32,12 +32,12 @@ void DungeonFacade::printLongDescription()
 
 void DungeonFacade::printShortDescription()
 {
-    throw std::runtime_error("Function not implemented");
+    mDungeon->printShortDescription();
 }
 
 void DungeonFacade::moveHiddenObjects()
 {
-    throw std::runtime_error("Function not implemented");
+    mDungeon->moveHiddenObjects();
 }
 
 IGameObject *DungeonFacade::pickUpObject(const char *aObjectName)

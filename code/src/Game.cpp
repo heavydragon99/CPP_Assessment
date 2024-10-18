@@ -106,6 +106,11 @@ void Game::generateDungeon()
     mDungeon->generateDungeon(locations);
 }
 
+void Game::printCurrentLocation()
+{
+    mDungeon->printShortDescription();
+}
+
 void Game::printCurrentSetting()
 {
     mDungeon->printLongDescription();
@@ -127,7 +132,7 @@ void Game::playerInput(bool *aQuit)
         argument = argument.substr(1);
     }
     clearConsole();
-    printCurrentSetting();
+    printCurrentLocation();
 
     try
     {
@@ -211,11 +216,13 @@ PlayerAction Game::getPlayerAction(const std::string &aAction)
 
 void Game::lookAction()
 {
-    throw std::runtime_error("Actie 'Kijk' is nog niet geïmplementeerd.");
+    clearConsole();
+    printCurrentSetting();
 }
 
 void Game::searchAction()
 {
+    mDungeon->moveHiddenObjects();
     mDungeon->update();
     throw std::runtime_error("Actie 'Zoek' is nog niet geïmplementeerd.");
 }
@@ -248,7 +255,7 @@ void Game::goAction(const std::string &aDirection)
     {
         //mDungeon->update(); // Only update if the location was moved
         clearConsole();
-        printCurrentSetting();
+        printCurrentLocation();
     }
 }
 
@@ -298,21 +305,21 @@ void Game::consumeAction(const std::string &aObject)
 void Game::helpAction()
 {
     std::cout << "Beschikbare acties:" << std::endl;
-    std::cout << "Kijk - Om je heen kijken" << std::endl;
-    std::cout << "Zoek - Zoeken in de omgeving" << std::endl;
-    std::cout << "Ga <noord|oost|zuid|west> - Naar een andere locatie gaan" << std::endl;
-    std::cout << "Pak <item> - Een object oppakken" << std::endl;
-    std::cout << "Leg <item> - Een object neerleggen" << std::endl;
-    std::cout << "Bekijk <object> - Een object bekijken" << std::endl;
-    std::cout << "Bekijk <vijand> - Een vijand bekijken" << std::endl;
-    std::cout << "Bekijk - Jezelf bekijken" << std::endl;
-    std::cout << "Sla <vijand> - Een vijand aanvallen" << std::endl;
-    std::cout << "Draag <object> - Een object dragen" << std::endl;
-    std::cout << "Wacht - Wachten" << std::endl;
-    std::cout << "Consumeer <object> - Een object consumeren" << std::endl;
-    std::cout << "Help - Deze helptekst tonen" << std::endl;
-    std::cout << "Godmode - Godmode activeren" << std::endl;
-    std::cout << "Quit - Het spel verlaten" << std::endl;
+    std::cout << "kijk - Om je heen kijken" << std::endl;
+    std::cout << "zoek - Zoeken in de omgeving" << std::endl;
+    std::cout << "ga <noord|oost|zuid|west> - Naar een andere locatie gaan" << std::endl;
+    std::cout << "pak <item> - Een object oppakken" << std::endl;
+    std::cout << "leg <item> - Een object neerleggen" << std::endl;
+    std::cout << "bekijk <object> - Een object bekijken" << std::endl;
+    std::cout << "bekijk <vijand> - Een vijand bekijken" << std::endl;
+    std::cout << "bekijk - Jezelf bekijken" << std::endl;
+    std::cout << "sla <vijand> - Een vijand aanvallen" << std::endl;
+    std::cout << "draag <object> - Een object dragen" << std::endl;
+    std::cout << "wacht - Wachten" << std::endl;
+    std::cout << "consumeer <object> - Een object consumeren" << std::endl;
+    std::cout << "help - Deze helptekst tonen" << std::endl;
+    std::cout << "godmode - Godmode toggelen" << std::endl;
+    std::cout << "quit - Het spel verlaten" << std::endl;
 }
 
 void Game::godmodeAction()

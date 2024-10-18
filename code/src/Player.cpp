@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 
 Player::Player()
     : mHealth(20), mAttackPercentage(40), mGold(0), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
@@ -16,7 +17,7 @@ void Player::printDescription()
     std::cout << "Levenspunten: " << mHealth << std::endl;
     std::cout << "Aanvalskans: " << mAttackPercentage << "%" << std::endl;
     std::cout << "Goud: " << mGold << std::endl;
-    //print equipped weapon
+    // print equipped weapon
     std::cout << "Uitgeruste wapen: ";
     if (mEquippedWeapon)
     {
@@ -28,7 +29,7 @@ void Player::printDescription()
         std::cout << "Geen" << std::endl;
     }
 
-    //print equipped armor
+    // print equipped armor
     std::cout << "Uitgeruste pantser: ";
     if (mEquippedArmor)
     {
@@ -40,7 +41,7 @@ void Player::printDescription()
         std::cout << "Geen" << std::endl;
     }
 
-    //print inventory
+    // print inventory
     std::cout << "Inventaris: " << std::endl;
     for (auto &item : mInventory)
     {
@@ -55,34 +56,38 @@ std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
 {
     std::unique_ptr<IGameObject> previousItem = nullptr;
 
-    for (auto it = mInventory.begin(); it != mInventory.end(); ++it)
+    for (auto iter = mInventory.begin(); iter != mInventory.end(); ++iter)
     {
-        if (it->get()->getName() == aItem)
+        if (iter->get()->getName() == aItem)
         {
-            if (it->get()->isWeapon())
+            if (iter->get()->isWeapon())
             {
                 if (mEquippedWeapon)
                 {
                     previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
-                    mInventory.erase(it);
+                    auto previousIter = std::find_if(mInventory.begin(), mInventory.end(), [this](const std::unique_ptr<IGameObject> &aItem)
+                                                     { return aItem.get() == mEquippedWeapon; });
+                    mInventory.erase(previousIter);
                 }
-                mEquippedWeapon = it->get();
+                mEquippedWeapon = iter->get();
                 std::cout << "Wapen uitgerust: " << aItem << std::endl;
             }
-            else if (it->get()->isArmor())
+            else if (iter->get()->isArmor())
             {
                 if (mEquippedArmor)
                 {
-                    previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
-                    mInventory.erase(it);
+                    previousItem = std::unique_ptr<IGameObject>(mEquippedArmor->clone());
+                    auto previousIter = std::find_if(mInventory.begin(), mInventory.end(), [this](const std::unique_ptr<IGameObject> &aItem)
+                                                     { return aItem.get() == mEquippedWeapon; });
+                    mInventory.erase(previousIter);
                 }
-                mEquippedWeapon = it->get();
+                mEquippedArmor = iter->get();
                 std::cout << "Pantser uitgerust: " << aItem << std::endl;
             }
             return previousItem;
         }
     }
-    std::cout << "Item " << aItem << " niet gevonden." << std::endl;
+    std::cout << "Item " << aItem << " niet gevonden in je rugzak." << std::endl;
     return nullptr;
 }
 

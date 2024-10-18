@@ -217,3 +217,7 @@ bool Dungeon::moveLocation(Sean::Direction aDirection){
     std::cout << "Er is geen locatie in die richting" << std::endl;
     return false;
 }
+
+void Dungeon::moveHiddenObjects(){
+    mCurrentLocation->moveHiddenObjects();
+}

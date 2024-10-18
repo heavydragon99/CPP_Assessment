@@ -24,6 +24,7 @@ public:
     void printDescriptionLong() const;
     void printExits() const;
     void update();
+    void moveHiddenObjects();
 
 private:
     Sean::String mName;                       // Name of the location

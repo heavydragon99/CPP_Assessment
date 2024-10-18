@@ -56,20 +56,27 @@ Location* Location::getExit(Sean::Direction aDirection) const {
 }
 
 void Location::printDescriptionShort() const {
-    std::cout << "Naam: " << mName << std::endl;
-    for (const auto& enemy : mEnemies) {
-        std::cout << "Vijanden: " << enemy.getName() << std::endl;
-    }
+    std::cout << "Je staat in de locatie: " << mName << std::endl;
 }
 
 void Location::printDescriptionLong() const {
-    std::cout << "Naam: " << mName << std::endl;
-    std::cout << "Omschrijving: " << mDescription << std::endl;
-    for (const auto& obj : mVisibleObjects) {
-        std::cout << "Objecten: " << obj.getName() << std::endl;
+    std::cout << "Je staat in de locatie: " << mName << std::endl;
+    std::cout << mDescription << std::endl;
+    std::cout << "Objecten:" << std::endl;
+    if (mVisibleObjects.empty()) {
+        std::cout << "\tgeen" << std::endl;
+    } else {
+        for (const auto& obj : mVisibleObjects) {
+            std::cout << "\t" << obj.getName() << std::endl;
+        }
     }
-    for (const auto& enemy : mEnemies) {
-        std::cout << "Vijanden: " << enemy.getName() << std::endl;
+    std::cout << "Vijanden:" << std::endl;
+    if (mEnemies.empty()) {
+        std::cout << "\tgeen" << std::endl;
+    } else {
+        for (const auto& enemy : mEnemies) {
+            std::cout << "\t" << enemy.getName() << std::endl;
+        }
     }
 }
 
@@ -91,5 +98,12 @@ void Location::printExits() const {
 }
 
 void Location::update() {
-    // Implementation for update
+    throw std::runtime_error("Location update Not implemented");
+}
+
+void Location::moveHiddenObjects() {
+    for(auto& obj : mHiddenObjects) {
+        mVisibleObjects.push_back(obj);
+    }
+    mHiddenObjects.clear();
 }
