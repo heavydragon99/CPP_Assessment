@@ -1,6 +1,7 @@
 #include "DungeonFacade.h"
 #include <stdexcept>
 
+// Methods
 void DungeonFacade::createDungeon(std::vector<Sean::ParsedLocations> &aLocations)
 {
     if (mDungeon == nullptr)
@@ -25,12 +26,12 @@ void DungeonFacade::generateDungeon(int aLocations)
     }
 }
 
-void DungeonFacade::printLongDescription()
+void DungeonFacade::printLongDescription() const
 {
     mDungeon->printLongDescription();
 }
 
-void DungeonFacade::printShortDescription()
+void DungeonFacade::printShortDescription() const
 {
     mDungeon->printShortDescription();
 }
@@ -57,17 +58,17 @@ bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
     throw std::runtime_error("Invalid object type");
 }
 
-bool DungeonFacade::printGameObject(const char *aObjectName)
+bool DungeonFacade::printGameObject(const char *aObjectName) const
 {
     return mDungeon->printObject(aObjectName);
 }
 
-bool DungeonFacade::printEnemy(const char *aEnemyName)
+bool DungeonFacade::printEnemy(const char *aEnemyName) const
 {
     throw std::runtime_error("Function not implemented");
 }
 
-bool DungeonFacade::validLocation(Sean::Direction aDirection)
+bool DungeonFacade::validLocation(Sean::Direction aDirection) const
 {
     return mDungeon->validLocation(aDirection);
 }
@@ -89,7 +90,7 @@ IGameObject *DungeonFacade::createGameObject(const Sean::String &aName)
 
 int DungeonFacade::update()
 {
-   return mDungeon->update();
+    return mDungeon->update();
 }
 
 void DungeonFacade::teleport(int aAmount)

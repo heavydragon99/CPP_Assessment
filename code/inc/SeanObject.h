@@ -27,7 +27,7 @@ namespace Sean
          * @param aPtr A raw pointer to the object to manage.
          * @param aDeleter A custom deleter function to be called instead of the default destructor.
          */
-        Object(T *aPtr, void (*aDeleter)(T*)) : mPtr(aPtr), mCustomDeleter(aDeleter) {}
+        Object(T *aPtr, void (*aDeleter)(T *)) : mPtr(aPtr), mCustomDeleter(aDeleter) {}
 
         /**
          * @brief Destructor that deletes the managed object.
@@ -148,9 +148,19 @@ namespace Sean
             return temp;
         }
 
+        /**
+         * @brief Allows the Sean::Object to be used where a reference to T is expected.
+         *
+         * @return A reference to the managed object.
+         */
+        operator T &() const
+        {
+            return *mPtr;
+        }
+
     private:
-        T *mPtr; ///< The raw pointer to the managed object.
-        void (*mCustomDeleter)(T*); ///< Custom deleter function.
+        T *mPtr;                     ///< The raw pointer to the managed object.
+        void (*mCustomDeleter)(T *); ///< Custom deleter function.
     };
 
 } // namespace Sean

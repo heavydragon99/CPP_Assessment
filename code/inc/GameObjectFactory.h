@@ -2,17 +2,27 @@
 #define GAMEOBJECTFACTORY_H
 
 #include "GameObject.h"
+#include "Sean.h"
 
 class GameObjectFactory
 {
 public:
+    // Constructors
     GameObjectFactory() = default;
+
+    // Destructor
     virtual ~GameObjectFactory() = default;
 
-    static GameObject *createGameObject(const Sean::String aName);
+    // Methods
+    static GameObject *createGameObject(const Sean::String &aName);
     static GameObject *createGameObject();
 
-    private:
+private:
+    // Private Methods
+    static void incrementCounter();
+
+private:
+    // Members
     static int mCounter;
 };
 

@@ -1,12 +1,11 @@
 #include "EnemyFactory.h"
-
 #include "SqlReader.h"
+#include <iostream>
 
 int EnemyFactory::mCounter = 0;
 
-Enemy *EnemyFactory::createEnemy(const Sean::String aEnemyName)
+Enemy *EnemyFactory::createEnemy(const Sean::String &aEnemyName)
 {
-
     Sean::String name = aEnemyName;
     Sean::String description;
     int health;
@@ -16,7 +15,8 @@ Enemy *EnemyFactory::createEnemy(const Sean::String aEnemyName)
 
     if (SQLReader::getInstance().getEnemyInfo(name, description, health, attackPercent, minDamage, maxDamage))
     {
-        return new Enemy(name, description, health, attackPercent, minDamage, maxDamage, mCounter++);
+        incrementCounter();
+        return new Enemy(name, description, health, attackPercent, minDamage, maxDamage, mCounter);
     }
     else
     {
@@ -37,11 +37,18 @@ Enemy *EnemyFactory::createEnemy()
 
     if (sqlReader.getRandomEnemy(name, description, health, attackPercent, minDamage, maxDamage))
     {
-        return new Enemy(name, description, health, attackPercent, minDamage, maxDamage, mCounter++);
+        incrementCounter();
+        return new Enemy(name, description, health, attackPercent, minDamage, maxDamage, mCounter);
     }
     else
     {
         std::cerr << "Enemy not found in database" << std::endl;
         return nullptr;
     }
+}
+
+// Private Methods
+void EnemyFactory::incrementCounter()
+{
+    ++mCounter;
 }

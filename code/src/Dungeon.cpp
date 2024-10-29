@@ -190,6 +190,24 @@ Dungeon::Dungeon(int aLocations)
     }
 }
 
+// Copy constructor
+Dungeon::Dungeon(const Dungeon &other)
+    : mMap(other.mMap), mCurrentLocation(other.mCurrentLocation)
+{
+}
+
+// Copy assignment operator
+Dungeon &Dungeon::operator=(const Dungeon &other)
+{
+    if (this != &other)
+    {
+        mMap = other.mMap;
+        mCurrentLocation = other.mCurrentLocation;
+    }
+    return *this;
+}
+
+// Methods
 int Dungeon::update()
 {
     int damage = 0;
@@ -239,7 +257,7 @@ void Dungeon::printLongDescription() const
     mCurrentLocation->printExits();
 }
 
-bool Dungeon::validLocation(Sean::Direction aDirection)
+bool Dungeon::validLocation(Sean::Direction aDirection) const
 {
     return mCurrentLocation->getExit(aDirection) != nullptr;
 }

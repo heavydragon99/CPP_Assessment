@@ -1,9 +1,9 @@
 #include "WeaponObject.h"
-
 #include "RandomGenerator.h"
+#include <iostream>
+#include <utility> // for std::swap
 
-#include <stdexcept>
-
+// Constructors
 WeaponObject::WeaponObject(const Sean::String aName, const Sean::String aDescription, int aMinDamage, int aMaxDamage, ObjectType aType, int aID)
     : GameObject(aName, aDescription, aType, aID), mMinDamage(aMinDamage), mMaxDamage(aMaxDamage)
 {
@@ -15,18 +15,6 @@ WeaponObject::WeaponObject(const WeaponObject &other)
 {
 }
 
-// Copy Assignment Operator
-WeaponObject &WeaponObject::operator=(const WeaponObject &other)
-{
-    if (this != &other)
-    {
-        GameObject::operator=(other);
-        mMinDamage = other.mMinDamage;
-        mMaxDamage = other.mMaxDamage;
-    }
-    return *this;
-}
-
 // Move Constructor
 WeaponObject::WeaponObject(WeaponObject &&other) noexcept
     : GameObject(std::move(other)), mMinDamage(other.mMinDamage), mMaxDamage(other.mMaxDamage)
@@ -35,7 +23,17 @@ WeaponObject::WeaponObject(WeaponObject &&other) noexcept
     other.mMaxDamage = 0;
 }
 
-// Move Assignment Operator
+// Assignment Operators
+WeaponObject &WeaponObject::operator=(const WeaponObject &other)
+{
+    if (this != &other)
+    {
+        WeaponObject temp(other);
+        swap(temp);
+    }
+    return *this;
+}
+
 WeaponObject &WeaponObject::operator=(WeaponObject &&other) noexcept
 {
     if (this != &other)
@@ -50,6 +48,7 @@ WeaponObject &WeaponObject::operator=(WeaponObject &&other) noexcept
     return *this;
 }
 
+// Methods
 IGameObject *WeaponObject::clone() const
 {
     return new WeaponObject(*this);
@@ -80,4 +79,11 @@ int WeaponObject::getMin() const
 int WeaponObject::getMax() const
 {
     return mMaxDamage;
+}
+
+// Private Methods
+void WeaponObject::swap(WeaponObject &other) noexcept
+{
+    std::swap(mMinDamage, other.mMinDamage);
+    std::swap(mMaxDamage, other.mMaxDamage);
 }

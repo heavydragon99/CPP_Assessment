@@ -17,6 +17,7 @@ void clearConsole()
     std::cout << "\033[2J\033[1;1H";
 }
 
+// Methods
 void Game::run()
 {
     clearConsole();
@@ -107,12 +108,12 @@ void Game::generateDungeon()
     mDungeon->generateDungeon(locations);
 }
 
-void Game::printCurrentLocation()
+void Game::printCurrentLocation() const
 {
     mDungeon->printShortDescription();
 }
 
-void Game::printCurrentSetting()
+void Game::printCurrentSetting() const
 {
     mDungeon->printLongDescription();
 }
@@ -189,7 +190,7 @@ void Game::playerInput()
     }
 }
 
-PlayerAction Game::getPlayerAction(const std::string &aAction)
+PlayerAction Game::getPlayerAction(const std::string &aAction) const
 {
     static const std::unordered_map<std::string, PlayerAction> actionMap = {
         {"kijk", PlayerAction::Kijk},
@@ -272,7 +273,7 @@ void Game::goAction(const std::string &aDirection)
     else
     {
         updateDungeon();
-        if(mQuit)
+        if (mQuit)
         {
             return;
         }
@@ -386,7 +387,7 @@ void Game::consumeAction(const std::string &aObject)
     std::cout << "Object " << aObject << " niet gevonden in je inventory" << std::endl;
 }
 
-void Game::helpAction()
+void Game::helpAction() const
 {
     std::cout << "Beschikbare acties:" << std::endl;
     std::cout << "kijk - Om je heen kijken" << std::endl;

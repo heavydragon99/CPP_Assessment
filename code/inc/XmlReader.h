@@ -9,10 +9,11 @@
  * @class XmlReader
  * @brief A class to read and parse XML files.
  */
-class XmlReader {
+class XmlReader
+{
 public:
     XmlReader(const char *aPath);
-    const std::vector<Sean::ParsedLocations>& getLocations() const;
+    const std::vector<Sean::ParsedLocations> &getLocations() const;
 
 private:
     std::vector<Sean::ParsedLocations> mParsedLocations; ///< Vector to store parsed locations.

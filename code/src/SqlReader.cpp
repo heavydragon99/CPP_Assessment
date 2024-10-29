@@ -1,13 +1,14 @@
 #include "SqlReader.h"
 #include <filesystem>
 #include <iostream>
+#include <stdexcept>
 
 /**
  * @brief Custom deleter for sqlite3 database.
  *
  * @param db Pointer to the sqlite3 database.
  */
-void sqlite3Deleter(sqlite3* db)
+void sqlite3Deleter(sqlite3 *db)
 {
     if (db)
     {
@@ -15,51 +16,14 @@ void sqlite3Deleter(sqlite3* db)
     }
 }
 
+// Constructors
 SQLReader::SQLReader() : db(nullptr, sqlite3Deleter)
 {
     openDatabase();
 }
 
-SQLReader::~SQLReader()
-{
-    // No need to call closeDatabase() explicitly as the custom deleter will handle it
-}
-
-void SQLReader::openDatabase()
-{
-    // Get the directory of the current file
-    std::filesystem::path currentPath = std::filesystem::path(__FILE__).parent_path();
-    // Construct the absolute path to the database file
-    std::filesystem::path dbPath = currentPath / "../../sql/kerkersendraken.db";
-    std::string dbPathStr = dbPath.lexically_normal().string();
-
-    sqlite3* tempDb = nullptr;
-    if (sqlite3_open(dbPathStr.c_str(), &tempDb) == SQLITE_OK)
-    {
-        db.reset(tempDb); // Transfer ownership to Sean::Object
-    }
-    else
-    {
-        std::cerr << "Error opening database!" << std::endl;
-        if (tempDb)
-        {
-            sqlite3_close(tempDb);
-        }
-    }
-}
-
-void SQLReader::closeDatabase()
-{
-    db.reset(); // Reset the Sean::Object, which will call the custom deleter
-}
-
-SQLReader &SQLReader::getInstance()
-{
-    static SQLReader instance;
-    return instance;
-}
-
-bool SQLReader::getLocationInfo(Sean::String &aName, Sean::String &aDescription)
+// Methods
+bool SQLReader::getLocationInfo(Sean::String &aName, Sean::String &aDescription) const
 {
     std::string query = "SELECT naam, beschrijving FROM Locaties WHERE naam = ?";
     sqlite3_stmt *stmt;
@@ -88,7 +52,7 @@ bool SQLReader::getLocationInfo(Sean::String &aName, Sean::String &aDescription)
     return found;
 }
 
-bool SQLReader::getRandomLocation(Sean::String &aName, Sean::String &aDescription)
+bool SQLReader::getRandomLocation(Sean::String &aName, Sean::String &aDescription) const
 {
     std::string query = "SELECT naam, beschrijving FROM Locaties ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
@@ -110,7 +74,7 @@ bool SQLReader::getRandomLocation(Sean::String &aName, Sean::String &aDescriptio
     return found;
 }
 
-bool SQLReader::getEnemyInfo(Sean::String &aName, Sean::String &aDescription, int &aHealth, int &aAttackPercent, int &aMinDamage, int &aMaxDamage)
+bool SQLReader::getEnemyInfo(Sean::String &aName, Sean::String &aDescription, int &aHealth, int &aAttackPercent, int &aMinDamage, int &aMaxDamage) const
 {
     std::string query = "SELECT naam, omschrijving, levenspunten, aanvalskans, minimumschade, maximumschade FROM Vijanden WHERE naam = ?";
     sqlite3_stmt *stmt;
@@ -143,7 +107,7 @@ bool SQLReader::getEnemyInfo(Sean::String &aName, Sean::String &aDescription, in
     return found;
 }
 
-bool SQLReader::getRandomEnemy(Sean::String &aName, Sean::String &aDescription, int &aHealth, int &aAttackPercent, int &aMinDamage, int &aMaxDamage)
+bool SQLReader::getRandomEnemy(Sean::String &aName, Sean::String &aDescription, int &aHealth, int &aAttackPercent, int &aMinDamage, int &aMaxDamage) const
 {
     std::string query = "SELECT naam, omschrijving, levenspunten, aanvalskans, minimumschade, maximumschade FROM Vijanden ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
@@ -169,7 +133,7 @@ bool SQLReader::getRandomEnemy(Sean::String &aName, Sean::String &aDescription, 
     return found;
 }
 
-bool SQLReader::getObjectInfo(Sean::String &aName, Sean::String &aDescription, Sean::String &aType, int &aMinValue, int &aMaxValue, int &aProtection)
+bool SQLReader::getObjectInfo(Sean::String &aName, Sean::String &aDescription, Sean::String &aType, int &aMinValue, int &aMaxValue, int &aProtection) const
 {
     std::string query = "SELECT naam, omschrijving, type, minimumwaarde, maximumwaarde, bescherming FROM Objecten WHERE naam = ?";
     sqlite3_stmt *stmt;
@@ -202,7 +166,7 @@ bool SQLReader::getObjectInfo(Sean::String &aName, Sean::String &aDescription, S
     return found;
 }
 
-bool SQLReader::getObjectAmount(Sean::String aName, int &aMinimum, int &aMaximum)
+bool SQLReader::getObjectAmount(Sean::String aName, int &aMinimum, int &aMaximum) const
 {
     std::string query = "SELECT minimumobjecten, maximumobjecten FROM Vijanden WHERE naam = ?";
     sqlite3_stmt *stmt;
@@ -231,7 +195,7 @@ bool SQLReader::getObjectAmount(Sean::String aName, int &aMinimum, int &aMaximum
     return found;
 }
 
-bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription, Sean::String &aType, int &aMinValue, int &aMaxValue, int &aProtection)
+bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription, Sean::String &aType, int &aMinValue, int &aMaxValue, int &aProtection) const
 {
     std::string query = "SELECT naam, omschrijving, type, minimumwaarde, maximumwaarde, bescherming FROM Objecten ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
@@ -257,7 +221,7 @@ bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription,
     return found;
 }
 
-void SQLReader::putHighscore(const Sean::String aName, int aScore)
+void SQLReader::putHighscore(const Sean::String aName, int aScore) const
 {
     std::string query = "INSERT INTO Leaderboard (naam, goudstukken) VALUES (?, ?)";
     sqlite3_stmt *stmt;
@@ -289,7 +253,7 @@ void SQLReader::putHighscore(const Sean::String aName, int aScore)
     sqlite3_finalize(stmt);
 }
 
-bool SQLReader::getHighscore(Sean::String &aName, int &aScore, int aRank)
+bool SQLReader::getHighscore(Sean::String &aName, int &aScore, int aRank) const
 {
     std::string query = "SELECT naam, goudstukken FROM Leaderboard ORDER BY goudstukken DESC LIMIT 1 OFFSET ?";
     sqlite3_stmt *stmt;
@@ -316,4 +280,39 @@ bool SQLReader::getHighscore(Sean::String &aName, int &aScore, int aRank)
 
     sqlite3_finalize(stmt);
     return found;
+}
+
+// Private Methods
+void SQLReader::openDatabase()
+{
+    // Get the directory of the current file
+    std::filesystem::path currentPath = std::filesystem::path(__FILE__).parent_path();
+    // Construct the absolute path to the database file
+    std::filesystem::path dbPath = currentPath / "../../sql/kerkersendraken.db";
+    std::string dbPathStr = dbPath.lexically_normal().string();
+
+    sqlite3 *tempDb = nullptr;
+    if (sqlite3_open(dbPathStr.c_str(), &tempDb) == SQLITE_OK)
+    {
+        db.reset(tempDb); // Transfer ownership to Sean::Object
+    }
+    else
+    {
+        std::cerr << "Error opening database!" << std::endl;
+        if (tempDb)
+        {
+            sqlite3_close(tempDb);
+        }
+    }
+}
+
+void SQLReader::closeDatabase()
+{
+    db.reset(); // Reset the Sean::Object, which will call the custom deleter
+}
+
+SQLReader &SQLReader::getInstance()
+{
+    static SQLReader instance;
+    return instance;
 }

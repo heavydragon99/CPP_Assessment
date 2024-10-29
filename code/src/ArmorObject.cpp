@@ -1,35 +1,35 @@
 #include "ArmorObject.h"
+#include <iostream>
+#include <utility>
 
+// Constructors
 ArmorObject::ArmorObject(const Sean::String aName, const Sean::String aDescription, int aArmor, ObjectType aType, int aID)
     : GameObject(aName, aDescription, aType, aID), mArmor(aArmor)
 {
 }
 
-// Copy Constructor
 ArmorObject::ArmorObject(const ArmorObject &other)
     : GameObject(other), mArmor(other.mArmor)
 {
 }
 
-// Copy Assignment Operator
-ArmorObject &ArmorObject::operator=(const ArmorObject &other)
-{
-    if (this != &other)
-    {
-        GameObject::operator=(other);
-        mArmor = other.mArmor;
-    }
-    return *this;
-}
-
-// Move Constructor
 ArmorObject::ArmorObject(ArmorObject &&other) noexcept
     : GameObject(std::move(other)), mArmor(other.mArmor)
 {
     other.mArmor = 0;
 }
 
-// Move Assignment Operator
+// Assignment Operators
+ArmorObject &ArmorObject::operator=(const ArmorObject &other)
+{
+    if (this != &other)
+    {
+        ArmorObject temp(other);
+        swap(temp);
+    }
+    return *this;
+}
+
 ArmorObject &ArmorObject::operator=(ArmorObject &&other) noexcept
 {
     if (this != &other)
@@ -41,6 +41,7 @@ ArmorObject &ArmorObject::operator=(ArmorObject &&other) noexcept
     return *this;
 }
 
+// Methods
 IGameObject *ArmorObject::clone() const
 {
     return new ArmorObject(*this);
@@ -70,4 +71,10 @@ int ArmorObject::getMin() const
 int ArmorObject::getMax() const
 {
     return getArmor();
+}
+
+// Private Methods
+void ArmorObject::swap(ArmorObject &other) noexcept
+{
+    std::swap(mArmor, other.mArmor);
 }

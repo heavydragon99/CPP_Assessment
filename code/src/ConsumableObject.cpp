@@ -1,7 +1,9 @@
 #include "ConsumableObject.h"
-
 #include "RandomGenerator.h"
+#include <iostream>
+#include <utility> // for std::swap
 
+// Constructors
 ConsumableObject::ConsumableObject(const Sean::String aName, const Sean::String aDescription, int aMinimum, int aMaximum, ObjectType aType, int aID)
     : GameObject(aName, aDescription, aType, aID), mMinimum(aMinimum), mMaximum(aMaximum)
 {
@@ -13,18 +15,6 @@ ConsumableObject::ConsumableObject(const ConsumableObject &other)
 {
 }
 
-// Copy Assignment Operator
-ConsumableObject &ConsumableObject::operator=(const ConsumableObject &other)
-{
-    if (this != &other)
-    {
-        GameObject::operator=(other);
-        mMinimum = other.mMinimum;
-        mMaximum = other.mMaximum;
-    }
-    return *this;
-}
-
 // Move Constructor
 ConsumableObject::ConsumableObject(ConsumableObject &&other) noexcept
     : GameObject(std::move(other)), mMinimum(other.mMinimum), mMaximum(other.mMaximum)
@@ -33,7 +23,17 @@ ConsumableObject::ConsumableObject(ConsumableObject &&other) noexcept
     other.mMaximum = 0;
 }
 
-// Move Assignment Operator
+// Assignment Operators
+ConsumableObject &ConsumableObject::operator=(const ConsumableObject &other)
+{
+    if (this != &other)
+    {
+        ConsumableObject temp(other);
+        swap(temp);
+    }
+    return *this;
+}
+
 ConsumableObject &ConsumableObject::operator=(ConsumableObject &&other) noexcept
 {
     if (this != &other)
@@ -48,6 +48,7 @@ ConsumableObject &ConsumableObject::operator=(ConsumableObject &&other) noexcept
     return *this;
 }
 
+// Methods
 IGameObject *ConsumableObject::clone() const
 {
     return new ConsumableObject(*this);
@@ -73,4 +74,11 @@ int ConsumableObject::getMin() const
 int ConsumableObject::getMax() const
 {
     return mMaximum;
+}
+
+// Private Methods
+void ConsumableObject::swap(ConsumableObject &other) noexcept
+{
+    std::swap(mMinimum, other.mMinimum);
+    std::swap(mMaximum, other.mMaximum);
 }

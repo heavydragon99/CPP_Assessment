@@ -1,11 +1,13 @@
 #include "Location.h"
 #include <iostream>
 
+// Constructors
 Location::Location(const Sean::String aName, const Sean::String aDescription, int aID)
     : mName(aName), mDescription(aDescription), mNorth(nullptr), mEast(nullptr), mSouth(nullptr), mWest(nullptr), mID(aID)
 {
 }
 
+// Methods
 Sean::String Location::getName() const
 {
     return mName + std::to_string(mID).c_str();

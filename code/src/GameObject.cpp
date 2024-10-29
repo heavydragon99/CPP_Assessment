@@ -1,7 +1,8 @@
 #include "GameObject.h"
-
 #include <iostream>
+#include <utility> // for std::swap
 
+// Constructors
 GameObject::GameObject(const Sean::String &aName, const Sean::String &aDescription, ObjectType aType, int aID)
     : mName(aName), mDescription(aDescription), mType(aType), mID(aID)
 {
@@ -13,7 +14,15 @@ GameObject::GameObject(const GameObject &other)
 {
 }
 
-// Copy Assignment Operator
+// Move Constructor
+GameObject::GameObject(GameObject &&other) noexcept
+    : mName(std::move(other.mName)), mID(other.mID), mDescription(std::move(other.mDescription)), mType(other.mType)
+{
+    other.mID = 0;
+    other.mType = ObjectType::Gold; // Default type
+}
+
+// Assignment Operators
 GameObject &GameObject::operator=(const GameObject &other)
 {
     if (this != &other)
@@ -26,15 +35,6 @@ GameObject &GameObject::operator=(const GameObject &other)
     return *this;
 }
 
-// Move Constructor
-GameObject::GameObject(GameObject &&other) noexcept
-    : mName(std::move(other.mName)), mID(other.mID), mDescription(std::move(other.mDescription)), mType(other.mType)
-{
-    other.mID = 0;
-    other.mType = ObjectType::Gold; // Default type
-}
-
-// Move Assignment Operator
 GameObject &GameObject::operator=(GameObject &&other) noexcept
 {
     if (this != &other)
@@ -50,6 +50,7 @@ GameObject &GameObject::operator=(GameObject &&other) noexcept
     return *this;
 }
 
+// Methods
 Sean::String GameObject::getName() const
 {
     return mName + (std::to_string(mID).c_str());
@@ -93,4 +94,13 @@ bool GameObject::isMoney() const
 ObjectType GameObject::getType() const
 {
     return mType;
+}
+
+// Private Methods
+void GameObject::swap(GameObject &other) noexcept
+{
+    std::swap(mName, other.mName);
+    std::swap(mID, other.mID);
+    std::swap(mDescription, other.mDescription);
+    std::swap(mType, other.mType);
 }

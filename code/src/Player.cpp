@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "RandomGenerator.h"
 
+// Constructors
 Player::Player()
     : mHealth(20), mAttackPercentage(40), mGold(100), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
 {
@@ -12,7 +13,8 @@ Player::Player()
     std::cin >> mName;
 }
 
-void Player::printDescription()
+// Methods
+void Player::printDescription() const
 {
     std::cout << "Naam: " << mName << std::endl;
     std::cout << "Levenspunten: " << mHealth << std::endl;
@@ -41,7 +43,7 @@ void Player::printDescription()
 
     // print inventory
     std::cout << "Inventaris: " << std::endl;
-    for (auto &item : mInventory)
+    for (const auto &item : mInventory)
     {
         std::cout << "\t";
         item->printName();
@@ -90,7 +92,7 @@ std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
 
 void Player::addHealth(int aHealth)
 {
-    if(mGodMode && aHealth < 0)
+    if (mGodMode && aHealth < 0)
     {
         aHealth = 0;
     }
@@ -116,7 +118,7 @@ void Player::addObject(std::unique_ptr<IGameObject> aObject)
     }
 }
 
-bool Player::printObject(const char *aObjectName)
+bool Player::printObject(const char *aObjectName) const
 {
     for (const auto &obj : mInventory)
     {
@@ -178,7 +180,7 @@ int Player::getAttackDamage() const
     RandomGenerator randomEngine;
     if (mEquippedWeapon)
     {
-        if(randomEngine.getChance(mAttackPercentage) || mGodMode)
+        if (randomEngine.getChance(mAttackPercentage) || mGodMode)
         {
             return mEquippedWeapon->getValue();
         }

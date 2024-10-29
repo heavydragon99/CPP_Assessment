@@ -2,18 +2,28 @@
 #define LOCATIONFACTORY_H
 
 #include "Location.h"
+#include "Sean.h"
 
 class LocationFactory
 {
 public:
+    // Constructors
     LocationFactory() = default;
+
+    // Destructor
     virtual ~LocationFactory() = default;
 
-    static Location *createLocation(const Sean::String aLocation, const Sean::String aDescription);
-    static Location *createLocation(const Sean::String aLocation, const Sean::String aDescription, int aId);
+    // Methods
+    static Location *createLocation(const Sean::String &aLocation, const Sean::String &aDescription);
+    static Location *createLocation(const Sean::String &aLocation, const Sean::String &aDescription,const int aId);
     static Location *createLocation();
 
-    private:
+private:
+    // Private Methods
+    static void incrementCounter();
+
+private:
+    // Members
     static int mCounter;
 };
 

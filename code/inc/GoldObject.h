@@ -6,23 +6,30 @@
 class GoldObject : public GameObject
 {
 public:
+    // Constructors
     GoldObject(const Sean::String aName, const Sean::String aDescription, int aMinimumValue, int aMaximumValue, ObjectType aType, int aID);
+    GoldObject(const GoldObject &other);
+    GoldObject(GoldObject &&other) noexcept;
+
+    // Destructor
     virtual ~GoldObject() = default;
 
-    GoldObject(const GoldObject &other);
+    // Assignment Operators
     GoldObject &operator=(const GoldObject &other);
-    GoldObject(GoldObject &&other) noexcept;
     GoldObject &operator=(GoldObject &&other) noexcept;
 
-    IGameObject* clone() const override;
-
+    // Methods
+    IGameObject *clone() const override;
     void printDescription() const override;
-
     int getValue() const override;
     int getMin() const override;
     int getMax() const override;
 
 private:
+    // Private Methods
+
+private:
+    // Members
     int mMinimumValue;
     int mMaximumValue;
 };

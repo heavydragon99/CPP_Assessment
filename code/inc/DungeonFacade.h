@@ -10,28 +10,34 @@
 class DungeonFacade
 {
 public:
+    // Constructors
     DungeonFacade() = default;
+
+    // Destructor
     virtual ~DungeonFacade() = default;
 
-public:
+    // Methods
     void createDungeon(std::vector<Sean::ParsedLocations> &aLocations);
     void generateDungeon(int aLocations);
-
-    void printLongDescription();
-    void printShortDescription();
+    void printLongDescription() const;
+    void printShortDescription() const;
     void moveHiddenObjects();
-    IGameObject* pickUpObject(const char *aObjectName);
+    IGameObject *pickUpObject(const char *aObjectName);
     bool placeObject(std::unique_ptr<IGameObject> aObject);
-    bool printGameObject(const char *aObjectName);
-    bool printEnemy(const char *aEnemyName);
-    bool validLocation(Sean::Direction aDirection);
+    bool printGameObject(const char *aObjectName) const;
+    bool printEnemy(const char *aEnemyName) const;
+    bool validLocation(Sean::Direction aDirection) const;
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, int aDamage);
-    IGameObject* createGameObject(const Sean::String &aName);
+    IGameObject *createGameObject(const Sean::String &aName);
     int update();
-    void teleport(int aAMount);
+    void teleport(int aAmount);
 
 private:
+    // Private Methods
+
+private:
+    // Members
     std::unique_ptr<Dungeon> mDungeon;
 };
 

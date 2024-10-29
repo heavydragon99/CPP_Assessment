@@ -27,19 +27,25 @@ enum class PlayerAction
 
 class Game
 {
-public: // public functions
+public:
+    // Constructors
     Game() = default;
+
+    // Destructor
     virtual ~Game() = default;
+
+    // Methods
     void run();
 
-private: // private functions
+private:
+    // Private Methods
     void initialize();
     void loadDungeon();
     void generateDungeon();
-    void printCurrentLocation();
-    void printCurrentSetting();
+    void printCurrentLocation() const;
+    void printCurrentSetting() const;
     void playerInput();
-    PlayerAction getPlayerAction(const std::string &aInput);
+    PlayerAction getPlayerAction(const std::string &aInput) const;
     void updateDungeon();
 
     void lookAction();
@@ -52,12 +58,13 @@ private: // private functions
     void wearAction(const std::string &aObject);
     void waitAction();
     void consumeAction(const std::string &aObject);
-    void helpAction();
+    void helpAction() const;
     void godmodeAction();
 
     void endGame();
 
-private: // private variables
+private:
+    // Members
     std::unique_ptr<Player> mPlayer;
     std::unique_ptr<DungeonFacade> mDungeon;
 

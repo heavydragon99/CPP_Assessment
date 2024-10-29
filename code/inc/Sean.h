@@ -30,7 +30,8 @@ namespace Sean
         int mID;
     };
 
-    struct ParsedLocations{
+    struct ParsedLocations
+    {
         int mId;
         DirectionInfo mDirections[4];
         Vector<String> mEnemies;
