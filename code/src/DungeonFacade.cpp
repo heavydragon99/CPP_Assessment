@@ -18,7 +18,11 @@ void DungeonFacade::generateDungeon(int aLocations)
 {
     if (mDungeon == nullptr)
     {
-        mDungeon = std::make_unique<Dungeon>(aLocations);
+        try {
+            mDungeon = std::make_unique<Dungeon>(aLocations);
+        } catch (const std::invalid_argument &e) {
+            throw std::runtime_error(e.what());
+        }
     }
     else
     {
@@ -52,7 +56,7 @@ bool DungeonFacade::placeObject(std::unique_ptr<IGameObject> aObject)
     Sean::Object<GameObject> gameObject(dynamic_cast<GameObject *>(aObject.release()));
     if (gameObject.get() != nullptr)
     {
-        mDungeon->placeObject(gameObject.get());
+        mDungeon->placeObject(gameObject.release());
         return true;
     }
     throw std::runtime_error("Invalid object type");

@@ -55,39 +55,78 @@ std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
 {
     std::unique_ptr<IGameObject> previousItem = nullptr;
 
-    for (auto iter = mInventory.begin(); iter != mInventory.end(); ++iter)
+    // Check if the item is already equipped
+    if ((mEquippedWeapon && mEquippedWeapon->getName() == aItem) ||
+        (mEquippedArmor && mEquippedArmor->getName() == aItem))
     {
-        if (iter->get()->getName() == aItem)
-        {
-            if (iter->get()->isWeapon())
-            {
-                if (mEquippedWeapon)
-                {
-                    previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
-                    auto previousIter = std::find_if(mInventory.begin(), mInventory.end(), [this](const std::unique_ptr<IGameObject> &aItem)
-                                                     { return aItem.get() == mEquippedWeapon; });
-                    mInventory.erase(previousIter);
-                }
-                mEquippedWeapon = iter->get();
-                std::cout << "Wapen uitgerust: " << aItem << std::endl;
-            }
-            else if (iter->get()->isArmor())
-            {
-                if (mEquippedArmor)
-                {
-                    previousItem = std::unique_ptr<IGameObject>(mEquippedArmor->clone());
-                    auto previousIter = std::find_if(mInventory.begin(), mInventory.end(), [this](const std::unique_ptr<IGameObject> &aItem)
-                                                     { return aItem.get() == mEquippedWeapon; });
-                    mInventory.erase(previousIter);
-                }
-                mEquippedArmor = iter->get();
-                std::cout << "Pantser uitgerust: " << aItem << std::endl;
-            }
-            return previousItem;
-        }
+        std::cout << "Item " << aItem << " is al uitgerust." << std::endl;
+        return nullptr;
     }
-    std::cout << "Item " << aItem << " niet gevonden in je rugzak." << std::endl;
-    return nullptr;
+
+    // Find item in the inventory
+    auto itemIter = std::find_if(mInventory.begin(), mInventory.end(),
+                                 [&](const std::unique_ptr<IGameObject> &item)
+                                 {
+                                     return item->getName() == aItem;
+                                 });
+
+    if (itemIter == mInventory.end())
+    {
+        std::cout << "Item " << aItem << " niet gevonden in je rugzak." << std::endl;
+        return nullptr;
+    }
+
+    // Equip weapon or armor, replacing any currently equipped item
+    auto &item = *itemIter;
+    if (item->isWeapon())
+    {
+        if (mEquippedWeapon)
+        {
+            previousItem = std::unique_ptr<IGameObject>(mEquippedWeapon->clone());
+            removeEquippedItem(mEquippedWeapon);
+        }
+        // Find item in the inventory
+        auto weaponIter = std::find_if(mInventory.begin(), mInventory.end(),
+                                       [&](const std::unique_ptr<IGameObject> &item)
+                                       {
+                                           return item->getName() == aItem;
+                                       });
+        auto &weapon = *weaponIter;
+        mEquippedWeapon = weapon.get();
+        std::cout << "Wapen uitgerust: " << aItem << std::endl;
+    }
+    else if (item->isArmor())
+    {
+        if (mEquippedArmor)
+        {
+            previousItem = std::unique_ptr<IGameObject>(mEquippedArmor->clone());
+            removeEquippedItem(mEquippedArmor);
+        }
+        // Find item in the inventory
+        auto armorIter = std::find_if(mInventory.begin(), mInventory.end(),
+                                      [&](const std::unique_ptr<IGameObject> &item)
+                                      {
+                                          return item->getName() == aItem;
+                                      });
+        auto &armor = *armorIter;
+        mEquippedArmor = armor.get();
+        std::cout << "Pantser uitgerust: " << aItem << std::endl;
+    }
+
+    return previousItem;
+}
+
+void Player::removeEquippedItem(IGameObject *equippedItem)
+{
+    auto iter = std::find_if(mInventory.begin(), mInventory.end(),
+                             [&](const std::unique_ptr<IGameObject> &item)
+                             {
+                                 return item.get() == equippedItem;
+                             });
+    if (iter != mInventory.end())
+    {
+        mInventory.erase(iter);
+    }
 }
 
 void Player::addHealth(int aHealth)
@@ -95,6 +134,17 @@ void Player::addHealth(int aHealth)
     if (mGodMode && aHealth < 0)
     {
         aHealth = 0;
+    }
+    if (aHealth < 0)
+    {
+        if (mEquippedArmor)
+        {
+            aHealth += mEquippedArmor->getValue();
+            if (aHealth > 0)
+            {
+                aHealth = 0;
+            }
+        }
     }
     mHealth += aHealth;
     // std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
@@ -108,7 +158,7 @@ void Player::addExperience(int aExperience)
 
 void Player::addObject(std::unique_ptr<IGameObject> aObject)
 {
-    if (aObject->isConsumableHealth())
+    if (aObject->isMoney())
     {
         mGold += aObject->getValue();
     }

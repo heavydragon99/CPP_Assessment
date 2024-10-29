@@ -65,24 +65,24 @@ GameObject *GameObjectFactory::createGameObject()
     {
         incrementCounter();
         name.append(std::to_string(mCounter).c_str());
-        if (type == "Gold")
+        if (type == "goudstukken")
         {
             return new GoldObject(name, description, minValue, maxValue, ObjectType::Gold, mCounter);
         }
-        else if (type == "Weapon")
+        else if (type == "wapen")
         {
             return new WeaponObject(name, description, minValue, maxValue, ObjectType::Weapon, mCounter);
         }
-        else if (type == "Armor")
+        else if (type == "wapenrusting")
         {
             return new ArmorObject(name, description, protection, ObjectType::Armor, mCounter);
         }
-        else if (type == "Consumable_Health" || type == "Consumable_Experience" || type == "Consumable_Teleport")
+        else if (type == "levenselixer" || type == "ervaringsdrank" || type == "teleportatiedrank")
         {
             ObjectType consumableType;
-            if (type == "Consumable_Health")
+            if (type == "levenselixer")
                 consumableType = ObjectType::Consumable_Health;
-            else if (type == "Consumable_Experience")
+            else if (type == "ervaringsdrankje")
                 consumableType = ObjectType::Consumable_Experience;
             else
                 consumableType = ObjectType::Consumable_Teleport;

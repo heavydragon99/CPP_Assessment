@@ -23,6 +23,7 @@ public:
     // Methods
     void printDescription() const;
     std::unique_ptr<IGameObject> equipObject(const char *aItem);
+    void removeEquippedItem(IGameObject* equippedItem);
     void addHealth(int aHealth);
     void addExperience(int aExperience);
     void addObject(std::unique_ptr<IGameObject> aObject);

@@ -7,8 +7,6 @@
 #include "RandomGenerator.h"
 
 #include <stdexcept>
-#include <unordered_set>
-#include <random>
 
 // Dummy static Location for temporary initialization
 static Location dummyLocation("dummy", "dummy", 0);
@@ -106,63 +104,53 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
 }
 
 // Constructor that takes an integer
+
 Dungeon::Dungeon(int aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
-    if (aLocations <= 0)
-    {
+    if (aLocations <= 0) {
         throw std::invalid_argument("Number of locations must be greater than zero");
     }
 
-    std::unordered_set<std::string> usedNames;
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> visibleDist(0, 3);
-    std::uniform_int_distribution<> hiddenDist(0, 2);
-    std::uniform_int_distribution<> exitDist(1, 4);
+    RandomGenerator randomGen;
+    Sean::Vector<Sean::String> usedNames;
 
     // Generate unique locations
-    for (int i = 0; i < aLocations; ++i)
-    {
+    for (int i = 0; i < aLocations; ++i) {
         Sean::Object<Location> location;
-        do
-        {
-            location.reset(LocationFactory::createLocation());
-        } while (usedNames.find(location.get()->getName().c_str()) != usedNames.end());
 
-        usedNames.insert(location.get()->getName().c_str());
+        // Ensure unique location name
+        do {
+            location.reset(LocationFactory::createLocation());
+        } while (usedNames.contains(location.get()->getName()));
+
+        usedNames.push_back(location.get()->getName());
         mMap.push_back(std::move(*location));
 
         // Add visible objects
-        int numVisibleObjects = visibleDist(gen);
-        for (int j = 0; j < numVisibleObjects; ++j)
-        {
+        int numVisibleObjects = randomGen.getRandomValue(0, 3);
+        for (int j = 0; j < numVisibleObjects; ++j) {
             Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get())
-            {
+            if (object.get()) {
                 mMap.back().addVisibleObject(object.release());
             }
         }
 
         // Add hidden objects
-        int numHiddenObjects = hiddenDist(gen);
-        for (int j = 0; j < numHiddenObjects; ++j)
-        {
+        int numHiddenObjects = randomGen.getRandomValue(0, 2);
+        for (int j = 0; j < numHiddenObjects; ++j) {
             Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get())
-            {
+            if (object.get()) {
                 mMap.back().addHiddenObject(object.release());
             }
         }
     }
 
     // Ensure all locations are reachable by setting exits
-    for (int i = 0; i < aLocations; ++i)
-    {
+    for (int i = 0; i < aLocations; ++i) {
         Location &currentLocation = mMap[i];
-        int numExits = exitDist(gen);
-        for (int j = 0; j < numExits; ++j)
-        {
+        int numExits = randomGen.getRandomValue(1, 4);
+        for (int j = 0; j < numExits; ++j) {
             int exitIndex = (i + j + 1) % aLocations;
             currentLocation.setExit(static_cast<Sean::Direction>(j % 4), &mMap[exitIndex]);
         }
@@ -170,25 +158,21 @@ Dungeon::Dungeon(int aLocations)
 
     // Add enemies to the dungeon
     int numEnemies = (aLocations + 2) / 3; // One enemy per 3 locations, rounded up
-    for (int i = 0; i < numEnemies; ++i)
-    {
-        Enemy *enemy = EnemyFactory::createEnemy();
-        if (enemy)
-        {
+    for (int i = 0; i < numEnemies; ++i) {
+        Sean::Object<Enemy> enemy(EnemyFactory::createEnemy());
+        if (enemy.get() != nullptr) {
             mMap[i % aLocations].addEnemy(*enemy);
         }
     }
 
     // Set mCurrentLocation to the first location in the map if available
-    if (!mMap.empty())
-    {
+    if (!mMap.empty()) {
         mCurrentLocation = &mMap[0];
-    }
-    else
-    {
+    } else {
         throw std::runtime_error("No locations provided");
     }
 }
+
 
 // Copy constructor
 Dungeon::Dungeon(const Dungeon &other)

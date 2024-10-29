@@ -102,10 +102,32 @@ void Game::loadDungeon()
 void Game::generateDungeon()
 {
     int locations;
-    std::cout << "Geeft aantal locaties op: ";
-    std::cin >> locations;
+    while (true)
+    {
+        std::cout << "Geeft aantal locaties op (1-20): ";
+        std::cin >> locations;
 
-    mDungeon->generateDungeon(locations);
+        if (std::cin.fail() || locations <= 0 || locations > 20)
+        {
+            std::cin.clear(); // Clear the error flag
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+            std::cout << "Ongeldige invoer. Probeer het opnieuw." << std::endl;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    try
+    {
+        mDungeon->generateDungeon(locations);
+    }
+    catch (const std::runtime_error &e)
+    {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
 }
 
 void Game::printCurrentLocation() const

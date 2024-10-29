@@ -158,7 +158,7 @@ GameObject *Location::pickUpObject(const char *aObjectName)
         {
             Sean::Object<GameObject> obj = std::move(*iter);
             mVisibleObjects.erase(iter);
-            return obj.get();
+            return obj.release();
         }
     }
     return nullptr;
