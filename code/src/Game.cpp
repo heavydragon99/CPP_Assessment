@@ -268,9 +268,15 @@ void Game::goAction(const std::string &aDirection)
         std::cout << "Ongeldige invoer" << std::endl;
         return;
     }
-    if (mDungeon->moveLocation(direction))
+    if (!mDungeon->validLocation(direction))
     {
-        updateDungeon(); // Only update if the location was moved
+        std::cout << "Er is geen locatie in die richting" << std::endl;
+        return;
+    }
+    else
+    {
+        updateDungeon();
+        mDungeon->moveLocation(direction);
     }
     clearConsole();
     printCurrentLocation();

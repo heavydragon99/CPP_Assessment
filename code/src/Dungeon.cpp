@@ -239,6 +239,11 @@ void Dungeon::printLongDescription() const
     mCurrentLocation->printExits();
 }
 
+bool Dungeon::validLocation(Sean::Direction aDirection)
+{
+    return mCurrentLocation->getExit(aDirection) != nullptr;
+}
+
 bool Dungeon::moveLocation(Sean::Direction aDirection)
 {
     Location *newLocation = mCurrentLocation->getExit(aDirection);

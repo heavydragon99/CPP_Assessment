@@ -67,6 +67,11 @@ bool DungeonFacade::printEnemy(const char *aEnemyName)
     throw std::runtime_error("Function not implemented");
 }
 
+bool DungeonFacade::validLocation(Sean::Direction aDirection)
+{
+    return mDungeon->validLocation(aDirection);
+}
+
 bool DungeonFacade::moveLocation(Sean::Direction aDirection)
 {
     return mDungeon->moveLocation(aDirection);

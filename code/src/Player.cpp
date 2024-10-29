@@ -95,7 +95,7 @@ void Player::addHealth(int aHealth)
         aHealth = 0;
     }
     mHealth += aHealth;
-    std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
+    // std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
 }
 
 void Player::addExperience(int aExperience)

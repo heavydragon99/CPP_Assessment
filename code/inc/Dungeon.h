@@ -25,6 +25,7 @@ public:
     void placeObject(GameObject *aObject);
     void printShortDescription() const;
     void printLongDescription() const;
+    bool validLocation(Sean::Direction aDirection);
     bool moveLocation(Sean::Direction aDirection);
     void moveHiddenObjects();
     bool printObject(const char *aObjectName);

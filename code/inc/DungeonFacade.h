@@ -24,6 +24,7 @@ public:
     bool placeObject(std::unique_ptr<IGameObject> aObject);
     bool printGameObject(const char *aObjectName);
     bool printEnemy(const char *aEnemyName);
+    bool validLocation(Sean::Direction aDirection);
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, int aDamage);
     IGameObject* createGameObject(const Sean::String &aName);
