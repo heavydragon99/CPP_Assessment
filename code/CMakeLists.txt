@@ -3,11 +3,14 @@ cmake_minimum_required(VERSION 3.10)
 # Set the output directory for the executable
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Set build type to Debug
-set(CMAKE_BUILD_TYPE Debug)
+# Add an option to enable debug mode
+option(ENABLE_DEBUG "Enable debug mode" OFF)
 
-# Add debug flags
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+# Conditionally set build type and debug flags
+if(ENABLE_DEBUG)
+    set(CMAKE_BUILD_TYPE Debug)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+endif()
 
 # Set the project name
 project(dungeon_crawler)
