@@ -6,7 +6,7 @@
 ' skinparam classFontColor White
 ' skinparam classAttributeIconColor White
 ' skinparam classArrowColor White
-skinparam linetype ortho
+' skinparam linetype ortho
 
 package "Sean"{
     class Vector{
@@ -15,7 +15,7 @@ package "Sean"{
 
     class UniquePtr{}
 
-    class CharArray{}
+    class String{}
 
     class SeanObject{}
 
@@ -36,11 +36,11 @@ package "Sean"{
     struct ParsedLocations{
         - mId : int
         - mExits : Direction[4]
-        - mEnemies : Sean::Vector<Sean::CharArray>
-        - mHiddenObjects : Sean::Vector<Sean::CharArray>
-        - mVisibleObjects : Sean::Vector<Sean::CharArray>
-        - mName : Sean::CharArray
-        - mDescription : Sean::CharArray
+        - mEnemies : Sean::Vector<Sean::String>
+        - mHiddenObjects : Sean::Vector<Sean::String>
+        - mVisibleObjects : Sean::Vector<Sean::String>
+        - mName : Sean::String
+        - mDescription : Sean::String
     }
 }
 

@@ -2,14 +2,27 @@
 #include <filesystem>
 #include <iostream>
 
-SQLReader::SQLReader() : db(nullptr)
+/**
+ * @brief Custom deleter for sqlite3 database.
+ *
+ * @param db Pointer to the sqlite3 database.
+ */
+void sqlite3Deleter(sqlite3* db)
+{
+    if (db)
+    {
+        sqlite3_close(db);
+    }
+}
+
+SQLReader::SQLReader() : db(nullptr, sqlite3Deleter)
 {
     openDatabase();
 }
 
 SQLReader::~SQLReader()
 {
-    closeDatabase();
+    // No need to call closeDatabase() explicitly as the custom deleter will handle it
 }
 
 void SQLReader::openDatabase()
@@ -20,22 +33,24 @@ void SQLReader::openDatabase()
     std::filesystem::path dbPath = currentPath / "../../sql/kerkersendraken.db";
     std::string dbPathStr = dbPath.lexically_normal().string();
 
-    if (sqlite3_open(dbPathStr.c_str(), &db) == SQLITE_OK)
+    sqlite3* tempDb = nullptr;
+    if (sqlite3_open(dbPathStr.c_str(), &tempDb) == SQLITE_OK)
     {
+        db.reset(tempDb); // Transfer ownership to Sean::Object
     }
     else
     {
         std::cerr << "Error opening database!" << std::endl;
+        if (tempDb)
+        {
+            sqlite3_close(tempDb);
+        }
     }
 }
 
 void SQLReader::closeDatabase()
 {
-    if (db)
-    {
-        sqlite3_close(db);
-        db = nullptr;
-    }
+    db.reset(); // Reset the Sean::Object, which will call the custom deleter
 }
 
 SQLReader &SQLReader::getInstance()
@@ -48,15 +63,15 @@ bool SQLReader::getLocationInfo(Sean::String &aName, Sean::String &aDescription)
 {
     std::string query = "SELECT naam, beschrijving FROM Locaties WHERE naam = ?";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
     if (sqlite3_bind_text(stmt, 1, aName.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
     {
-        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
         sqlite3_finalize(stmt);
         return false;
     }
@@ -77,9 +92,9 @@ bool SQLReader::getRandomLocation(Sean::String &aName, Sean::String &aDescriptio
 {
     std::string query = "SELECT naam, beschrijving FROM Locaties ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
@@ -99,15 +114,15 @@ bool SQLReader::getEnemyInfo(Sean::String &aName, Sean::String &aDescription, in
 {
     std::string query = "SELECT naam, omschrijving, levenspunten, aanvalskans, minimumschade, maximumschade FROM Vijanden WHERE naam = ?";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
     if (sqlite3_bind_text(stmt, 1, aName.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
     {
-        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
         sqlite3_finalize(stmt);
         return false;
     }
@@ -132,9 +147,9 @@ bool SQLReader::getRandomEnemy(Sean::String &aName, Sean::String &aDescription, 
 {
     std::string query = "SELECT naam, omschrijving, levenspunten, aanvalskans, minimumschade, maximumschade FROM Vijanden ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
@@ -158,15 +173,15 @@ bool SQLReader::getObjectInfo(Sean::String &aName, Sean::String &aDescription, S
 {
     std::string query = "SELECT naam, omschrijving, type, minimumwaarde, maximumwaarde, bescherming FROM Objecten WHERE naam = ?";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
     if (sqlite3_bind_text(stmt, 1, aName.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
     {
-        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
         sqlite3_finalize(stmt);
         return false;
     }
@@ -191,15 +206,15 @@ bool SQLReader::getObjectAmount(Sean::String aName, int &aMinimum, int &aMaximum
 {
     std::string query = "SELECT minimumobjecten, maximumobjecten FROM Vijanden WHERE naam = ?";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 
     if (sqlite3_bind_text(stmt, 1, aName.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
     {
-        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
         sqlite3_finalize(stmt);
         return false;
     }
@@ -220,9 +235,9 @@ bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription,
 {
     std::string query = "SELECT naam, omschrijving, type, minimumwaarde, maximumwaarde, bescherming FROM Objecten ORDER BY RANDOM() LIMIT 1";
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
-        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
         return false;
     }
 

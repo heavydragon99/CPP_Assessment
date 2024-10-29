@@ -19,14 +19,29 @@ namespace Sean
          *
          * @param aPtr A raw pointer to the object to manage. Defaults to nullptr.
          */
-        explicit Object(T *aPtr = nullptr) : mPtr(aPtr) {}
+        explicit Object(T *aPtr = nullptr) : mPtr(aPtr), mCustomDeleter(nullptr) {}
+
+        /**
+         * @brief Constructs an Object with a raw pointer and a custom deleter.
+         *
+         * @param aPtr A raw pointer to the object to manage.
+         * @param aDeleter A custom deleter function to be called instead of the default destructor.
+         */
+        Object(T *aPtr, void (*aDeleter)(T*)) : mPtr(aPtr), mCustomDeleter(aDeleter) {}
 
         /**
          * @brief Destructor that deletes the managed object.
          */
         ~Object()
         {
-            delete mPtr;
+            if (mCustomDeleter)
+            {
+                mCustomDeleter(mPtr);
+            }
+            else
+            {
+                delete mPtr;
+            }
         }
 
         // Disable copy constructor and copy assignment
@@ -38,9 +53,10 @@ namespace Sean
          *
          * @param aOther The Object to move from.
          */
-        Object(Object &&aOther) noexcept : mPtr(aOther.mPtr)
+        Object(Object &&aOther) noexcept : mPtr(aOther.mPtr), mCustomDeleter(aOther.mCustomDeleter)
         {
             aOther.mPtr = nullptr;
+            aOther.mCustomDeleter = nullptr;
         }
 
         /**
@@ -53,9 +69,18 @@ namespace Sean
         {
             if (this != &aOther)
             {
-                delete mPtr;
+                if (mCustomDeleter)
+                {
+                    mCustomDeleter(mPtr);
+                }
+                else
+                {
+                    delete mPtr;
+                }
                 mPtr = aOther.mPtr;
+                mCustomDeleter = aOther.mCustomDeleter;
                 aOther.mPtr = nullptr;
+                aOther.mCustomDeleter = nullptr;
             }
             return *this;
         }
@@ -79,7 +104,14 @@ namespace Sean
         {
             if (mPtr != aPtr)
             {
-                delete mPtr;
+                if (mCustomDeleter)
+                {
+                    mCustomDeleter(mPtr);
+                }
+                else
+                {
+                    delete mPtr;
+                }
                 mPtr = aPtr;
             }
         }
@@ -103,6 +135,7 @@ namespace Sean
         {
             return mPtr;
         }
+
         /**
          * @brief Releases ownership of the managed object without deleting it.
          *
@@ -114,10 +147,10 @@ namespace Sean
             mPtr = nullptr;
             return temp;
         }
-        
 
     private:
         T *mPtr; ///< The raw pointer to the managed object.
+        void (*mCustomDeleter)(T*); ///< Custom deleter function.
     };
 
 } // namespace Sean

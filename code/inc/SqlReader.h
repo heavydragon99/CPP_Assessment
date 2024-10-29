@@ -28,7 +28,7 @@ private:
     void openDatabase();
     void closeDatabase();
 
-    sqlite3 *db;
+    Sean::Object<sqlite3> db;
 };
 
 #endif // SQLREADER_H
