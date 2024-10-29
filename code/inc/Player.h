@@ -26,6 +26,7 @@ public:
     int getHealth() const;
     int getAttackPercentage() const;
     int getAttackDamage() const;
+    bool isDead() const;
 
 
 private:

@@ -17,6 +17,7 @@ public:
     void addVisibleObject(GameObject* aObject);
     void addHiddenObject(GameObject* aObject);
     void addEnemy(Enemy aEnemy);
+    void removeEnemy(const char *aEnemyName);
     void setExit(Sean::Direction aDirection, Location *aLocation);
     Location *getExit(Sean::Direction aDirection) const;
     Sean::Vector<Enemy> &getEnemies();
@@ -24,7 +25,6 @@ public:
     void printDescriptionShort() const;
     void printDescriptionLong() const;
     void printExits() const;
-    void update();
     void moveHiddenObjects();
     GameObject* pickUpObject(const char *aObjectName);
     bool printObject(const char *aObjectName);

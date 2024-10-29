@@ -190,9 +190,27 @@ Dungeon::Dungeon(int aLocations)
     }
 }
 
-void Dungeon::update()
+int Dungeon::update()
 {
-    throw std::runtime_error("Dungeon update Not implemented");
+    int damage = 0;
+    bool enemiesAlive = false;
+    for (Enemy &enemy : mCurrentLocation->getEnemies())
+    {
+        if (!enemy.isDead())
+        {
+            enemiesAlive = true;
+            int attack = enemy.getAttack();
+            std::cout << "De " << enemy.getName() << " valt je aan met: " << attack << " schade" << std::endl;
+
+            damage += attack;
+        }
+    }
+    if (!enemiesAlive)
+    {
+        moveEnemies();
+    }
+
+    return damage;
 }
 
 GameObject *Dungeon::createGameObject(const Sean::String &aName)
@@ -264,7 +282,7 @@ void Dungeon::teleport(int aAmount)
 
         do
         {
-            nextDirection = static_cast<Sean::Direction>(randomEngine.getRandomValue(0, 3)); 
+            nextDirection = static_cast<Sean::Direction>(randomEngine.getRandomValue(0, 3));
             switch (nextDirection)
             {
             case Sean::Direction::North:
@@ -314,7 +332,7 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
                 }
                 else
                 {
-                    std::cout << "Je hebt de " << enemy.getName() << " geraakt met "<< aDamage << " schade" << std::endl;
+                    std::cout << "Je hebt de " << enemy.getName() << " geraakt met " << aDamage << " schade" << std::endl;
                 }
                 return true;
             }
@@ -326,4 +344,49 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
     }
     std::cout << "Er is geen vijand met de naam " << aEnemyName << std::endl;
     return false;
+}
+
+void Dungeon::moveEnemies()
+{
+    Sean::Vector<Sean::String> movedEnemies;
+    RandomGenerator randomEngine;
+    for (Location &location : mMap)
+    {
+        Sean::Vector<Location *> exits;
+        Location *north = location.getExit(Sean::Direction::North);
+        Location *east = location.getExit(Sean::Direction::East);
+        Location *south = location.getExit(Sean::Direction::South);
+        Location *west = location.getExit(Sean::Direction::West);
+        if (north != nullptr)
+        {
+            exits.push_back(north);
+        }
+        if (east != nullptr)
+        {
+            exits.push_back(east);
+        }
+        if (south != nullptr)
+        {
+            exits.push_back(south);
+        }
+        if (west != nullptr)
+        {
+            exits.push_back(west);
+        }
+        for (Enemy &enemy : location.getEnemies())
+        {
+            Sean::String enemyName = enemy.getName();
+            if (movedEnemies.contains(enemyName) || enemy.isDead())
+            {
+                continue;
+            }
+            movedEnemies.push_back(enemyName);
+            if (randomEngine.getChance(50) && !exits.empty())
+            {
+                Location *newLocation = exits[randomEngine.getRandomValue(0, exits.size() - 1)];
+                newLocation->addEnemy(enemy);
+                location.removeEnemy(enemyName.c_str());
+            }
+        }
+    }
 }

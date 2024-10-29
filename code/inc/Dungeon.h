@@ -19,7 +19,7 @@ public:
     virtual ~Dungeon() = default;
 
     public:
-    void update();
+    int update();
     GameObject* createGameObject(const Sean::String &aName);
     GameObject* pickUpObject(const char *aObjectName);
     void placeObject(GameObject *aObject);
@@ -30,6 +30,9 @@ public:
     bool printObject(const char *aObjectName);
     void teleport(int aAmount);
     bool attackEnemy(const char *aEnemyName, int aDamage);
+
+    private:
+    void moveEnemies();
 
 private:
     Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!

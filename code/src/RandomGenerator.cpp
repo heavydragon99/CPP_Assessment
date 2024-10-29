@@ -8,10 +8,10 @@ int RandomGenerator::getRandomValue(int aMin, int aMax) {
     return distribution(mEngine);
 }
 
-bool RandomGenerator::shouldAttack(int aAttackPercent) {
-    if (aAttackPercent < 0 || aAttackPercent > 100) {
+bool RandomGenerator::getChance(int aPercent) {
+    if (aPercent < 0 || aPercent > 100) {
         return false;
     }
     std::uniform_int_distribution<int> distribution(1, 100);
-    return distribution(mEngine) <= aAttackPercent;
+    return distribution(mEngine) <= aPercent;
 }

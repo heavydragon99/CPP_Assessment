@@ -220,6 +220,16 @@ interface IGameObject{
     + printDescription() : void
 }
 
+class randomGenerator{
+    + randomGenerator()
+    + getRandomValue(int aMin, int aMax) : int
+    + shouldAttack(int aPercentage) : bool
+
+    - {static} std::default_random_engine mEngine
+
+
+}
+
 Game o-- "0..1" DungeonFacade
 
 Player o-- "0..*" IGameObject

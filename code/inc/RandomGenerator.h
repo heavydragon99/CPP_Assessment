@@ -8,7 +8,7 @@ public:
     RandomGenerator() = default;
 
     int getRandomValue(int aMin, int aMax);
-    bool shouldAttack(int aAttackPercent);
+    bool getChance(int aPercent);
 
 private:
     static std::default_random_engine mEngine;

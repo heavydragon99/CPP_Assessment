@@ -26,6 +26,8 @@ void Game::run()
     initialize();
     clearConsole();
     printCurrentSetting();
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     bool quit = false;
     while (!quit)
     {
@@ -61,8 +63,9 @@ void Game::initialize()
 
     mPlayer = std::make_unique<Player>();
     auto dolk = std::unique_ptr<IGameObject>(mDungeon->createGameObject(StartingWeapon.c_str()));
+    std::string weaponName = dolk->getName().c_str();
     mPlayer->addObject(std::move(dolk));
-    mPlayer->equipObject(StartingWeapon.c_str());
+    mPlayer->equipObject(weaponName.c_str());
 }
 
 void Game::loadDungeon()
@@ -132,7 +135,6 @@ void Game::playerInput(bool *aQuit)
         argument = argument.substr(1);
     }
     clearConsole();
-    printCurrentLocation();
 
     try
     {
@@ -214,6 +216,22 @@ PlayerAction Game::getPlayerAction(const std::string &aAction)
     return PlayerAction::Invalid;
 }
 
+void Game::updateDungeon()
+{
+    int damage = mDungeon->update();
+    if (damage > 0)
+    {
+        mPlayer->addHealth(-damage);
+        std::cout << "Je hebt " << damage << " schade opgelopen en je levenspunten zijn nu " << mPlayer->getHealth() << std::endl;
+    }
+    if (mPlayer->isDead())
+    {
+        std::cout << "Je bent dood. Game over." << std::endl;
+        throw std::runtime_error("Game over");
+        exit(0);
+    }
+}
+
 void Game::lookAction()
 {
     clearConsole();
@@ -223,7 +241,7 @@ void Game::lookAction()
 void Game::searchAction()
 {
     mDungeon->moveHiddenObjects();
-    mDungeon->update();
+    updateDungeon();
 }
 
 void Game::goAction(const std::string &aDirection)
@@ -252,10 +270,10 @@ void Game::goAction(const std::string &aDirection)
     }
     if (mDungeon->moveLocation(direction))
     {
-        // mDungeon->update(); // Only update if the location was moved
-        clearConsole();
-        printCurrentLocation();
+        updateDungeon(); // Only update if the location was moved
     }
+    clearConsole();
+    printCurrentLocation();
 }
 
 void Game::takeAction(const std::string &aObject)
@@ -303,9 +321,9 @@ void Game::examineAction(const std::string &aObject)
 
 void Game::hitAction(const std::string &aTarget)
 {
-    if(mDungeon->attackEnemy(aTarget.c_str(), mPlayer->getAttackDamage()))
+    if (mDungeon->attackEnemy(aTarget.c_str(), mPlayer->getAttackDamage()))
     {
-        mDungeon->update();
+        updateDungeon();
     }
     else
     {
@@ -320,14 +338,14 @@ void Game::wearAction(const std::string &aObject)
     {
         if (mDungeon->placeObject(std::move(previousItem)))
         {
-            mDungeon->update(); // Only update if the object was placed in the dungeon
+            updateDungeon(); // Only update if the object was placed in the dungeon
         }
     }
 }
 
 void Game::waitAction()
 {
-    mDungeon->update();
+    updateDungeon();
 }
 
 void Game::consumeAction(const std::string &aObject)

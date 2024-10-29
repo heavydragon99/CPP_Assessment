@@ -26,6 +26,18 @@ void Location::addEnemy(Enemy aEnemy)
     mEnemies.push_back(aEnemy);
 }
 
+void Location::removeEnemy(const char *aEnemyName)
+{
+    for (auto iter = mEnemies.begin(); iter != mEnemies.end(); ++iter)
+    {
+        if (iter->getName() == aEnemyName)
+        {
+            mEnemies.erase(iter);
+            return;
+        }
+    }
+}
+
 void Location::setExit(Sean::Direction aDirection, Location *aLocation)
 {
     if (aLocation == nullptr)
@@ -125,11 +137,6 @@ void Location::printExits() const
         std::cout << "West ";
     }
     std::cout << std::endl;
-}
-
-void Location::update()
-{
-    throw std::runtime_error("Location update Not implemented");
 }
 
 void Location::moveHiddenObjects()

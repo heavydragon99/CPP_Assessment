@@ -58,7 +58,7 @@ namespace Sean
                 mData = new T[mCapacity];
                 for (size_t i = 0; i < mSize; ++i)
                 {
-                    mData[i] = std::move(aOther.mData[i]); //have to use move as Sean::object is not copyable
+                    mData[i] = std::move(aOther.mData[i]); // have to use move as Sean::object is not copyable
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace Sean
                 T *newData = new T[aOther.mCapacity];
                 for (size_t i = 0; i < aOther.mSize; ++i)
                 {
-                    newData[i] = std::move(aOther.mData[i]); //have to use move as Sean::object is not copyable
+                    newData[i] = std::move(aOther.mData[i]); // have to use move as Sean::object is not copyable
                 }
 
                 // Release the current object's resources
@@ -373,6 +373,26 @@ namespace Sean
                 mData[i] = std::move(mData[i + 1]);
             }
             --mSize;
+        }
+
+        /**
+         * @brief Checks if the vector contains a specific element.
+         *
+         * This function checks if the vector contains an element that is equal to the specified value.
+         *
+         * @param aValue The value to check for in the vector.
+         * @return True if the vector contains the specified value, false otherwise.
+         */
+        bool contains(const T &aValue) const
+        {
+            for (size_t i = 0; i < mSize; ++i)
+            {
+                if (mData[i] == aValue)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     };
 } // namespace Sean

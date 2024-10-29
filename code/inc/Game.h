@@ -40,6 +40,7 @@ private: // private functions
     void printCurrentSetting();
     void playerInput(bool *aQuit);
     PlayerAction getPlayerAction(const std::string &aInput);
+    void updateDungeon();
 
     void lookAction();
     void searchAction();

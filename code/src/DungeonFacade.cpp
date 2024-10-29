@@ -82,9 +82,9 @@ IGameObject *DungeonFacade::createGameObject(const Sean::String &aName)
     return std::move(mDungeon->createGameObject(aName));
 }
 
-void DungeonFacade::update()
+int DungeonFacade::update()
 {
-    mDungeon->update();
+   return mDungeon->update();
 }
 
 void DungeonFacade::teleport(int aAmount)

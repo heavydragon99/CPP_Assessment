@@ -27,7 +27,7 @@ public:
     bool moveLocation(Sean::Direction aDirection);
     bool attackEnemy(const char *aEnemyName, int aDamage);
     IGameObject* createGameObject(const Sean::String &aName);
-    void update();
+    int update();
     void teleport(int aAMount);
 
 private:

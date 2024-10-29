@@ -3,6 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
+#include "RandomGenerator.h"
 
 Player::Player()
     : mHealth(20), mAttackPercentage(40), mGold(0), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
@@ -22,20 +23,16 @@ void Player::printDescription()
     if (mEquippedWeapon)
     {
         mEquippedWeapon->printName();
-        mEquippedWeapon->printDescription();
     }
     else
     {
         std::cout << "Geen" << std::endl;
     }
-
     // print equipped armor
     std::cout << "Uitgeruste pantser: ";
     if (mEquippedArmor)
     {
         mEquippedArmor->printName();
-        std::cout << "Omschrijving: ";
-        mEquippedArmor->printDescription();
     }
     else
     {
@@ -93,6 +90,10 @@ std::unique_ptr<IGameObject> Player::equipObject(const char *aItem)
 
 void Player::addHealth(int aHealth)
 {
+    if(mGodMode && aHealth < 0)
+    {
+        aHealth = 0;
+    }
     mHealth += aHealth;
     std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
 }
@@ -174,9 +175,18 @@ int Player::getAttackPercentage() const
 
 int Player::getAttackDamage() const
 {
+    RandomGenerator randomEngine;
     if (mEquippedWeapon)
     {
-        return mEquippedWeapon->getValue();
+        if(randomEngine.getChance(mAttackPercentage) || mGodMode)
+        {
+            return mEquippedWeapon->getValue();
+        }
     }
     return 0;
+}
+
+bool Player::isDead() const
+{
+    return mHealth <= 0;
 }

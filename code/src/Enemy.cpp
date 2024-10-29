@@ -43,7 +43,16 @@ Enemy::Enemy(Sean::String aName, Sean::String aDescription, int aHealth, int aAt
 
 Sean::String Enemy::getName() const
 {
-    return mName + (std::to_string(mID).c_str());
+    Sean::String tempName;
+    if(isDead())
+    {
+        tempName = Sean::String("dode ") + mName + Sean::String(std::to_string(mID).c_str());
+    }
+    else
+    {
+        tempName = mName + Sean::String(std::to_string(mID).c_str());
+    }
+    return tempName;
 }
 
 void Enemy::printName() const
@@ -68,13 +77,22 @@ Sean::Vector<Sean::Object<GameObject>> &Enemy::getHiddenObjects()
 
 void Enemy::takeDamage(int aDamage)
 {
+    if(aDamage < 0)
+    {
+        return;
+    }
+    if(aDamage > mHealth)
+    {
+        mHealth = 0;
+        return;
+    }
     mHealth -= aDamage;
 }
 
 int Enemy::getAttack()
 {
     RandomGenerator randomEngine;
-    if (randomEngine.shouldAttack(mAttackPercent))
+    if (randomEngine.getChance(mAttackPercent))
     {
         return randomEngine.getRandomValue(mMinimumDamage, mMaximumDamage);
     }

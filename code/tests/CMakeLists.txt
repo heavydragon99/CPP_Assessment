@@ -10,8 +10,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Find GoogleTest package
 find_package(GTest REQUIRED)
 
-# Include common settings
-include(${CMAKE_SOURCE_DIR}/common.cmake)
+# Include directories
+# include_directories(${CMAKE_SOURCE_DIR}/inc)
+# include_directories(${CMAKE_SOURCE_DIR}/external/sqlite3/inc)  # Include SQLite3 headers
 
 # List all test source files
 set(TEST_SOURCES
@@ -20,15 +21,15 @@ set(TEST_SOURCES
 )
 
 # Add the test executable
-add_executable(${PROJECT_NAME} ${TEST_SOURCES} ${MAIN_SOURCES})
+add_executable(${TESTS_NAME} ${TEST_SOURCES})
 
-# Link GoogleTest libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE ${GTEST_LIBRARIES} pthread tinyxml2)
+# Link GoogleTest libraries and the main library
+target_link_libraries(${TESTS_NAME} PRIVATE ${GTEST_LIBRARIES} pthread tinyxml2 ${LIBRARY_NAME})
 
 # Add custom target to run the tests
 add_custom_target(run_tests
-    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}
-    DEPENDS ${PROJECT_NAME}
+    COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TESTS_NAME}
+    DEPENDS ${TESTS_NAME}
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     COMMENT "Running the tests"
 )
