@@ -2,22 +2,19 @@
 
 #include "XmlReader.h"
 #include "IGameObject.h"
+#include "SqlReader.h"
 
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <sstream>
 #include <limits>
+#include <utility>
 
 // Function to clear the console
 void clearConsole()
 {
     std::cout << "\033[2J\033[1;1H";
-}
-
-Game::Game()
-{
-    mDungeon = std::make_unique<DungeonFacade>();
 }
 
 void Game::run()
@@ -28,16 +25,17 @@ void Game::run()
     printCurrentSetting();
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    bool quit = false;
-    while (!quit)
+    while (!mQuit)
     {
-        playerInput(&quit);
+        playerInput();
     }
     clearConsole();
 }
 
 void Game::initialize()
 {
+    mQuit = false;
+    mDungeon = std::make_unique<DungeonFacade>();
     std::string choice;
     while (true)
     {
@@ -95,7 +93,7 @@ void Game::loadDungeon()
     }
 
     XmlReader xmlReader(path.c_str());
-    auto locations = xmlReader.getLocations();
+    std::vector<Sean::ParsedLocations> locations = xmlReader.getLocations();
 
     mDungeon->createDungeon(locations);
 }
@@ -119,7 +117,7 @@ void Game::printCurrentSetting()
     mDungeon->printLongDescription();
 }
 
-void Game::playerInput(bool *aQuit)
+void Game::playerInput()
 {
     std::string input;
 
@@ -177,7 +175,7 @@ void Game::playerInput(bool *aQuit)
             godmodeAction();
             break;
         case PlayerAction::Quit:
-            *aQuit = true;
+            mQuit = true;
             break;
         case PlayerAction::Invalid:
         default:
@@ -226,9 +224,7 @@ void Game::updateDungeon()
     }
     if (mPlayer->isDead())
     {
-        std::cout << "Je bent dood. Game over." << std::endl;
-        throw std::runtime_error("Game over");
-        exit(0);
+        endGame();
     }
 }
 
@@ -276,6 +272,10 @@ void Game::goAction(const std::string &aDirection)
     else
     {
         updateDungeon();
+        if(mQuit)
+        {
+            return;
+        }
         mDungeon->moveLocation(direction);
     }
     clearConsole();
@@ -409,4 +409,61 @@ void Game::helpAction()
 void Game::godmodeAction()
 {
     mPlayer->toggleGodMode();
+}
+
+void Game::endGame()
+{
+    SQLReader &sqlReader = SQLReader::getInstance();
+    sqlReader.putHighscore(mPlayer->getName().c_str(), mPlayer->getGold());
+    std::pair<Sean::String, int> highscore[10];
+
+    for (int i = 0; i < 10; i++)
+    {
+        highscore[i].first = "...";
+        highscore[i].second = 0;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+        if (!sqlReader.getHighscore(highscore[i].first, highscore[i].second, i + 1))
+        {
+            break;
+        }
+    }
+
+    clearConsole();
+    std::cout << "Je bent dood. Game over." << std::endl;
+    std::cout << "je score is: " << mPlayer->getGold() << std::endl;
+    std::cout << "Highscores:" << std::endl;
+    for (int i = 0; i < 10; i++)
+    {
+        std::cout << "\t" << i + 1 << ". " << highscore[i].first << " - " << highscore[i].second << std::endl;
+    }
+    std::cout << "Bedankt voor het spelen!" << std::endl;
+
+    std::string choice;
+    while (true)
+    {
+        std::cout << "Wilt u opnieuw spelen of stoppen? (opnieuw/quit): ";
+        std::cin >> choice;
+
+        if (choice == "opnieuw")
+        {
+            mDungeon.reset();
+            mPlayer.reset();
+            run();
+            mQuit = true;
+            return;
+        }
+        else if (choice == "quit")
+        {
+            std::cout << "Het spel wordt afgesloten. Bedankt voor het spelen!" << std::endl;
+            mQuit = true;
+            return;
+        }
+        else
+        {
+            std::cout << "Ongeldige keuze. Probeer het opnieuw." << std::endl;
+        }
+    }
 }

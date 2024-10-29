@@ -27,6 +27,8 @@ public:
     int getAttackPercentage() const;
     int getAttackDamage() const;
     bool isDead() const;
+    int getGold() const;
+    std::string getName() const;
 
 
 private:

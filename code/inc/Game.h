@@ -28,7 +28,7 @@ enum class PlayerAction
 class Game
 {
 public: // public functions
-    Game();
+    Game() = default;
     virtual ~Game() = default;
     void run();
 
@@ -38,7 +38,7 @@ private: // private functions
     void generateDungeon();
     void printCurrentLocation();
     void printCurrentSetting();
-    void playerInput(bool *aQuit);
+    void playerInput();
     PlayerAction getPlayerAction(const std::string &aInput);
     void updateDungeon();
 
@@ -55,11 +55,15 @@ private: // private functions
     void helpAction();
     void godmodeAction();
 
+    void endGame();
+
 private: // private variables
     std::unique_ptr<Player> mPlayer;
     std::unique_ptr<DungeonFacade> mDungeon;
 
     inline static const std::string StartingWeapon{"dolk"};
+
+    bool mQuit;
 };
 
 #endif // GAME_H

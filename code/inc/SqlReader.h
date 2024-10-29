@@ -21,6 +21,9 @@ public:
     bool getObjectAmount(Sean::String aName, int& aMinimum, int& aMaximum);
     bool getRandomObject(Sean::String& aName, Sean::String& aDescription, Sean::String& aType, int& aMinValue, int& aMaxValue, int& aProtection);
 
+    void putHighscore(const Sean::String aName, int aScore);
+    bool getHighscore(Sean::String& aName, int& aScore, int aRank);
+
 private:
     SQLReader();  // Private constructor
     ~SQLReader(); // Private destructor

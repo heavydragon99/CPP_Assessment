@@ -256,3 +256,64 @@ bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription,
     sqlite3_finalize(stmt);
     return found;
 }
+
+void SQLReader::putHighscore(const Sean::String aName, int aScore)
+{
+    std::string query = "INSERT INTO Leaderboard (naam, goudstukken) VALUES (?, ?)";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
+        return;
+    }
+
+    if (sqlite3_bind_text(stmt, 1, aName.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
+    {
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    if (sqlite3_bind_int(stmt, 2, aScore) != SQLITE_OK)
+    {
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    if (sqlite3_step(stmt) != SQLITE_DONE)
+    {
+        std::cerr << "Failed to execute statement: " << sqlite3_errmsg(db.get()) << std::endl;
+    }
+
+    sqlite3_finalize(stmt);
+}
+
+bool SQLReader::getHighscore(Sean::String &aName, int &aScore, int aRank)
+{
+    std::string query = "SELECT naam, goudstukken FROM Leaderboard ORDER BY goudstukken DESC LIMIT 1 OFFSET ?";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db.get(), query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db.get()) << std::endl;
+        return false;
+    }
+
+    if (sqlite3_bind_int(stmt, 1, aRank - 1) != SQLITE_OK)
+    {
+        std::cerr << "Failed to bind parameter: " << sqlite3_errmsg(db.get()) << std::endl;
+        sqlite3_finalize(stmt);
+        return false;
+    }
+
+    bool found = false;
+    if (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        aName.set(reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0)));
+        aScore = sqlite3_column_int(stmt, 1);
+        found = true;
+    }
+
+    sqlite3_finalize(stmt);
+    return found;
+}

@@ -6,7 +6,7 @@
 #include "RandomGenerator.h"
 
 Player::Player()
-    : mHealth(20), mAttackPercentage(40), mGold(0), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
+    : mHealth(20), mAttackPercentage(40), mGold(100), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
 {
     std::cout << "Wat is je naam? ";
     std::cin >> mName;
@@ -189,4 +189,14 @@ int Player::getAttackDamage() const
 bool Player::isDead() const
 {
     return mHealth <= 0;
+}
+
+int Player::getGold() const
+{
+    return mGold;
+}
+
+std::string Player::getName() const
+{
+    return mName;
 }
