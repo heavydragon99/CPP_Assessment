@@ -13,6 +13,7 @@ protected:
 
     void SetUp() override {
         factory = new GameObjectFactory();
+        factory->resetCounter();
     }
 
     void TearDown() override {
@@ -33,7 +34,7 @@ TEST_F(GameObjectFactoryTest, CreateGoldObject) {
 TEST_F(GameObjectFactoryTest, CreateWeaponObject) {
     GameObject *obj = factory->createGameObject("dolk");
     ASSERT_NE(obj, nullptr);
-    EXPECT_EQ(obj->getName(), "dolk2");
+    EXPECT_EQ(obj->getName(), "dolk1");
     EXPECT_EQ(obj->getType(), ObjectType::Weapon);
     EXPECT_EQ(static_cast<WeaponObject*>(obj)->getMin(), 1);
     EXPECT_EQ(static_cast<WeaponObject*>(obj)->getMax(), 4);
@@ -43,7 +44,7 @@ TEST_F(GameObjectFactoryTest, CreateWeaponObject) {
 TEST_F(GameObjectFactoryTest, CreateArmorObject) {
     GameObject *obj = factory->createGameObject("harnas");
     ASSERT_NE(obj, nullptr);
-    EXPECT_EQ(obj->getName(), "harnas3");
+    EXPECT_EQ(obj->getName(), "harnas1");
     EXPECT_EQ(obj->getType(), ObjectType::Armor);
     EXPECT_EQ(static_cast<ArmorObject*>(obj)->getArmor(), 5);
     delete obj;
@@ -52,7 +53,7 @@ TEST_F(GameObjectFactoryTest, CreateArmorObject) {
 TEST_F(GameObjectFactoryTest, CreateConsumableObject) {
     GameObject *obj = factory->createGameObject("klein levenselixer");
     ASSERT_NE(obj, nullptr);
-    EXPECT_EQ(obj->getName(), "klein levenselixer4");
+    EXPECT_EQ(obj->getName(), "klein levenselixer1");
     EXPECT_EQ(obj->getType(), ObjectType::Consumable_Health);
     EXPECT_EQ(static_cast<ConsumableObject*>(obj)->getMin(), 1);
     EXPECT_EQ(static_cast<ConsumableObject*>(obj)->getMax(), 10);

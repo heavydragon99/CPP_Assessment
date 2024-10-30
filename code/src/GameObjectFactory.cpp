@@ -95,6 +95,12 @@ GameObject *GameObjectFactory::createGameObject()
     return nullptr;
 }
 
+//Function added for the tests
+void GameObjectFactory::resetCounter()
+{
+    mCounter = 0;
+}
+
 // Private Methods
 void GameObjectFactory::incrementCounter()
 {

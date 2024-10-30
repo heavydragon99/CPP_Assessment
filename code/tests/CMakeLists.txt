@@ -16,6 +16,7 @@ find_package(GTest REQUIRED)
 
 # List all test source files
 set(TEST_SOURCES
+    ${CMAKE_SOURCE_DIR}/tests/test_enemy.cpp
     ${CMAKE_SOURCE_DIR}/tests/test_gameObjects.cpp
     ${CMAKE_SOURCE_DIR}/tests/test_gameObjectsFactory.cpp
     ${CMAKE_SOURCE_DIR}/tests/test_sql.cpp

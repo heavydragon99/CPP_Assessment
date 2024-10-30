@@ -17,6 +17,8 @@ public:
     static GameObject *createGameObject(const Sean::String &aName);
     static GameObject *createGameObject();
 
+    static void resetCounter();
+
 private:
     // Private Methods
     static void incrementCounter();
