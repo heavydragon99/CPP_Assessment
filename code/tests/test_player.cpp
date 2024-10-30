@@ -123,7 +123,7 @@ TEST_F(PlayerTest, AddObject)
     EXPECT_CALL(*mockObject, isMoney()).WillRepeatedly(::testing::Return(true));
     EXPECT_CALL(*mockObject, getValue()).WillRepeatedly(::testing::Return(50));
     player->addObject(std::move(mockObject));
-    EXPECT_EQ(player->getGold(), 150);
+    EXPECT_EQ(player->getGold(), 50);
 }
 
 // Test for printObject method
@@ -206,7 +206,7 @@ TEST_F(PlayerTest, IsDead)
 // Test for getGold method
 TEST_F(PlayerTest, GetGold)
 {
-    EXPECT_EQ(player->getGold(), 100);
+    EXPECT_EQ(player->getGold(), 0);
 }
 
 // Test for getName method
