@@ -38,6 +38,7 @@ public:
     bool printObject(const char *aObjectName);
     const Sean::Vector<Sean::Object<GameObject>>& getVisibleObjects() const;
     const Sean::Vector<Sean::Object<GameObject>>& getHiddenObjects() const;
+    const Sean::Vector<Enemy>& getEnemies() const;
 
 private:
     // Private Methods

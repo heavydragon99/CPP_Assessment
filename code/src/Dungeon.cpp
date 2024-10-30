@@ -108,7 +108,8 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
 Dungeon::Dungeon(int aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
-    if (aLocations <= 0) {
+    if (aLocations <= 0)
+    {
         throw std::invalid_argument("Number of locations must be greater than zero");
     }
 
@@ -116,11 +117,13 @@ Dungeon::Dungeon(int aLocations)
     Sean::Vector<Sean::String> usedNames;
 
     // Generate unique locations
-    for (int i = 0; i < aLocations; ++i) {
+    for (int i = 0; i < aLocations; ++i)
+    {
         Sean::Object<Location> location;
 
         // Ensure unique location name
-        do {
+        do
+        {
             location.reset(LocationFactory::createLocation());
         } while (usedNames.contains(location.get()->getName()));
 
@@ -129,28 +132,34 @@ Dungeon::Dungeon(int aLocations)
 
         // Add visible objects
         int numVisibleObjects = randomGen.getRandomValue(0, 3);
-        for (int j = 0; j < numVisibleObjects; ++j) {
+        for (int j = 0; j < numVisibleObjects; ++j)
+        {
             Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get()) {
+            if (object.get())
+            {
                 mMap.back().addVisibleObject(object.release());
             }
         }
 
         // Add hidden objects
         int numHiddenObjects = randomGen.getRandomValue(0, 2);
-        for (int j = 0; j < numHiddenObjects; ++j) {
+        for (int j = 0; j < numHiddenObjects; ++j)
+        {
             Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get()) {
+            if (object.get())
+            {
                 mMap.back().addHiddenObject(object.release());
             }
         }
     }
 
     // Ensure all locations are reachable by setting exits
-    for (int i = 0; i < aLocations; ++i) {
+    for (int i = 0; i < aLocations; ++i)
+    {
         Location &currentLocation = mMap[i];
         int numExits = randomGen.getRandomValue(1, 4);
-        for (int j = 0; j < numExits; ++j) {
+        for (int j = 0; j < numExits; ++j)
+        {
             int exitIndex = (i + j + 1) % aLocations;
             currentLocation.setExit(static_cast<Sean::Direction>(j % 4), &mMap[exitIndex]);
         }
@@ -158,21 +167,25 @@ Dungeon::Dungeon(int aLocations)
 
     // Add enemies to the dungeon
     int numEnemies = (aLocations + 2) / 3; // One enemy per 3 locations, rounded up
-    for (int i = 0; i < numEnemies; ++i) {
+    for (int i = 0; i < numEnemies; ++i)
+    {
         Sean::Object<Enemy> enemy(EnemyFactory::createEnemy());
-        if (enemy.get() != nullptr) {
+        if (enemy.get() != nullptr)
+        {
             mMap[i % aLocations].addEnemy(*enemy);
         }
     }
 
     // Set mCurrentLocation to the first location in the map if available
-    if (!mMap.empty()) {
+    if (!mMap.empty())
+    {
         mCurrentLocation = &mMap[0];
-    } else {
+    }
+    else
+    {
         throw std::runtime_error("No locations provided");
     }
 }
-
 
 // Copy constructor
 Dungeon::Dungeon(const Dungeon &other)
@@ -270,6 +283,10 @@ bool Dungeon::printObject(const char *aObjectName)
 
 void Dungeon::teleport(int aAmount)
 {
+    if (aAmount >= mMap.size())
+    {
+        aAmount = mMap.size() - 1;
+    }
     if (aAmount <= 0)
     {
         return;
@@ -286,6 +303,9 @@ void Dungeon::teleport(int aAmount)
         Location *locationEast = mCurrentLocation->getExit(Sean::Direction::East);
         Location *locationSouth = mCurrentLocation->getExit(Sean::Direction::South);
         Location *locationWest = mCurrentLocation->getExit(Sean::Direction::West);
+
+        int attempts = 0;
+        const int maxAttempts = 20; // Maximum number of attempts to find a new direction
 
         do
         {
@@ -308,6 +328,12 @@ void Dungeon::teleport(int aAmount)
                 nextLocation = locationWest;
                 nextDirection = Sean::Direction::West;
                 break;
+            }
+            attempts++;
+            if (attempts >= maxAttempts)
+            {
+                // Break out of the loop if max attempts are reached
+                return;
             }
         } while (nextLocation == nullptr);
 
@@ -351,6 +377,11 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
     }
     std::cout << "Er is geen vijand met de naam " << aEnemyName << std::endl;
     return false;
+}
+
+const Location &Dungeon::getCurrentLocation() const
+{
+    return *mCurrentLocation;
 }
 
 void Dungeon::moveEnemies()

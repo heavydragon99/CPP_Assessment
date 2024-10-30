@@ -211,3 +211,8 @@ const Sean::Vector<Sean::Object<GameObject>> &Location::getHiddenObjects() const
 {
     return mHiddenObjects;
 }
+
+const Sean::Vector<Enemy> &Location::getEnemies() const
+{
+    return mEnemies;
+}

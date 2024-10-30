@@ -34,6 +34,7 @@ public:
     bool printObject(const char *aObjectName);
     void teleport(int aAmount);
     bool attackEnemy(const char *aEnemyName, int aDamage);
+    const Location& getCurrentLocation() const;
 
 private:
     // Private Methods
