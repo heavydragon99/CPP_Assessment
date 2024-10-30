@@ -450,11 +450,11 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
                     {
                         enemyName = enemyName.substr(5);
                     }
-                    std::cout << "Je hebt de " << enemyName << " geraakt met " << aDamage << " schade en verslagen" << std::endl;
+                    std::cout << "Je hebt de " << enemyName << " " << aDamage << " schade toegediend en verslagen" << std::endl;
                 }
                 else
                 {
-                    std::cout << "Je hebt de " << enemy.getName() << " geraakt met " << aDamage << " schade" << std::endl;
+                    std::cout << "Je hebt de " << enemy.getName() << " " << aDamage << " schade toegediend" << std::endl;
                 }
                 return true;
             }

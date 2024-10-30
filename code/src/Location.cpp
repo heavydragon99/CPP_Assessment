@@ -180,19 +180,19 @@ void Location::printExits() const
     std::cout << "Uitgangen: ";
     if (mNorth != nullptr)
     {
-        std::cout << "Noord ";
+        std::cout << "noord ";
     }
     if (mEast != nullptr)
     {
-        std::cout << "Oost ";
+        std::cout << "oost ";
     }
     if (mSouth != nullptr)
     {
-        std::cout << "Zuid ";
+        std::cout << "zuid ";
     }
     if (mWest != nullptr)
     {
-        std::cout << "West ";
+        std::cout << "west ";
     }
     std::cout << std::endl;
 }

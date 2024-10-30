@@ -425,7 +425,7 @@ void Game::hitAction(const std::string &aTarget)
 {
     int damage = mPlayer->getAttackDamage();
     if(damage == 0){
-        std::cout << "Je hebt de vijand gemist" << std::endl;
+        std::cout << "Je hebt de vijand niet geraakt" << std::endl;
     }
     if (mDungeon->attackEnemy(aTarget.c_str(), damage))
     {
