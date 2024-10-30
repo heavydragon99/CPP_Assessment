@@ -3,6 +3,9 @@
 
 #include "GameObject.h"
 
+/**
+ * @brief The WeaponObject class represents a weapon in the game.
+ */
 class WeaponObject : public GameObject
 {
 public:
@@ -32,8 +35,8 @@ private:
 
 private:
     // Members
-    int mMinDamage;
-    int mMaxDamage;
+    int mMinDamage; ///< The minimum damage of the weapon.
+    int mMaxDamage; ///< The maximum damage of the weapon.
 };
 
 #endif // WEAPONOBJECT_H

@@ -2,8 +2,12 @@
 #define ARMOROBJECT_H
 
 #include "GameObject.h"
-#include <utility> // for std::move
+#include <utility>
 
+/**
+ * @class ArmorObject
+ * @brief A class representing an armor object in the game.
+ */
 class ArmorObject : public GameObject
 {
 public:
@@ -15,7 +19,7 @@ public:
     // Destructor
     virtual ~ArmorObject() = default;
 
-        // Assignment Operators
+    // Assignment Operators
     ArmorObject &operator=(const ArmorObject &other);
     ArmorObject &operator=(ArmorObject &&other) noexcept;
 
@@ -27,14 +31,12 @@ public:
     int getMin() const override;
     int getMax() const override;
 
-
-
 private:
     // Private Methods
     void swap(ArmorObject &other) noexcept;
 
     // Members
-    int mArmor;
+    int mArmor; ///< The armor value of the object.
 };
 
 #endif // ARMOROBJECT_H

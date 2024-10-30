@@ -4,6 +4,12 @@
 #include "GameObject.h"
 #include "Sean.h"
 
+/**
+ * @brief Represents an enemy in the game.
+ * 
+ * The Enemy class encapsulates the properties and behaviors of an enemy character,
+ * including its name, description, health, attack capabilities, and hidden objects.
+ */
 class Enemy
 {
 public:
@@ -35,14 +41,14 @@ private:
 
 private:
     // Members
-    Sean::String mName;                                    // Name of the enemy
-    int mID;                                               // ID of the enemy
-    Sean::String mDescription;                             // Description of the enemy
-    Sean::Vector<Sean::Object<GameObject>> mHiddenObjects; // Objects that are hidden in the enemy
-    int mHealth;                                           // Health of the enemy
-    int mAttackPercent;                                    // Attack percentage of the enemy
-    int mMinimumDamage;                                    // Minimum damage the enemy can deal
-    int mMaximumDamage;                                    // Maximum damage the enemy can deal
+    Sean::String mName;                                    ///< Name of the enemy
+    int mID;                                               ///< ID of the enemy
+    Sean::String mDescription;                             ///< Description of the enemy
+    Sean::Vector<Sean::Object<GameObject>> mHiddenObjects; ///< Objects that are hidden in the enemy
+    int mHealth;                                           ///< Health of the enemy
+    int mAttackPercent;                                    ///< Attack percentage of the enemy
+    int mMinimumDamage;                                    ///< Minimum damage the enemy can deal
+    int mMaximumDamage;                                    ///< Maximum damage the enemy can deal
 };
 
 #endif // ENEMY_H

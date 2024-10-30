@@ -11,7 +11,11 @@
 // Dummy static Location for temporary initialization
 static Location dummyLocation("dummy", "dummy", 0);
 
-// Constructor that takes a vector of ParsedLocations
+/**
+ * @brief Constructor that takes a vector of ParsedLocations.
+ * 
+ * @param aLocations A vector of parsed locations to initialize the dungeon.
+ */
 Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
@@ -103,8 +107,11 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
     }
 }
 
-// Constructor that takes an integer
-
+/**
+ * @brief Constructor that takes an integer representing the number of locations.
+ * 
+ * @param aLocations The number of locations to generate in the dungeon.
+ */
 Dungeon::Dungeon(int aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
@@ -187,13 +194,22 @@ Dungeon::Dungeon(int aLocations)
     }
 }
 
-// Copy constructor
+/**
+ * @brief Copy constructor.
+ * 
+ * @param other The other Dungeon to copy from.
+ */
 Dungeon::Dungeon(const Dungeon &other)
     : mMap(other.mMap), mCurrentLocation(other.mCurrentLocation)
 {
 }
 
-// Copy assignment operator
+/**
+ * @brief Copy assignment operator.
+ * 
+ * @param other The other Dungeon to copy from.
+ * @return Dungeon& A reference to this object.
+ */
 Dungeon &Dungeon::operator=(const Dungeon &other)
 {
     if (this != &other)
@@ -204,7 +220,11 @@ Dungeon &Dungeon::operator=(const Dungeon &other)
     return *this;
 }
 
-// Methods
+/**
+ * @brief Updates the dungeon state.
+ * 
+ * @return int The total damage taken from enemies.
+ */
 int Dungeon::update()
 {
     int damage = 0;
@@ -228,37 +248,72 @@ int Dungeon::update()
     return damage;
 }
 
+/**
+ * @brief Creates a game object.
+ * 
+ * @param aName The name of the game object to create.
+ * @return GameObject* A pointer to the created game object.
+ */
 GameObject *Dungeon::createGameObject(const Sean::String &aName)
 {
     return std::move(GameObjectFactory::createGameObject(aName));
 }
 
+/**
+ * @brief Picks up an object from the current location.
+ * 
+ * @param aObjectName The name of the object to pick up.
+ * @return GameObject* A pointer to the picked-up object.
+ */
 GameObject *Dungeon::pickUpObject(const char *aObjectName)
 {
     return mCurrentLocation->pickUpObject(aObjectName);
 }
 
+/**
+ * @brief Places an object in the current location.
+ * 
+ * @param aObject A pointer to the object to place.
+ */
 void Dungeon::placeObject(GameObject *aObject)
 {
     mCurrentLocation->addVisibleObject(aObject);
 }
 
+/**
+ * @brief Prints a short description of the current location.
+ */
 void Dungeon::printShortDescription() const
 {
     mCurrentLocation->printDescriptionShort();
 }
 
+/**
+ * @brief Prints a long description of the current location.
+ */
 void Dungeon::printLongDescription() const
 {
     mCurrentLocation->printDescriptionLong();
     mCurrentLocation->printExits();
 }
 
+/**
+ * @brief Checks if a location in the given direction is valid.
+ * 
+ * @param aDirection The direction to check.
+ * @return bool True if the location is valid, false otherwise.
+ */
 bool Dungeon::validLocation(Sean::Direction aDirection) const
 {
     return mCurrentLocation->getExit(aDirection) != nullptr;
 }
 
+/**
+ * @brief Moves to a new location in the given direction.
+ * 
+ * @param aDirection The direction to move.
+ * @return bool True if the move was successful, false otherwise.
+ */
 bool Dungeon::moveLocation(Sean::Direction aDirection)
 {
     Location *newLocation = mCurrentLocation->getExit(aDirection);
@@ -271,16 +326,30 @@ bool Dungeon::moveLocation(Sean::Direction aDirection)
     return false;
 }
 
+/**
+ * @brief Moves hidden objects in the current location.
+ */
 void Dungeon::moveHiddenObjects()
 {
     mCurrentLocation->moveHiddenObjects();
 }
 
+/**
+ * @brief Prints information about an object in the current location.
+ * 
+ * @param aObjectName The name of the object to print.
+ * @return bool True if the object was found, false otherwise.
+ */
 bool Dungeon::printObject(const char *aObjectName)
 {
     return mCurrentLocation->printObject(aObjectName);
 }
 
+/**
+ * @brief Teleports the player a certain number of locations.
+ * 
+ * @param aAmount The number of locations to teleport.
+ */
 void Dungeon::teleport(int aAmount)
 {
     if (aAmount >= mMap.size())
@@ -350,6 +419,13 @@ void Dungeon::teleport(int aAmount)
     }
 }
 
+/**
+ * @brief Attacks an enemy in the current location.
+ * 
+ * @param aEnemyName The name of the enemy to attack.
+ * @param aDamage The amount of damage to deal.
+ * @return bool True if the enemy was found and attacked, false otherwise.
+ */
 bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
 {
     for (Enemy &enemy : mCurrentLocation->getEnemies())
@@ -379,11 +455,19 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
     return false;
 }
 
+/**
+ * @brief Gets the current location.
+ * 
+ * @return const Location& A reference to the current location.
+ */
 const Location &Dungeon::getCurrentLocation() const
 {
     return *mCurrentLocation;
 }
 
+/**
+ * @brief Moves enemies in the dungeon.
+ */
 void Dungeon::moveEnemies()
 {
     Sean::Vector<Sean::String> movedEnemies;

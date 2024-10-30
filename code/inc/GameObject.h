@@ -4,16 +4,22 @@
 #include "Sean.h"
 #include "IGameObject.h"
 
+/**
+ * @brief Enum class representing the type of a game object.
+ */
 enum class ObjectType
 {
-    Gold,
-    Weapon,
-    Armor,
-    Consumable_Health,
-    Consumable_Experience,
-    Consumable_Teleport
+    Gold,                  ///< Represents gold.
+    Weapon,                ///< Represents a weapon.
+    Armor,                 ///< Represents armor.
+    Consumable_Health,     ///< Represents a health consumable.
+    Consumable_Experience, ///< Represents an experience consumable.
+    Consumable_Teleport    ///< Represents a teleport consumable.
 };
 
+/**
+ * @brief The GameObject class represents an object in the game.
+ */
 class GameObject : public IGameObject
 {
 public:
@@ -52,10 +58,10 @@ private:
 
 protected:
     // Members
-    Sean::String mName;        // Name of the object
-    int mID;                   // ID of the object
-    Sean::String mDescription; // Description of the object
-    ObjectType mType;          // Type of the object
+    Sean::String mName;        ///< Name of the object
+    int mID;                   ///< ID of the object
+    Sean::String mDescription; ///< Description of the object
+    ObjectType mType;          ///< Type of the object
 };
 
 #endif // GAMEOBJECT_H

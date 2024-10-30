@@ -3,6 +3,9 @@
 
 #include "GameObject.h"
 
+/**
+ * @brief this class represents a gold object in the game.
+ */
 class GoldObject : public GameObject
 {
 public:
@@ -30,8 +33,9 @@ private:
 
 private:
     // Members
-    int mMinimumValue;
-    int mMaximumValue;
+
+    int mMinimumValue; ///< The minimum value of the gold object.
+    int mMaximumValue; ///< The maximum value of the gold object.
 };
 
 #endif // GOLD_OBJECT_H

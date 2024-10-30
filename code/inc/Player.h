@@ -7,6 +7,9 @@
 #include <vector>
 #include <memory>
 
+/**
+ * @brief player class
+ */
 class Player
 {
 public:
@@ -23,7 +26,7 @@ public:
     // Methods
     void printDescription() const;
     std::unique_ptr<IGameObject> equipObject(const char *aItem);
-    void removeEquippedItem(IGameObject* equippedItem);
+    void removeEquippedItem(IGameObject *equippedItem);
     void addHealth(int aHealth);
     void addExperience(int aExperience);
     void addObject(std::unique_ptr<IGameObject> aObject);
@@ -43,14 +46,14 @@ private:
 
 private:
     // Members
-    std::string mName;
-    int mHealth;
-    int mAttackPercentage;
-    std::vector<std::unique_ptr<IGameObject>> mInventory;
-    int mGold;
-    IGameObject *mEquippedWeapon;
-    IGameObject *mEquippedArmor;
-    bool mGodMode;
+    std::string mName;                                    ///< The name of the player.
+    int mHealth;                                          ///< The health of the player.
+    int mAttackPercentage;                                ///< The attack percentage of the player.
+    std::vector<std::unique_ptr<IGameObject>> mInventory; ///< The inventory of the player.
+    int mGold;                                            ///< The amount of gold the player has.
+    IGameObject *mEquippedWeapon;                         ///< The equipped weapon of the player.
+    IGameObject *mEquippedArmor;                          ///< The equipped armor of the player.
+    bool mGodMode;                                        ///< Whether the player is in god mode.
 };
 
 #endif // PLAYER_H

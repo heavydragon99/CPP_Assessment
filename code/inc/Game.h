@@ -7,6 +7,9 @@
 
 #include <memory>
 
+/**
+ * @brief Enum class representing possible actions a player can take.
+ */
 enum class PlayerAction
 {
     Kijk,
@@ -25,13 +28,22 @@ enum class PlayerAction
     Invalid
 };
 
+/**
+ * @brief The Game class manages the main game loop and player interactions.
+ */
 class Game
 {
 public:
     // Constructors
+    /**
+     * @brief Default constructor for Game.
+     */
     Game() = default;
 
     // Destructor
+    /**
+     * @brief Destructor for Game.
+     */
     virtual ~Game() = default;
 
     // Methods
@@ -65,11 +77,24 @@ private:
 
 private:
     // Members
+    /**
+     * @brief Unique pointer to the Player object.
+     */
     std::unique_ptr<Player> mPlayer;
+
+    /**
+     * @brief Unique pointer to the DungeonFacade object.
+     */
     std::unique_ptr<DungeonFacade> mDungeon;
 
+    /**
+     * @brief The starting weapon for the player.
+     */
     inline static const std::string StartingWeapon{"dolk"};
 
+    /**
+     * @brief Flag indicating whether the game should quit.
+     */
     bool mQuit;
 };
 

@@ -3,6 +3,10 @@
 
 #include "GameObject.h"
 
+/**
+ * @class ConsumableObject
+ * @brief A class representing a consumable object in the game.
+ */
 class ConsumableObject : public GameObject
 {
 public:
@@ -30,8 +34,14 @@ private:
     void swap(ConsumableObject &other) noexcept;
 
 private:
-    // Members
+    /**
+     * @brief The minimum value of the consumable object.
+     */
     int mMinimum;
+
+    /**
+     * @brief The maximum value of the consumable object.
+     */
     int mMaximum;
 };
 

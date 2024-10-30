@@ -4,6 +4,10 @@
 #include "IGameObject.h"
 #include "SqlReader.h"
 
+#include "LocationFactory.h"
+#include "GameObjectFactory.h"
+#include "EnemyFactory.h"
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -11,13 +15,19 @@
 #include <limits>
 #include <utility>
 
-// Function to clear the console
+/**
+ * @brief Clears the console screen.
+ */
 void clearConsole()
 {
     std::cout << "\033[2J\033[1;1H";
 }
 
 // Methods
+
+/**
+ * @brief Runs the main game loop.
+ */
 void Game::run()
 {
     clearConsole();
@@ -33,8 +43,18 @@ void Game::run()
     clearConsole();
 }
 
+/**
+ * @brief Initializes the game by setting up the dungeon and player.
+ */
 void Game::initialize()
 {
+    LocationFactory locationFactory;
+    locationFactory.resetCounter();
+    GameObjectFactory gameObjectFactory;
+    gameObjectFactory.resetCounter();
+    EnemyFactory enemyFactory;
+    enemyFactory.resetCounter();
+
     mQuit = false;
     mDungeon = std::make_unique<DungeonFacade>();
     std::string choice;
@@ -67,6 +87,9 @@ void Game::initialize()
     mPlayer->equipObject(weaponName.c_str());
 }
 
+/**
+ * @brief Loads the dungeon from an XML file.
+ */
 void Game::loadDungeon()
 {
     std::string xmlChoice;
@@ -99,6 +122,9 @@ void Game::loadDungeon()
     mDungeon->createDungeon(locations);
 }
 
+/**
+ * @brief Generates a random dungeon.
+ */
 void Game::generateDungeon()
 {
     int locations;
@@ -130,16 +156,25 @@ void Game::generateDungeon()
     }
 }
 
+/**
+ * @brief Prints the short description of the current location.
+ */
 void Game::printCurrentLocation() const
 {
     mDungeon->printShortDescription();
 }
 
+/**
+ * @brief Prints the long description of the current setting.
+ */
 void Game::printCurrentSetting() const
 {
     mDungeon->printLongDescription();
 }
 
+/**
+ * @brief Handles player input and executes the corresponding actions.
+ */
 void Game::playerInput()
 {
     std::string input;
@@ -212,6 +247,12 @@ void Game::playerInput()
     }
 }
 
+/**
+ * @brief Maps player input to PlayerAction enum.
+ * 
+ * @param aAction The action input by the player.
+ * @return PlayerAction The corresponding PlayerAction enum value.
+ */
 PlayerAction Game::getPlayerAction(const std::string &aAction) const
 {
     static const std::unordered_map<std::string, PlayerAction> actionMap = {
@@ -237,6 +278,9 @@ PlayerAction Game::getPlayerAction(const std::string &aAction) const
     return PlayerAction::Invalid;
 }
 
+/**
+ * @brief Updates the dungeon and applies any damage to the player.
+ */
 void Game::updateDungeon()
 {
     int damage = mDungeon->update();
@@ -251,18 +295,29 @@ void Game::updateDungeon()
     }
 }
 
+/**
+ * @brief Executes the look action, printing the current setting.
+ */
 void Game::lookAction()
 {
     clearConsole();
     printCurrentSetting();
 }
 
+/**
+ * @brief Executes the search action, moving hidden objects and updating the dungeon.
+ */
 void Game::searchAction()
 {
     mDungeon->moveHiddenObjects();
     updateDungeon();
 }
 
+/**
+ * @brief Executes the go action, moving the player in the specified direction.
+ * 
+ * @param aDirection The direction to move.
+ */
 void Game::goAction(const std::string &aDirection)
 {
     Sean::Direction direction;
@@ -305,6 +360,11 @@ void Game::goAction(const std::string &aDirection)
     printCurrentLocation();
 }
 
+/**
+ * @brief Executes the take action, picking up the specified object.
+ * 
+ * @param aObject The object to take.
+ */
 void Game::takeAction(const std::string &aObject)
 {
     std::unique_ptr<IGameObject> object(mDungeon->pickUpObject(aObject.c_str()));
@@ -318,6 +378,11 @@ void Game::takeAction(const std::string &aObject)
     }
 }
 
+/**
+ * @brief Executes the drop action, dropping the specified object.
+ * 
+ * @param aObject The object to drop.
+ */
 void Game::dropAction(const std::string &aObject)
 {
     auto item = mPlayer->dropObject(aObject.c_str());
@@ -331,6 +396,11 @@ void Game::dropAction(const std::string &aObject)
     }
 }
 
+/**
+ * @brief Executes the examine action, examining the specified object or the player if no object is specified.
+ * 
+ * @param aObject The object to examine.
+ */
 void Game::examineAction(const std::string &aObject)
 {
     if (aObject.empty())
@@ -348,6 +418,11 @@ void Game::examineAction(const std::string &aObject)
     }
 }
 
+/**
+ * @brief Executes the hit action, attacking the specified target.
+ * 
+ * @param aTarget The target to hit.
+ */
 void Game::hitAction(const std::string &aTarget)
 {
     if (mDungeon->attackEnemy(aTarget.c_str(), mPlayer->getAttackDamage()))
@@ -360,6 +435,11 @@ void Game::hitAction(const std::string &aTarget)
     }
 }
 
+/**
+ * @brief Executes the wear action, equipping the specified object.
+ * 
+ * @param aObject The object to wear.
+ */
 void Game::wearAction(const std::string &aObject)
 {
     auto previousItem = mPlayer->equipObject(aObject.c_str());
@@ -372,11 +452,19 @@ void Game::wearAction(const std::string &aObject)
     }
 }
 
+/**
+ * @brief Executes the wait action, updating the dungeon.
+ */
 void Game::waitAction()
 {
     updateDungeon();
 }
 
+/**
+ * @brief Executes the consume action, consuming the specified object.
+ * 
+ * @param aObject The object to consume.
+ */
 void Game::consumeAction(const std::string &aObject)
 {
     for (auto iter = mPlayer->getInventory().begin(); iter != mPlayer->getInventory().end(); ++iter)
@@ -409,6 +497,9 @@ void Game::consumeAction(const std::string &aObject)
     std::cout << "Object " << aObject << " niet gevonden in je inventory" << std::endl;
 }
 
+/**
+ * @brief Executes the help action, displaying available commands.
+ */
 void Game::helpAction() const
 {
     std::cout << "Beschikbare acties:" << std::endl;
@@ -429,11 +520,17 @@ void Game::helpAction() const
     std::cout << "quit - Het spel verlaten" << std::endl;
 }
 
+/**
+ * @brief Toggles god mode for the player.
+ */
 void Game::godmodeAction()
 {
     mPlayer->toggleGodMode();
 }
 
+/**
+ * @brief Ends the game, displaying the player's score and high scores.
+ */
 void Game::endGame()
 {
     SQLReader &sqlReader = SQLReader::getInstance();

@@ -4,6 +4,12 @@
 
 int EnemyFactory::mCounter = 0;
 
+/**
+ * @brief Creates an Enemy object with the specified name.
+ * 
+ * @param aEnemyName The name of the enemy to create.
+ * @return Enemy* Pointer to the created Enemy object.
+ */
 Enemy *EnemyFactory::createEnemy(const Sean::String &aEnemyName)
 {
     Sean::String name = aEnemyName;
@@ -25,6 +31,11 @@ Enemy *EnemyFactory::createEnemy(const Sean::String &aEnemyName)
     }
 }
 
+/**
+ * @brief Creates a random Enemy object.
+ * 
+ * @return Enemy* Pointer to the created Enemy object.
+ */
 Enemy *EnemyFactory::createEnemy()
 {
     SQLReader &sqlReader = SQLReader::getInstance();
@@ -47,7 +58,14 @@ Enemy *EnemyFactory::createEnemy()
     }
 }
 
-// Private Methods
+void EnemyFactory::resetCounter()
+{
+    mCounter = 0;
+}
+
+/**
+ * @brief Increments the internal counter for enemy IDs.
+ */
 void EnemyFactory::incrementCounter()
 {
     ++mCounter;

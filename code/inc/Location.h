@@ -5,6 +5,9 @@
 #include "GameObject.h"
 #include "Enemy.h"
 
+/**
+ * @brief Represents a location in the game.
+ */
 class Location
 {
 public:
@@ -36,9 +39,9 @@ public:
     void moveHiddenObjects();
     GameObject *pickUpObject(const char *aObjectName);
     bool printObject(const char *aObjectName);
-    const Sean::Vector<Sean::Object<GameObject>>& getVisibleObjects() const;
-    const Sean::Vector<Sean::Object<GameObject>>& getHiddenObjects() const;
-    const Sean::Vector<Enemy>& getEnemies() const;
+    const Sean::Vector<Sean::Object<GameObject>> &getVisibleObjects() const;
+    const Sean::Vector<Sean::Object<GameObject>> &getHiddenObjects() const;
+    const Sean::Vector<Enemy> &getEnemies() const;
 
 private:
     // Private Methods
@@ -48,16 +51,16 @@ public:
 
 private:
     // Members
-    Sean::String mName;                                     // Name of the location
-    int mID;                                                // ID of the location
-    Sean::String mDescription;                              // Description of the location
-    Sean::Vector<Sean::Object<GameObject>> mVisibleObjects; // Objects that are visible in the location
-    Sean::Vector<Sean::Object<GameObject>> mHiddenObjects;  // Objects that are hidden in the location
-    Sean::Vector<Enemy> mEnemies;                           // Enemies in the location
-    Location *mNorth;
-    Location *mEast;
-    Location *mSouth;
-    Location *mWest;
+    Sean::String mName;                                     ///< Name of the location
+    int mID;                                                ///< ID of the location
+    Sean::String mDescription;                              ///< Description of the location
+    Sean::Vector<Sean::Object<GameObject>> mVisibleObjects; ///< Objects that are visible in the location
+    Sean::Vector<Sean::Object<GameObject>> mHiddenObjects;  ///< Objects that are hidden in the location
+    Sean::Vector<Enemy> mEnemies;                           ///< Enemies in the location
+    Location *mNorth;                                       ///< Location to the north
+    Location *mEast;                                        ///< Location to the east
+    Location *mSouth;                                       ///< Location to the south
+    Location *mWest;                                        ///< Location to the west
 };
 
 #endif // LOCATION_H

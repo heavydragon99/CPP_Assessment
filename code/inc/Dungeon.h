@@ -5,8 +5,12 @@
 #include "Location.h"
 #include "WeaponObject.h"
 
-#include <vector>
-
+/**
+ * @class Dungeon
+ * @brief A class representing a dungeon in the game.
+ * 
+ * This class manages the locations, objects, and enemies within a dungeon.
+ */
 class Dungeon
 {
 public:
@@ -41,8 +45,14 @@ private:
     void moveEnemies();
 
 private:
-    // Members
+    /**
+     * @brief The map of the dungeon, containing all locations.
+     */
     Sean::Vector<Location> mMap; //unordered_map would be way better!!!!!!!!!!
+
+    /**
+     * @brief The current location of the player in the dungeon.
+     */
     Location *mCurrentLocation;
 };
 

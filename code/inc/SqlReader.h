@@ -4,6 +4,9 @@
 #include "sqlite3.h"
 #include "Sean.h"
 
+/**
+ * @brief The SQLReader class reads data from an SQLite database.
+ */
 class SQLReader
 {
 public:
@@ -18,6 +21,7 @@ public:
     ~SQLReader() = default;
 
     // Methods
+    bool prepareAndBindStatement(const std::string &query, sqlite3_stmt **stmt, const char *bindText) const;
     bool getLocationInfo(Sean::String &aName, Sean::String &aDescription) const;
     bool getRandomLocation(Sean::String &aName, Sean::String &aDescription) const;
     bool getEnemyInfo(Sean::String &aName, Sean::String &aDescription, int &aHealth, int &aAttackPercent, int &aMinDamage, int &aMaxDamage) const;
@@ -35,7 +39,7 @@ private:
 
 private:
     // Members
-    Sean::Object<sqlite3> db;
+    Sean::Object<sqlite3> db; ///< The SQLite database object.
 
 private:
     // Constructors

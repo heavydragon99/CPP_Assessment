@@ -4,6 +4,9 @@
 #include "GameObject.h"
 #include "Sean.h"
 
+/**
+ * @brief Factory class for creating GameObject objects.
+ */
 class GameObjectFactory
 {
 public:
@@ -25,6 +28,9 @@ private:
 
 private:
     // Members
+    /**
+     * @brief Counter for assigning unique IDs to game objects.
+     */
     static int mCounter;
 };
 

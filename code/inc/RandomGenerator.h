@@ -3,6 +3,9 @@
 
 #include <random>
 
+/**
+ * @brief class for generating random values and chances.
+ */
 class RandomGenerator
 {
 public:

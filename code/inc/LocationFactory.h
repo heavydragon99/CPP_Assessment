@@ -4,6 +4,9 @@
 #include "Location.h"
 #include "Sean.h"
 
+/**
+ * @brief factory class for creating locations
+ */
 class LocationFactory
 {
 public:
@@ -17,6 +20,8 @@ public:
     static Location *createLocation(const Sean::String &aLocation, const Sean::String &aDescription);
     static Location *createLocation(const Sean::String &aLocation, const Sean::String &aDescription,const int aId);
     static Location *createLocation();
+
+    static void resetCounter();
 
 private:
     // Private Methods

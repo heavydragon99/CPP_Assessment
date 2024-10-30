@@ -7,8 +7,15 @@
 #include "SqlReader.h"
 #include <iostream>
 
+
 int GameObjectFactory::mCounter = 0;
 
+/**
+ * @brief Creates a GameObject with the specified name.
+ * 
+ * @param aObjectName The name of the object to create.
+ * @return GameObject* The created object, or nullptr if the object was not found.
+ */
 GameObject *GameObjectFactory::createGameObject(const Sean::String &aObjectName)
 {
     Sean::String name = aObjectName;
@@ -51,6 +58,11 @@ GameObject *GameObjectFactory::createGameObject(const Sean::String &aObjectName)
     return nullptr;
 }
 
+/**
+ * @brief Creates a random GameObject.
+ * 
+ * @return GameObject* The created object, or nullptr if the object was not found.
+ */
 GameObject *GameObjectFactory::createGameObject()
 {
     SQLReader &sqlReader = SQLReader::getInstance();
@@ -95,13 +107,18 @@ GameObject *GameObjectFactory::createGameObject()
     return nullptr;
 }
 
-//Function added for the tests
+
+/**
+ * @brief Resets the counter for assigning unique IDs to game objects.
+ */
 void GameObjectFactory::resetCounter()
 {
     mCounter = 0;
 }
 
-// Private Methods
+/**
+ * @brief Increments the counter for assigning unique IDs to game objects.
+ */
 void GameObjectFactory::incrementCounter()
 {
     ++mCounter;

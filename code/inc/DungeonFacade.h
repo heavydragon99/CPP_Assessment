@@ -6,7 +6,15 @@
 #include "IGameObject.h"
 
 #include <memory>
+#include <vector>
 
+/**
+ * @class DungeonFacade
+ * @brief A facade class to interact with the Dungeon.
+ * 
+ * This class provides a simplified interface to manage the dungeon, including
+ * creating and generating dungeons, moving objects, and interacting with enemies.
+ */
 class DungeonFacade
 {
 public:
@@ -37,7 +45,9 @@ private:
     // Private Methods
 
 private:
-    // Members
+    /**
+     * @brief A unique pointer to the Dungeon instance.
+     */
     std::unique_ptr<Dungeon> mDungeon;
 };
 

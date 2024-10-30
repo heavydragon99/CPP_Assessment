@@ -3,6 +3,9 @@
 
 #include "Sean.h"
 
+/**
+ * @brief interface for game objects
+ */
 class IGameObject
 {
 public:

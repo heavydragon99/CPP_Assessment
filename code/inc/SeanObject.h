@@ -1,7 +1,7 @@
 #ifndef SEAN_OBJECT_H
 #define SEAN_OBJECT_H
 
-#include <utility> // For std::move
+#include <utility>
 
 namespace Sean
 {
