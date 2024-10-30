@@ -6,18 +6,16 @@
 ' skinparam classFontColor White
 ' skinparam classAttributeIconColor White
 ' skinparam classArrowColor White
-' skinparam linetype ortho
+skinparam linetype ortho
 
 package "Sean"{
-    class Vector{
-
-    }
+    class Vector{}
 
     class UniquePtr{}
 
     class String{}
 
-    class SeanObject{}
+    class Object{}
 
     enum Direction{
         North
@@ -45,6 +43,7 @@ package "Sean"{
 }
 
 
+
 package "Backend"{
 
     class Location{
@@ -63,16 +62,30 @@ package "Backend"{
     }
 
 
-    class LocationFactory{
-        +{static} CreateLocation(const char* alocation) : *Location
-    }
-
     class GameObjectFactory{
-        +{static} CreateGameObject(const char* aGameObject) : *GameObject
+        + {static} createGameObject(const Sean::String &aName) : GameObject*
+        + {static} createGameObject() : GameObject*
+        + {static} resetCounter() : void
+
+        - {static} incrementCounter() : void
+        - {static} mCounter : int
     }
 
     class EnemyFactory{
-        +{static} CreateEnemy(const char* aEnemy) : *Enemy
+        +{static} createEnemy(const Sean::String &aEnemyName) : Enemy*
+        +{static} createEnemy() : Enemy*
+
+        - {static} incrementCounter() : void
+        - {static} mCounter : int
+    }
+
+    class LocationFactory{
+        +{static} createLocation(const Sean::String &aLocation, const Sean::String &aDescription) : Location*
+        +{static} createLocation(const Sean::String &aLocation, const Sean::String &aDescription, const int aId) : Location*
+        +{static} createLocation() : Location*
+
+        - {static} incrementCounter() : void
+        - {static} mCounter : int
     }
 
     class GameObject{
@@ -113,18 +126,31 @@ package "Backend"{
     }
 
     class Dungeon{
-        + Dungeon(&std::vector<ParsedLocations> aLocations) : void
+        + Dungeon(std::vector<Sean::ParsedLocations> &aLocations) : void
         + Dungeon(int aLocations) : void
 
-        + update() : void
+        + update() : int
+        + createGameObject(const Sean::String &aName) : GameObject*
+        + pickUpObject(const char *aObjectName) : GameObject*
+        + placeObject(GameObject *aObject) : void
+        + printShortDescription() const : void
+        + printLongDescription() const : void
+        + validLocation(Sean::Direction aDirection) const : bool
+        + moveLocation(Sean::Direction aDirection) : bool
+        + moveHiddenObjects() : void
+        + printObject(const char *aObjectName) : bool
+        + teleport(int aAmount) : void
+        + attackEnemy(const char *aEnemyName, int aDamage) : bool
+        + getCurrentLocation() const : const Location&
 
-        + getGameObject(const char* aGameObject) : GameObject*
+        - moveEnemies() : void
 
-        - mLocations : Sean::Vector<Location>
-        - mCurrentLocation : &Location
+        - mMap : Sean::Vector<Location>
+        - mCurrentLocation : Location*
     }
 
-    class sqlReader{}
+    class sqlReader{
+    }
 
     Location o-- "Visible objects 0..*" GameObject
     Location o-- "Hidden Objects 0..*"GameObject
@@ -158,28 +184,61 @@ package "Frontend"{
         - mName : string
         - mHealth : int
         - mAttackPercentage : int
-        - mInventory : std::vector<std::unique_ptr<IGameObject>>>
+        - mInventory : std::vector<std::unique_ptr<IGameObject>>
         - mGold : int
-        - mEquippedArmor : std::unique_ptr<IGameObject>
-        - mEquippedWeapon : std::unique_ptr<IGameObject>
+        - mEquippedWeapon : IGameObject*
+        - mEquippedArmor : IGameObject*
         - mGodMode : bool
 
         + printDescription() : void
-        + equipWeapon(const char* aItem) : void
-        + equipArmor(const char* aItem) : void
-        + consumeConsumable(const char* aConsumable) : void
-        + addObject(IGameObject* aObject) : void
+        + equipObject(const char* aItem) : std::unique_ptr<IGameObject>
+        + removeEquippedItem(IGameObject* equippedItem) : void
+        + addHealth(int aHealth) : void
+        + addExperience(int aExperience) : void
+        + addObject(std::unique_ptr<IGameObject> aObject) : void
+        + printObject(const char* aObjectName) const : bool
+        + dropObject(const char* aObjectName) : std::unique_ptr<IGameObject>
+        + toggleGodMode() : void
+        + getInventory() : std::vector<std::unique_ptr<IGameObject>>&
+        + getHealth() const : int
+        + getAttackPercentage() const : int
+        + getAttackDamage() const : int
+        + isDead() const : bool
+        + getGold() const : int
+        + getName() const : std::string
     }
 
     class Game{
-        + run() : void
-        - initialize() : void
-        - loadDungeon(char *aPath) : void
-        - generateDungeon() : void
-        - playerInput() : void
-
-        - mDungeonFacade : std::uniqueptr<DungeonFacade>
         - mPlayer : std::unique_ptr<Player>
+        - mDungeon : std::unique_ptr<DungeonFacade>
+        - {static} StartingWeapon : const std::string
+        - mQuit : bool
+
+        + run() : void
+
+        - initialize() : void
+        - loadDungeon() : void
+        - generateDungeon() : void
+        - printCurrentLocation() const : void
+        - printCurrentSetting() const : void
+        - playerInput() : void
+        - getPlayerAction(const std::string &aInput) const : PlayerAction
+        - updateDungeon() : void
+
+        - lookAction() : void
+        - searchAction() : void
+        - goAction(const std::string &aDirection) : void
+        - takeAction(const std::string &aObject) : void
+        - dropAction(const std::string &aObject) : void
+        - examineAction(const std::string &aObject) : void
+        - hitAction(const std::string &aTarget) : void
+        - wearAction(const std::string &aObject) : void
+        - waitAction() : void
+        - consumeAction(const std::string &aObject) : void
+        - helpAction() const : void
+        - godmodeAction() : void
+
+        - endGame() : void
     }
 
     class xmlReader{
@@ -199,25 +258,40 @@ package "Frontend"{
 class DungeonFacade{
     - mDungeon : std::unique_ptr<Dungeon>
 
-    + createDungeon(const &std::vector<Sean::ParsedLocations> aLocations) : void
+    + createDungeon(std::vector<Sean::ParsedLocations> &aLocations) : void
     + generateDungeon(int aLocations) : void
-
-    + printLongDescription() : void
-    + printShortDescription() : void
+    + printLongDescription() const : void
+    + printShortDescription() const : void
     + moveHiddenObjects() : void
-    + getGameObject(const char* aGameObject) : GameObject*
-    + putGameObject(GameObject*) : bool
-    + printGameObjectDescription(const char* aGameObject) : bool
-    + printEnemyDescription(const char* aEnemy) : bool
-    + moveLocation(Direction aDirection) : bool
-    + attackEnemy(const char* aEnemy, &WeaponObject aWeapon) : bool
-    + getGameObject(const char* aGameObject) : GameObject*
+    + pickUpObject(const char* aObjectName) : IGameObject*
+    + placeObject(std::unique_ptr<IGameObject> aObject) : bool
+    + printGameObject(const char* aObjectName) const : bool
+    + printEnemy(const char* aEnemyName) const : bool
+    + validLocation(Sean::Direction aDirection) const : bool
+    + moveLocation(Sean::Direction aDirection) : bool
+    + attackEnemy(const char* aEnemyName, int aDamage) : bool
+    + createGameObject(const Sean::String &aName) : IGameObject*
+    + update() : int
+    + teleport(int aAmount) : void
 }
 
 interface IGameObject{
-    + getName() : string
-    + printName() : void
-    + printDescription() : void
+    + IGameObject() : void
+    + ~IGameObject() : void
+
+    + clone() const : IGameObject*
+    + getName() const : Sean::String
+    + printName() const : void
+    + printDescription() const : void
+    + isWeapon() const : bool
+    + isArmor() const : bool
+    + isConsumableHealth() const : bool
+    + isConsumableExperience() const : bool
+    + isConsumableTeleport() const : bool
+    + isMoney() const : bool
+    + getValue() const : int
+    + getMin() const : int
+    + getMax() const : int
 }
 
 class randomGenerator{
