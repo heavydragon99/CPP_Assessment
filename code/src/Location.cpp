@@ -15,12 +15,12 @@ Sean::String Location::getName() const
 
 void Location::addVisibleObject(GameObject *aObject)
 {
-    mVisibleObjects.push_back(Sean::Object<GameObject>(aObject));
+    mVisibleObjects.push_back(Sean::Object<GameObject>(std::move(aObject)));
 }
 
 void Location::addHiddenObject(GameObject *aObject)
 {
-    mHiddenObjects.push_back(Sean::Object<GameObject>(aObject));
+    mHiddenObjects.push_back(Sean::Object<GameObject>(std::move(aObject)));
 }
 
 void Location::addEnemy(Enemy aEnemy)
@@ -200,4 +200,14 @@ bool Location::printObject(const char *aObjectName)
         }
     }
     return false;
+}
+
+const Sean::Vector<Sean::Object<GameObject>> &Location::getVisibleObjects() const
+{
+    return mVisibleObjects;
+}
+
+const Sean::Vector<Sean::Object<GameObject>> &Location::getHiddenObjects() const
+{
+    return mHiddenObjects;
 }

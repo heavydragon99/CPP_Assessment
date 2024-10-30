@@ -36,6 +36,8 @@ public:
     void moveHiddenObjects();
     GameObject *pickUpObject(const char *aObjectName);
     bool printObject(const char *aObjectName);
+    const Sean::Vector<Sean::Object<GameObject>>& getVisibleObjects() const;
+    const Sean::Vector<Sean::Object<GameObject>>& getHiddenObjects() const;
 
 private:
     // Private Methods
