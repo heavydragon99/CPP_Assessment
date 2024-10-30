@@ -39,7 +39,7 @@ class DungeonTest : public ::testing::Test
 {
 protected:
     Dungeon *dungeon;
-    std::vector<Sean::ParsedLocations> parsedLocations;
+    Sean::Vector<Sean::ParsedLocations> parsedLocations;
     MockLocationFactory mockLocationFactory;
     MockEnemyFactory mockEnemyFactory;
     MockGameObjectFactory mockGameObjectFactory;

@@ -283,6 +283,70 @@ namespace Sean
             return mData;
         }
 
+        /**
+         * @brief Checks if the string starts with the given prefix.
+         * @param prefix The prefix to check.
+         * @return True if the string starts with the prefix, false otherwise.
+         */
+        bool starts_with(const char *prefix) const
+        {
+            if (!prefix || !mData)
+            {
+                return false;
+            }
+            size_t prefixLen = strlen(prefix);
+            if (prefixLen > mSize)
+            {
+                return false;
+            }
+            return strncmp(mData, prefix, prefixLen) == 0;
+        }
+
+        /**
+         * @brief Returns a substring of the string starting from the given index.
+         * @param start The starting index of the substring.
+         * @return A new String object containing the substring.
+         */
+        String substr(size_t start) const
+        {
+            if (start >= mSize)
+            {
+                return String();
+            }
+            size_t length = mSize - start;
+            char *subStr = new char[length + 1];
+            strncpy(subStr, mData + start, length);
+            subStr[length] = '\0';
+            String result(subStr);
+            delete[] subStr;
+            return result;
+        }
+
+        /**
+         * @brief Returns a substring of the string.
+         * @param start The starting index of the substring.
+         * @param length The length of the substring.
+         * @return A new String object containing the substring.
+         */
+        String substr(size_t start, size_t length) const
+        {
+            if (start >= mSize)
+            {
+                return String();
+            }
+            size_t maxLength = mSize - start;
+            if (length > maxLength)
+            {
+                length = maxLength;
+            }
+            char *subStr = new char[length + 1];
+            strncpy(subStr, mData + start, length);
+            subStr[length] = '\0';
+            String result(subStr);
+            delete[] subStr;
+            return result;
+        }
+
     private:
         char *mData;  ///< Pointer to the character array.
         size_t mSize; ///< Size of the string.

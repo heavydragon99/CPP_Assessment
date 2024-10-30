@@ -11,7 +11,7 @@
  * @brief Constructs a Player object with default attributes.
  */
 Player::Player()
-    : mHealth(20), mAttackPercentage(40), mGold(100), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
+    : mHealth(20), mAttackPercentage(40), mGold(0), mGodMode(false), mEquippedWeapon(nullptr), mEquippedArmor(nullptr)
 {
     std::cout << "Wat is je naam? ";
     std::cin >> mName;

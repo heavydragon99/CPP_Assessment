@@ -15,7 +15,7 @@ class Dungeon
 {
 public:
     // Constructors
-    Dungeon(std::vector<Sean::ParsedLocations> &aLocations);
+    Dungeon(Sean::Vector<Sean::ParsedLocations> &aLocations);
     Dungeon(int aLocations);
     Dungeon(const Dungeon& other); // Copy constructor
     Dungeon& operator=(const Dungeon& other); // Copy assignment operator

@@ -11,7 +11,12 @@ void DungeonFacade::createDungeon(std::vector<Sean::ParsedLocations> &aLocations
 {
     if (mDungeon == nullptr)
     {
-        mDungeon = std::make_unique<Dungeon>(aLocations);
+        Sean::Vector<Sean::ParsedLocations> locations;
+        for (Sean::ParsedLocations &parsedLocation : aLocations)
+        {
+            locations.push_back(parsedLocation);
+        }
+        mDungeon = std::make_unique<Dungeon>(locations);
     }
     else
     {

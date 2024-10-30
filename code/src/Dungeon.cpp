@@ -5,6 +5,7 @@
 #include "GameObjectFactory.h"
 #include "Enemy.h"
 #include "RandomGenerator.h"
+#include "Location.h"
 
 #include <stdexcept>
 
@@ -13,10 +14,10 @@ static Location dummyLocation("dummy", "dummy", 0);
 
 /**
  * @brief Constructor that takes a vector of ParsedLocations.
- * 
+ *
  * @param aLocations A vector of parsed locations to initialize the dungeon.
  */
-Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
+Dungeon::Dungeon(Sean::Vector<Sean::ParsedLocations> &aLocations)
     : mCurrentLocation(&dummyLocation) // Temporary initialization
 {
     for (Sean::ParsedLocations &parsedLocation : aLocations)
@@ -109,7 +110,7 @@ Dungeon::Dungeon(std::vector<Sean::ParsedLocations> &aLocations)
 
 /**
  * @brief Constructor that takes an integer representing the number of locations.
- * 
+ *
  * @param aLocations The number of locations to generate in the dungeon.
  */
 Dungeon::Dungeon(int aLocations)
@@ -196,7 +197,7 @@ Dungeon::Dungeon(int aLocations)
 
 /**
  * @brief Copy constructor.
- * 
+ *
  * @param other The other Dungeon to copy from.
  */
 Dungeon::Dungeon(const Dungeon &other)
@@ -206,7 +207,7 @@ Dungeon::Dungeon(const Dungeon &other)
 
 /**
  * @brief Copy assignment operator.
- * 
+ *
  * @param other The other Dungeon to copy from.
  * @return Dungeon& A reference to this object.
  */
@@ -222,7 +223,7 @@ Dungeon &Dungeon::operator=(const Dungeon &other)
 
 /**
  * @brief Updates the dungeon state.
- * 
+ *
  * @return int The total damage taken from enemies.
  */
 int Dungeon::update()
@@ -235,7 +236,14 @@ int Dungeon::update()
         {
             enemiesAlive = true;
             int attack = enemy.getAttack();
-            std::cout << "De " << enemy.getName() << " valt je aan met: " << attack << " schade" << std::endl;
+            if (attack == 0)
+            {
+                std::cout << "De " << enemy.getName() << " mist je" << std::endl;
+            }
+            else
+            {
+                std::cout << "De " << enemy.getName() << " valt je aan met: " << attack << " schade" << std::endl;
+            }
 
             damage += attack;
         }
@@ -250,7 +258,7 @@ int Dungeon::update()
 
 /**
  * @brief Creates a game object.
- * 
+ *
  * @param aName The name of the game object to create.
  * @return GameObject* A pointer to the created game object.
  */
@@ -261,7 +269,7 @@ GameObject *Dungeon::createGameObject(const Sean::String &aName)
 
 /**
  * @brief Picks up an object from the current location.
- * 
+ *
  * @param aObjectName The name of the object to pick up.
  * @return GameObject* A pointer to the picked-up object.
  */
@@ -272,7 +280,7 @@ GameObject *Dungeon::pickUpObject(const char *aObjectName)
 
 /**
  * @brief Places an object in the current location.
- * 
+ *
  * @param aObject A pointer to the object to place.
  */
 void Dungeon::placeObject(GameObject *aObject)
@@ -299,7 +307,7 @@ void Dungeon::printLongDescription() const
 
 /**
  * @brief Checks if a location in the given direction is valid.
- * 
+ *
  * @param aDirection The direction to check.
  * @return bool True if the location is valid, false otherwise.
  */
@@ -310,7 +318,7 @@ bool Dungeon::validLocation(Sean::Direction aDirection) const
 
 /**
  * @brief Moves to a new location in the given direction.
- * 
+ *
  * @param aDirection The direction to move.
  * @return bool True if the move was successful, false otherwise.
  */
@@ -336,7 +344,7 @@ void Dungeon::moveHiddenObjects()
 
 /**
  * @brief Prints information about an object in the current location.
- * 
+ *
  * @param aObjectName The name of the object to print.
  * @return bool True if the object was found, false otherwise.
  */
@@ -347,7 +355,7 @@ bool Dungeon::printObject(const char *aObjectName)
 
 /**
  * @brief Teleports the player a certain number of locations.
- * 
+ *
  * @param aAmount The number of locations to teleport.
  */
 void Dungeon::teleport(int aAmount)
@@ -421,7 +429,7 @@ void Dungeon::teleport(int aAmount)
 
 /**
  * @brief Attacks an enemy in the current location.
- * 
+ *
  * @param aEnemyName The name of the enemy to attack.
  * @param aDamage The amount of damage to deal.
  * @return bool True if the enemy was found and attacked, false otherwise.
@@ -437,7 +445,12 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
                 enemy.takeDamage(aDamage);
                 if (enemy.isDead())
                 {
-                    std::cout << "Je hebt de " << enemy.getName() << " verslagen" << std::endl;
+                    Sean::String enemyName = enemy.getName();
+                    if (enemyName.starts_with("dode "))
+                    {
+                        enemyName = enemyName.substr(5);
+                    }
+                    std::cout << "Je hebt de " << enemyName << " geraakt met " << aDamage << " schade en verslagen" << std::endl;
                 }
                 else
                 {
@@ -457,7 +470,7 @@ bool Dungeon::attackEnemy(const char *aEnemyName, int aDamage)
 
 /**
  * @brief Gets the current location.
- * 
+ *
  * @return const Location& A reference to the current location.
  */
 const Location &Dungeon::getCurrentLocation() const
@@ -495,8 +508,12 @@ void Dungeon::moveEnemies()
         {
             exits.push_back(west);
         }
-        for (Enemy &enemy : location.getEnemies())
+
+        Sean::Vector<Enemy> enemiesToMove;
+
+        for (auto it = location.getEnemies().begin(); it != location.getEnemies().end(); ++it)
         {
+            Enemy &enemy = *it;
             Sean::String enemyName = enemy.getName();
             if (movedEnemies.contains(enemyName) || enemy.isDead())
             {
@@ -505,10 +522,16 @@ void Dungeon::moveEnemies()
             movedEnemies.push_back(enemyName);
             if (randomEngine.getChance(50) && !exits.empty())
             {
-                Location *newLocation = exits[randomEngine.getRandomValue(0, exits.size() - 1)];
-                newLocation->addEnemy(enemy);
-                location.removeEnemy(enemyName.c_str());
+                enemiesToMove.push_back(enemy);
             }
+        }
+
+        // Move the enemies after collecting them
+        for (Enemy &enemy : enemiesToMove)
+        {
+            Location *newLocation = exits[randomEngine.getRandomValue(0, exits.size() - 1)];
+            newLocation->addEnemy(enemy);
+            location.removeEnemy(enemy.getName().c_str());
         }
     }
 }

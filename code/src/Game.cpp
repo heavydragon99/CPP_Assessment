@@ -135,7 +135,7 @@ void Game::generateDungeon()
 
         if (std::cin.fail() || locations <= 0 || locations > 20)
         {
-            std::cin.clear(); // Clear the error flag
+            std::cin.clear();                                                   // Clear the error flag
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
             std::cout << "Ongeldige invoer. Probeer het opnieuw." << std::endl;
         }
@@ -249,7 +249,7 @@ void Game::playerInput()
 
 /**
  * @brief Maps player input to PlayerAction enum.
- * 
+ *
  * @param aAction The action input by the player.
  * @return PlayerAction The corresponding PlayerAction enum value.
  */
@@ -315,7 +315,7 @@ void Game::searchAction()
 
 /**
  * @brief Executes the go action, moving the player in the specified direction.
- * 
+ *
  * @param aDirection The direction to move.
  */
 void Game::goAction(const std::string &aDirection)
@@ -362,7 +362,7 @@ void Game::goAction(const std::string &aDirection)
 
 /**
  * @brief Executes the take action, picking up the specified object.
- * 
+ *
  * @param aObject The object to take.
  */
 void Game::takeAction(const std::string &aObject)
@@ -380,7 +380,7 @@ void Game::takeAction(const std::string &aObject)
 
 /**
  * @brief Executes the drop action, dropping the specified object.
- * 
+ *
  * @param aObject The object to drop.
  */
 void Game::dropAction(const std::string &aObject)
@@ -398,7 +398,7 @@ void Game::dropAction(const std::string &aObject)
 
 /**
  * @brief Executes the examine action, examining the specified object or the player if no object is specified.
- * 
+ *
  * @param aObject The object to examine.
  */
 void Game::examineAction(const std::string &aObject)
@@ -406,13 +406,11 @@ void Game::examineAction(const std::string &aObject)
     if (aObject.empty())
     {
         mPlayer->printDescription();
-        return;
     }
-    if (mPlayer->printObject(aObject.c_str()))
+    else if (mPlayer->printObject(aObject.c_str()))
     {
-        return;
     }
-    if (!mDungeon->printGameObject(aObject.c_str()))
+    else if (!mDungeon->printGameObject(aObject.c_str()))
     {
         std::cout << "Object " << aObject << " niet gevonden" << std::endl;
     }
@@ -420,7 +418,7 @@ void Game::examineAction(const std::string &aObject)
 
 /**
  * @brief Executes the hit action, attacking the specified target.
- * 
+ *
  * @param aTarget The target to hit.
  */
 void Game::hitAction(const std::string &aTarget)
@@ -437,7 +435,7 @@ void Game::hitAction(const std::string &aTarget)
 
 /**
  * @brief Executes the wear action, equipping the specified object.
- * 
+ *
  * @param aObject The object to wear.
  */
 void Game::wearAction(const std::string &aObject)
@@ -462,7 +460,7 @@ void Game::waitAction()
 
 /**
  * @brief Executes the consume action, consuming the specified object.
- * 
+ *
  * @param aObject The object to consume.
  */
 void Game::consumeAction(const std::string &aObject)
@@ -491,6 +489,9 @@ void Game::consumeAction(const std::string &aObject)
                 std::cout << "Je hebt " << aObject << " geconsumeerd en je bent geteleporteerd naar een andere locatie" << std::endl;
                 mPlayer->getInventory().erase(iter);
                 return;
+            }else{
+                std::cout << "Je kunt " << aObject << " niet consumeren" << std::endl;
+                return;
             }
         }
     }
@@ -504,16 +505,16 @@ void Game::helpAction() const
 {
     std::cout << "Beschikbare acties:" << std::endl;
     std::cout << "kijk - Om je heen kijken" << std::endl;
-    std::cout << "zoek - Zoeken in de omgeving" << std::endl;
-    std::cout << "ga <noord|oost|zuid|west> - Naar een andere locatie gaan" << std::endl;
+    std::cout << "zoek* - Zoeken in de omgeving" << std::endl;
+    std::cout << "ga* <noord|oost|zuid|west> - Naar een andere locatie gaan" << std::endl;
     std::cout << "pak <item> - Een object oppakken" << std::endl;
     std::cout << "leg <item> - Een object neerleggen" << std::endl;
     std::cout << "bekijk <object> - Een object bekijken" << std::endl;
     std::cout << "bekijk <vijand> - Een vijand bekijken" << std::endl;
     std::cout << "bekijk - Jezelf bekijken" << std::endl;
-    std::cout << "sla <vijand> - Een vijand aanvallen" << std::endl;
-    std::cout << "draag <object> - Een object dragen" << std::endl;
-    std::cout << "wacht - Wachten" << std::endl;
+    std::cout << "sla* <vijand> - Een vijand aanvallen" << std::endl;
+    std::cout << "draag* <object> - Een object dragen" << std::endl;
+    std::cout << "wacht* - Wachten" << std::endl;
     std::cout << "consumeer <object> - Een object consumeren" << std::endl;
     std::cout << "help - Deze helptekst tonen" << std::endl;
     std::cout << "godmode - Godmode toggelen" << std::endl;
