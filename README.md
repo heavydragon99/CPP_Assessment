@@ -7,6 +7,30 @@ assessment-cplus-24-25-heavydragon99 created by GitHub Classroom
 - A C++ compiler that supports C++17
 - GoogleTest library installed on your system
 
+### Prerequisites gmock
+# Clone the Google Test repository
+```sh
+git clone https://github.com/google/googletest.git
+cd googletest
+```
+
+# Create a build directory
+```sh
+mkdir build
+cd build
+```
+
+# Configure and build
+```sh
+cmake ..
+make
+```
+
+# Install
+```sh
+sudo make install
+```
+
 ### Building the Main Program
 
 1. Navigate to the build directory:

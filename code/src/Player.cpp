@@ -147,6 +147,10 @@ void Player::addHealth(int aHealth)
         }
     }
     mHealth += aHealth;
+    if (mHealth < 0)
+    {
+        mHealth = 0;
+    }
     // std::cout << "Je levenspunten zijn nu " << mHealth << std::endl;
 }
 
