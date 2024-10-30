@@ -45,7 +45,7 @@ GameObject *GameObjectFactory::createGameObject(const Sean::String &aObjectName)
             ObjectType consumableType;
             if (type == "levenselixer")
                 consumableType = ObjectType::Consumable_Health;
-            else if (type == "ervaringsdrankje")
+            else if (type == "ervaringsdrank")
                 consumableType = ObjectType::Consumable_Experience;
             else
                 consumableType = ObjectType::Consumable_Teleport;
@@ -94,7 +94,7 @@ GameObject *GameObjectFactory::createGameObject()
             ObjectType consumableType;
             if (type == "levenselixer")
                 consumableType = ObjectType::Consumable_Health;
-            else if (type == "ervaringsdrankje")
+            else if (type == "ervaringsdrank")
                 consumableType = ObjectType::Consumable_Experience;
             else
                 consumableType = ObjectType::Consumable_Teleport;
