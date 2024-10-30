@@ -423,7 +423,11 @@ void Game::examineAction(const std::string &aObject)
  */
 void Game::hitAction(const std::string &aTarget)
 {
-    if (mDungeon->attackEnemy(aTarget.c_str(), mPlayer->getAttackDamage()))
+    int damage = mPlayer->getAttackDamage();
+    if(damage == 0){
+        std::cout << "Je hebt de vijand gemist" << std::endl;
+    }
+    if (mDungeon->attackEnemy(aTarget.c_str(), damage))
     {
         updateDungeon();
     }
