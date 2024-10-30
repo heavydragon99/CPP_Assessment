@@ -257,7 +257,7 @@ bool Location::printObject(const char *aObjectName)
                 obj.printDescription();
                 for (auto &hiddenObj : obj.getHiddenObjects())
                 {
-                    mVisibleObjects.push_back(Sean::Object(std::move(hiddenObj)));
+                    mVisibleObjects.push_back(Sean::Object(hiddenObj.release()));
                 }
                 obj.getHiddenObjects().clear();
                 
