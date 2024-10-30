@@ -28,8 +28,9 @@ WeaponObject &WeaponObject::operator=(const WeaponObject &other)
 {
     if (this != &other)
     {
-        WeaponObject temp(other);
-        swap(temp);
+        GameObject::operator=(other);
+        mMinDamage = other.mMinDamage;
+        mMaxDamage = other.mMaxDamage;
     }
     return *this;
 }

@@ -24,8 +24,8 @@ ArmorObject &ArmorObject::operator=(const ArmorObject &other)
 {
     if (this != &other)
     {
-        ArmorObject temp(other);
-        swap(temp);
+        GameObject::operator=(other);
+        mArmor = other.mArmor;
     }
     return *this;
 }

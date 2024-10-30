@@ -28,8 +28,9 @@ ConsumableObject &ConsumableObject::operator=(const ConsumableObject &other)
 {
     if (this != &other)
     {
-        ConsumableObject temp(other);
-        swap(temp);
+        GameObject::operator=(other);
+        mMinimum = other.mMinimum;
+        mMaximum = other.mMaximum;
     }
     return *this;
 }
