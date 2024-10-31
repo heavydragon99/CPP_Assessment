@@ -31,97 +31,116 @@ XmlReader::XmlReader(const char *aPath)
     tinyxml2::XMLElement *loc = root->FirstChildElement("locatie");
     while (loc)
     {
-        Sean::ParsedLocations location;
-        loc->QueryIntAttribute("id", &location.mId);
-
-        // Parse direction attributes
-        const char *noord = loc->Attribute("noord");
-        const char *oost = loc->Attribute("oost");
-        const char *zuid = loc->Attribute("zuid");
-        const char *west = loc->Attribute("west");
-
-        int indexCounter = 0;
-
-        if (noord != nullptr)
+        try
         {
-            location.mDirections[indexCounter] = {Sean::Direction::North, std::stoi(noord)};
-            indexCounter++;
-        }
-        if (oost != nullptr)
-        {
-            location.mDirections[indexCounter] = {Sean::Direction::East, std::stoi(oost)};
-            indexCounter++;
-        }
-        if (zuid != nullptr)
-        {
-            location.mDirections[indexCounter] = {Sean::Direction::South, std::stoi(zuid)};
-            indexCounter++;
-        }
-        if (west != nullptr)
-        {
-            location.mDirections[indexCounter] = {Sean::Direction::West, std::stoi(west)};
-            indexCounter++;
-        }
-
-        // Parse enemies attribute
-        const char *vijand = loc->Attribute("vijand");
-        if (vijand)
-        {
-            std::string enemiesStr(vijand);
-            std::istringstream enemiesStream(enemiesStr);
-            std::string enemy;
-            while (std::getline(enemiesStream, enemy, ';'))
+            Sean::ParsedLocations location;
+            if (loc->QueryIntAttribute("id", &location.mId) != tinyxml2::XML_SUCCESS)
             {
-                location.mEnemies.push_back(enemy.c_str());
+                throw std::runtime_error("Failed to parse 'id' attribute.");
             }
-        }
 
-        // Parse hidden objects attribute
-        const char *objectenverborgen = loc->Attribute("objectenverborgen");
-        if (objectenverborgen)
-        {
-            std::string hiddenObjectsStr(objectenverborgen);
-            std::istringstream hiddenObjectsStream(hiddenObjectsStr);
-            std::string hiddenObject;
-            while (std::getline(hiddenObjectsStream, hiddenObject, ';'))
+            // Parse direction attributes
+            const char *noord = loc->Attribute("noord");
+            const char *oost = loc->Attribute("oost");
+            const char *zuid = loc->Attribute("zuid");
+            const char *west = loc->Attribute("west");
+
+            int indexCounter = 0;
+
+            if (noord != nullptr)
             {
-                location.mHiddenObjects.push_back(hiddenObject.c_str());
+                location.mDirections[indexCounter] = {Sean::Direction::North, std::stoi(noord)};
+                indexCounter++;
             }
-        }
-
-        // Parse visible objects attribute
-        const char *objectenzichtbaar = loc->Attribute("objectenzichtbaar");
-        if (objectenzichtbaar)
-        {
-            std::string visibleObjectsStr(objectenzichtbaar);
-            std::istringstream visibleObjectsStream(visibleObjectsStr);
-            std::string visibleObject;
-            while (std::getline(visibleObjectsStream, visibleObject, ';'))
+            if (oost != nullptr)
             {
-                location.mVisibleObjects.push_back(visibleObject.c_str());
+                location.mDirections[indexCounter] = {Sean::Direction::East, std::stoi(oost)};
+                indexCounter++;
             }
-        }
-
-        // Parse name
-        const char *name = loc->GetText();
-        if (name)
-        {
-            location.mName = name;
-        }
-
-        // Parse description
-        tinyxml2::XMLElement *descriptionElement = loc->FirstChildElement("beschrijving");
-        if (descriptionElement)
-        {
-            const char *description = descriptionElement->GetText();
-            if (description)
+            if (zuid != nullptr)
             {
-                location.mDescription = description;
+                location.mDirections[indexCounter] = {Sean::Direction::South, std::stoi(zuid)};
+                indexCounter++;
             }
+            if (west != nullptr)
+            {
+                location.mDirections[indexCounter] = {Sean::Direction::West, std::stoi(west)};
+                indexCounter++;
+            }
+
+            // Parse enemies attribute
+            const char *vijand = loc->Attribute("vijand");
+            if (vijand)
+            {
+                std::string enemiesStr(vijand);
+                std::istringstream enemiesStream(enemiesStr);
+                std::string enemy;
+                while (std::getline(enemiesStream, enemy, ';'))
+                {
+                    location.mEnemies.push_back(enemy.c_str());
+                }
+            }
+
+            // Parse hidden objects attribute
+            const char *objectenverborgen = loc->Attribute("objectenverborgen");
+            if (objectenverborgen)
+            {
+                std::string hiddenObjectsStr(objectenverborgen);
+                std::istringstream hiddenObjectsStream(hiddenObjectsStr);
+                std::string hiddenObject;
+                while (std::getline(hiddenObjectsStream, hiddenObject, ';'))
+                {
+                    location.mHiddenObjects.push_back(hiddenObject.c_str());
+                }
+            }
+
+            // Parse visible objects attribute
+            const char *objectenzichtbaar = loc->Attribute("objectenzichtbaar");
+            if (objectenzichtbaar)
+            {
+                std::string visibleObjectsStr(objectenzichtbaar);
+                std::istringstream visibleObjectsStream(visibleObjectsStr);
+                std::string visibleObject;
+                while (std::getline(visibleObjectsStream, visibleObject, ';'))
+                {
+                    location.mVisibleObjects.push_back(visibleObject.c_str());
+                }
+            }
+
+            // Parse name
+            const char *name = loc->GetText();
+            if (name)
+            {
+                location.mName = name;
+            }
+            else
+            {
+                throw std::runtime_error("Failed to parse 'name' element.");
+            }
+
+            // Parse description
+            tinyxml2::XMLElement *descriptionElement = loc->FirstChildElement("beschrijving");
+            if (descriptionElement)
+            {
+                const char *description = descriptionElement->GetText();
+                if (description)
+                {
+                    location.mDescription = description;
+                }
+                else
+                {
+                    throw std::runtime_error("Failed to parse 'description' element.");
+                }
+            }
+
+            // Add parsed location to the vector
+            mParsedLocations.push_back(location);
+        }
+        catch (const std::exception &e)
+        {
+            throw std::runtime_error(std::string("Error parsing location: ") + e.what());
         }
 
-        // Add parsed location to the vector
-        mParsedLocations.push_back(location);
         loc = loc->NextSiblingElement("locatie");
     }
 }

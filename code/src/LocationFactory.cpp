@@ -6,7 +6,7 @@ int LocationFactory::mCounter = 0;
 
 /**
  * @brief Creates a Location object with the specified name and description.
- * 
+ *
  * @param aLocation The name of the location.
  * @param aDescription The description of the location.
  * @return Location* Pointer to the created Location object.
@@ -19,7 +19,7 @@ Location *LocationFactory::createLocation(const Sean::String &aLocation, const S
 
 /**
  * @brief Creates a Location object with the specified name, description, and ID.
- * 
+ *
  * @param aLocation The name of the location.
  * @param aDescription The description of the location.
  * @param aId The ID of the location.
@@ -32,25 +32,28 @@ Location *LocationFactory::createLocation(const Sean::String &aLocation, const S
 
 /**
  * @brief Creates a random Location object.
- * 
+ *
  * @return Location* Pointer to the created Location object.
  */
 Location *LocationFactory::createLocation()
 {
-    SQLReader &sqlReader = SQLReader::getInstance();
     Sean::String name;
     Sean::String description;
+    try
+    {
+        if (SQLReader::getInstance().getRandomLocation(name, description))
+        {
+            incrementCounter();
+            return new Location(name, description, mCounter);
+        }
+    }
+    catch (std::exception &e)
+    {
+        throw std::runtime_error(e.what());
+    }
 
-    if (sqlReader.getRandomLocation(name, description))
-    {
-        incrementCounter();
-        return new Location(name, description, mCounter);
-    }
-    else
-    {
-        std::cerr << "Location not found in database" << std::endl;
-        return nullptr;
-    }
+    std::cerr << "Location not found in database" << std::endl;
+    return nullptr;
 }
 
 /**

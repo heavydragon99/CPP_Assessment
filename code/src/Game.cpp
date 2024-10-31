@@ -31,15 +31,24 @@ void clearConsole()
 void Game::run()
 {
     clearConsole();
-    initialize();
-    clearConsole();
-    printCurrentSetting();
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    while (!mQuit)
+    try
     {
-        playerInput();
+        initialize();
+        clearConsole();
+        printCurrentSetting();
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        while (!mQuit)
+        {
+            playerInput();
+        }
     }
+    catch (const std::runtime_error &e)
+    {
+        std::cerr << e.what() << std::endl;
+        return;
+    }
+
     clearConsole();
 }
 
@@ -63,19 +72,26 @@ void Game::initialize()
         std::cout << "Wilt u een kerker laden of genereren? (laden/genereren): ";
         std::cin >> choice;
 
-        if (choice == "laden")
+        try
         {
-            loadDungeon();
-            break;
+            if (choice == "laden")
+            {
+                loadDungeon();
+                break;
+            }
+            else if (choice == "genereren")
+            {
+                generateDungeon();
+                break;
+            }
+            else
+            {
+                std::cout << "Ongeldige keuze. Probeer het opnieuw." << std::endl;
+            }
         }
-        else if (choice == "genereren")
+        catch (const std::runtime_error &e)
         {
-            generateDungeon();
-            break;
-        }
-        else
-        {
-            std::cout << "Ongeldige keuze. Probeer het opnieuw." << std::endl;
+            throw std::runtime_error(e.what());
         }
     }
     clearConsole();
@@ -115,11 +131,16 @@ void Game::loadDungeon()
             std::cout << "Ongeldige keuze. Probeer het opnieuw." << std::endl;
         }
     }
-
-    XmlReader xmlReader(path.c_str());
-    std::vector<Sean::ParsedLocations> locations = xmlReader.getLocations();
-
-    mDungeon->createDungeon(locations);
+    try
+    {
+        XmlReader xmlReader(path.c_str());
+        std::vector<Sean::ParsedLocations> locations = xmlReader.getLocations();
+        mDungeon->createDungeon(locations);
+    }
+    catch (const std::runtime_error &e)
+    {
+        throw std::runtime_error(e.what());
+    }
 }
 
 /**
@@ -151,8 +172,7 @@ void Game::generateDungeon()
     }
     catch (const std::runtime_error &e)
     {
-        std::cerr << e.what() << std::endl;
-        return;
+        throw std::runtime_error(e.what());
     }
 }
 
@@ -424,7 +444,8 @@ void Game::examineAction(const std::string &aObject)
 void Game::hitAction(const std::string &aTarget)
 {
     int damage = mPlayer->getAttackDamage();
-    if(damage == 0){
+    if (damage == 0)
+    {
         std::cout << "Je hebt de vijand niet geraakt" << std::endl;
     }
     if (mDungeon->attackEnemy(aTarget.c_str(), damage))
@@ -493,7 +514,9 @@ void Game::consumeAction(const std::string &aObject)
                 std::cout << "Je hebt " << aObject << " geconsumeerd en je bent geteleporteerd naar een andere locatie" << std::endl;
                 mPlayer->getInventory().erase(iter);
                 return;
-            }else{
+            }
+            else
+            {
                 std::cout << "Je kunt " << aObject << " niet consumeren" << std::endl;
                 return;
             }

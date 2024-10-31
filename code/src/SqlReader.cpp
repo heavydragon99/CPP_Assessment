@@ -30,7 +30,7 @@ SQLReader::SQLReader() : db(nullptr, sqlite3Deleter)
 
 /**
  * @brief Prepares and binds a SQLite statement.
- * 
+ *
  * @param query The SQL query string.
  * @param stmt Pointer to the SQLite statement.
  * @param bindText The text to bind to the statement.
@@ -56,7 +56,7 @@ bool SQLReader::prepareAndBindStatement(const std::string &query, sqlite3_stmt *
 
 /**
  * @brief Retrieves location information from the database.
- * 
+ *
  * @param aName The name of the location.
  * @param aDescription The description of the location.
  * @return bool True if the location information was successfully retrieved, false otherwise.
@@ -84,7 +84,7 @@ bool SQLReader::getLocationInfo(Sean::String &aName, Sean::String &aDescription)
 
 /**
  * @brief Retrieves a random location from the database.
- * 
+ *
  * @param aName The name of the location.
  * @param aDescription The description of the location.
  * @return bool True if a random location was successfully retrieved, false otherwise.
@@ -112,7 +112,7 @@ bool SQLReader::getRandomLocation(Sean::String &aName, Sean::String &aDescriptio
 
 /**
  * @brief Retrieves enemy information from the database.
- * 
+ *
  * @param aName The name of the enemy.
  * @param aDescription The description of the enemy.
  * @param aHealth The health of the enemy.
@@ -148,7 +148,7 @@ bool SQLReader::getEnemyInfo(Sean::String &aName, Sean::String &aDescription, in
 
 /**
  * @brief Retrieves a random enemy from the database.
- * 
+ *
  * @param aName The name of the enemy.
  * @param aDescription The description of the enemy.
  * @param aHealth The health of the enemy.
@@ -184,7 +184,7 @@ bool SQLReader::getRandomEnemy(Sean::String &aName, Sean::String &aDescription, 
 
 /**
  * @brief Retrieves object information from the database.
- * 
+ *
  * @param aName The name of the object.
  * @param aDescription The description of the object.
  * @param aType The type of the object.
@@ -220,7 +220,7 @@ bool SQLReader::getObjectInfo(Sean::String &aName, Sean::String &aDescription, S
 
 /**
  * @brief Retrieves the amount of objects associated with an enemy from the database.
- * 
+ *
  * @param aName The name of the enemy.
  * @param aMinimum The minimum amount of objects.
  * @param aMaximum The maximum amount of objects.
@@ -249,7 +249,7 @@ bool SQLReader::getObjectAmount(Sean::String aName, int &aMinimum, int &aMaximum
 
 /**
  * @brief Retrieves a random object from the database.
- * 
+ *
  * @param aName The name of the object.
  * @param aDescription The description of the object.
  * @param aType The type of the object.
@@ -285,7 +285,7 @@ bool SQLReader::getRandomObject(Sean::String &aName, Sean::String &aDescription,
 
 /**
  * @brief Inserts a high score into the leaderboard.
- * 
+ *
  * @param aName The name of the player.
  * @param aScore The score of the player.
  */
@@ -315,7 +315,7 @@ void SQLReader::putHighscore(const Sean::String aName, int aScore) const
 
 /**
  * @brief Retrieves a high score from the leaderboard.
- * 
+ *
  * @param aName The name of the player.
  * @param aScore The score of the player.
  * @param aRank The rank of the high score to retrieve.
@@ -362,6 +362,12 @@ void SQLReader::openDatabase()
     std::filesystem::path dbPath = currentPath / "../../sql/kerkersendraken.db";
     std::string dbPathStr = dbPath.lexically_normal().string();
 
+    // Check if the database file exists
+    if (!std::filesystem::exists(dbPath))
+    {
+        throw std::runtime_error("Database file does not exist at path: " + dbPathStr);
+    }
+
     sqlite3 *tempDb = nullptr;
     if (sqlite3_open(dbPathStr.c_str(), &tempDb) == SQLITE_OK)
     {
@@ -369,11 +375,13 @@ void SQLReader::openDatabase()
     }
     else
     {
+        std::cerr << "Could not open database at path: " << dbPathStr << std::endl;
         std::cerr << "Error opening database!" << std::endl;
         if (tempDb)
         {
             sqlite3_close(tempDb);
         }
+        throw std::runtime_error("Error opening database!");
     }
 }
 
@@ -387,7 +395,7 @@ void SQLReader::closeDatabase()
 
 /**
  * @brief Gets the singleton instance of SQLReader.
- * 
+ *
  * @return SQLReader& Reference to the singleton instance of SQLReader.
  */
 SQLReader &SQLReader::getInstance()

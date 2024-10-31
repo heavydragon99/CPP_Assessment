@@ -22,46 +22,74 @@ Dungeon::Dungeon(Sean::Vector<Sean::ParsedLocations> &aLocations)
 {
     for (Sean::ParsedLocations &parsedLocation : aLocations)
     {
-        // Create a new Location using the LocationFactory
-        Sean::Object<Location> location(LocationFactory::createLocation(parsedLocation.mName.get(), parsedLocation.mDescription.get(), parsedLocation.mId));
-        if (location.get() == nullptr)
+        try
         {
-            throw std::runtime_error("Location not found");
-        }
-
-        // Add the new Location to mMap
-        mMap.push_back(std::move(*location));
-
-        // Add the enemies to the Location
-        for (Sean::String &enemy : parsedLocation.mEnemies)
-        {
-            Sean::Object<Enemy> newEnemy(EnemyFactory::createEnemy(enemy.get()));
-            if (newEnemy.get() == nullptr)
+            // Create a new Location using the LocationFactory
+            Sean::Object<Location> location(LocationFactory::createLocation(parsedLocation.mName.get(), parsedLocation.mDescription.get(), parsedLocation.mId));
+            if (location.get() == nullptr)
             {
-                throw std::runtime_error("Enemy not found");
+                throw std::runtime_error("Location not found");
             }
-            mMap.back().addEnemy(std::move(*newEnemy));
-        }
 
-        // Add the objects to the Location
-        for (Sean::String &object : parsedLocation.mVisibleObjects)
-        {
-            Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
-            if (newObject.get() == nullptr)
-            {
-                throw std::runtime_error("Object not found");
-            }
-            mMap.back().addVisibleObject(newObject.release());
-        }
+            // Add the new Location to mMap
+            mMap.push_back(std::move(*location));
 
-        for (Sean::String &object : parsedLocation.mHiddenObjects)
-        {
-            Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
-            if (newObject.get() == nullptr)
+            // Add the enemies to the Location
+            for (Sean::String &enemy : parsedLocation.mEnemies)
             {
-                throw std::runtime_error("Object not found");
+                try
+                {
+                    Sean::Object<Enemy> newEnemy(EnemyFactory::createEnemy(enemy.get()));
+                    if (newEnemy.get() == nullptr)
+                    {
+                        throw std::runtime_error("Enemy not found");
+                    }
+                    mMap.back().addEnemy(std::move(*newEnemy));
+                }
+                catch (const std::exception &e)
+                {
+                    throw;
+                }
             }
-            mMap.back().addHiddenObject(newObject.release());
+
+            // Add the objects to the Location
+            for (Sean::String &object : parsedLocation.mVisibleObjects)
+            {
+                try
+                {
+                    Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
+                    if (newObject.get() == nullptr)
+                    {
+                        throw std::runtime_error("Object not found");
+                    }
+                    mMap.back().addVisibleObject(newObject.release());
+                }
+                catch (const std::exception &e)
+                {
+                    throw;
+                }
+            }
+
+            for (Sean::String &object : parsedLocation.mHiddenObjects)
+            {
+                try
+                {
+                    Sean::Object<GameObject> newObject(GameObjectFactory::createGameObject(object.get()));
+                    if (newObject.get() == nullptr)
+                    {
+                        throw std::runtime_error("Object not found");
+                    }
+                    mMap.back().addHiddenObject(newObject.release());
+                }
+                catch (const std::exception &e)
+                {
+                    throw;
+                }
+            }
+        }
+        catch (const std::exception &e)
+        {
+            throw;
         }
     }
 
@@ -127,37 +155,58 @@ Dungeon::Dungeon(int aLocations)
     // Generate unique locations
     for (int i = 0; i < aLocations; ++i)
     {
-        Sean::Object<Location> location;
-
-        // Ensure unique location name
-        do
+        try
         {
-            location.reset(LocationFactory::createLocation());
-        } while (usedNames.contains(location.get()->getName()));
+            Sean::Object<Location> location;
 
-        usedNames.push_back(location.get()->getName());
-        mMap.push_back(std::move(*location));
-
-        // Add visible objects
-        int numVisibleObjects = randomGen.getRandomValue(0, 3);
-        for (int j = 0; j < numVisibleObjects; ++j)
-        {
-            Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get())
+            // Ensure unique location name
+            do
             {
-                mMap.back().addVisibleObject(object.release());
+                location.reset(LocationFactory::createLocation());
+            } while (usedNames.contains(location.get()->getName()));
+
+            usedNames.push_back(location.get()->getName());
+            mMap.push_back(std::move(*location));
+
+            // Add visible objects
+            int numVisibleObjects = randomGen.getRandomValue(0, 3);
+            for (int j = 0; j < numVisibleObjects; ++j)
+            {
+                try
+                {
+                    Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
+                    if (object.get())
+                    {
+                        mMap.back().addVisibleObject(object.release());
+                    }
+                }
+                catch (const std::exception &e)
+                {
+                    throw;
+                }
+            }
+
+            // Add hidden objects
+            int numHiddenObjects = randomGen.getRandomValue(0, 2);
+            for (int j = 0; j < numHiddenObjects; ++j)
+            {
+                try
+                {
+                    Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
+                    if (object.get())
+                    {
+                        mMap.back().addHiddenObject(object.release());
+                    }
+                }
+                catch (const std::exception &e)
+                {
+                    throw;
+                }
             }
         }
-
-        // Add hidden objects
-        int numHiddenObjects = randomGen.getRandomValue(0, 2);
-        for (int j = 0; j < numHiddenObjects; ++j)
+        catch (const std::exception &e)
         {
-            Sean::Object<GameObject> object(GameObjectFactory::createGameObject());
-            if (object.get())
-            {
-                mMap.back().addHiddenObject(object.release());
-            }
+            throw;
         }
     }
 
@@ -177,10 +226,17 @@ Dungeon::Dungeon(int aLocations)
     int numEnemies = (aLocations + 2) / 3; // One enemy per 3 locations, rounded up
     for (int i = 0; i < numEnemies; ++i)
     {
-        Sean::Object<Enemy> enemy(EnemyFactory::createEnemy());
-        if (enemy.get() != nullptr)
+        try
         {
-            mMap[i % aLocations].addEnemy(*enemy);
+            Sean::Object<Enemy> enemy(EnemyFactory::createEnemy());
+            if (enemy.get() != nullptr)
+            {
+                mMap[i % aLocations].addEnemy(*enemy);
+            }
+        }
+        catch (const std::exception &e)
+        {
+            throw;
         }
     }
 
