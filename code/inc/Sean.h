@@ -4,6 +4,7 @@
 #include "Vector.h"
 #include "String.h"
 #include "SeanObject.h"
+#include "Logger.h"
 
 namespace Sean
 {

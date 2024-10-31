@@ -34,11 +34,7 @@ enum class PlayerAction
 class Game
 {
 public:
-    // Constructors
-    /**
-     * @brief Default constructor for Game.
-     */
-    Game() = default;
+    Game();
 
     // Destructor
     /**

@@ -20,16 +20,32 @@
  */
 void clearConsole()
 {
+    std::cout << std::endl; //Add so log has enter between each command
+    // Temporarily restore the original std::cout buffer
+    std::streambuf *originalCoutBuf = Sean::Logger::getOriginalCoutBuf();
+    std::cout.rdbuf(originalCoutBuf);
+
     std::cout << "\033[2J\033[1;1H";
+
+    // Restore the logger buffer
+    Sean::Logger::replaceCout();
 }
 
-// Methods
+/*
+ * @brief Constructor for Game.
+ */
+Game::Game()
+    : mPlayer(nullptr), mDungeon(nullptr), mQuit(false)
+{
+    Sean::Logger::replaceCout();
+}
 
 /**
  * @brief Runs the main game loop.
  */
 void Game::run()
 {
+    Sean::Logger::createLogFile();
     clearConsole();
     try
     {
