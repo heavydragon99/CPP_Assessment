@@ -11,7 +11,7 @@ skinparam linetype ortho
 package "Sean"{
     class Vector{}
 
-    class UniquePtr{}
+    class Logger{}
 
     class String{}
 
