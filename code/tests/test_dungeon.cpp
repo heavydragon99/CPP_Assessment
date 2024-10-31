@@ -157,7 +157,7 @@ TEST_F(DungeonTest, PrintLongDescription)
             outputString += "\t" + vijand + "\n";
         }
     }
-    outputString += "Uitgangen: Noord \n";
+    outputString += "Uitgangen: noord \n";
     EXPECT_EQ(output, outputString);
 }
 

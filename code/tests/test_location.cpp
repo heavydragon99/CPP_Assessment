@@ -41,7 +41,7 @@ TEST_F(LocationTest, PrintExits_NorthExit) {
     testing::internal::CaptureStdout();
     location->printExits();
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Uitgangen: Noord \n");
+    EXPECT_EQ(output, "Uitgangen: noord \n");
 }
 
 TEST_F(LocationTest, PrintExits_EastExit) {
@@ -49,7 +49,7 @@ TEST_F(LocationTest, PrintExits_EastExit) {
     testing::internal::CaptureStdout();
     location->printExits();
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Uitgangen: Oost \n");
+    EXPECT_EQ(output, "Uitgangen: oost \n");
 }
 
 TEST_F(LocationTest, PrintExits_SouthExit) {
@@ -57,7 +57,7 @@ TEST_F(LocationTest, PrintExits_SouthExit) {
     testing::internal::CaptureStdout();
     location->printExits();
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Uitgangen: Zuid \n");
+    EXPECT_EQ(output, "Uitgangen: zuid \n");
 }
 
 TEST_F(LocationTest, PrintExits_WestExit) {
@@ -65,7 +65,7 @@ TEST_F(LocationTest, PrintExits_WestExit) {
     testing::internal::CaptureStdout();
     location->printExits();
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Uitgangen: West \n");
+    EXPECT_EQ(output, "Uitgangen: west \n");
 }
 
 TEST_F(LocationTest, PrintExits_MultipleExits) {
@@ -74,7 +74,7 @@ TEST_F(LocationTest, PrintExits_MultipleExits) {
     testing::internal::CaptureStdout();
     location->printExits();
     std::string output = testing::internal::GetCapturedStdout();
-    EXPECT_EQ(output, "Uitgangen: Noord Oost \n");
+    EXPECT_EQ(output, "Uitgangen: noord oost \n");
 }
 
 TEST_F(LocationTest, AddVisibleObject) {

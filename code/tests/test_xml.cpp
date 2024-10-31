@@ -3,7 +3,7 @@
 #include "Sean.h"
 #include "tinyxml2.h"
 
-#define XMLPATH "../../../xml/kasteelruine.xml"
+#define XMLPATH "/home/sean/school_stuff/leerjaar_4/minor/cpp/assessment-cplus-24-25-heavydragon99/xml/kasteelruine.xml"
 
 class XmlReaderTest : public ::testing::Test {
 protected:
