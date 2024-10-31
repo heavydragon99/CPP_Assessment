@@ -6,7 +6,9 @@ namespace Sean
     // Static instance
     Logger Logger::instance;
 
-    // Constructor: Initializes the logger with a custom stream buffer
+    /**
+     * @brief Constructor: Initializes the logger with a custom stream buffer.
+     */
     Logger::Logger()
         : mLogFile(),                              // Initialize the log file
           mLoggerBuf(std::cout.rdbuf(), mLogFile), // Initialize the custom stream buffer with console and file buffers
@@ -16,14 +18,19 @@ namespace Sean
         std::ostream::rdbuf(&mLoggerBuf); // Set the custom buffer for this stream
     }
 
-    // Destructor: Closes the log file
+    /**
+     * @brief Destructor: Closes the log file.
+     */
     Logger::~Logger()
     {
         if (mLogFile.is_open())
             mLogFile.close();
     }
 
-    // Get the current date and time as a string
+    /**
+     * @brief Get the current date and time as a string.
+     * @return A string representing the current date and time.
+     */
     std::string Logger::getCurrentDateTime()
     {
         auto now = std::time(nullptr);
@@ -34,7 +41,9 @@ namespace Sean
         return oss.str();
     }
 
-    // Create and open a log file with the current date and time in its name
+    /**
+     * @brief Create and open a log file with the current date and time in its name.
+     */
     void Logger::createLogFile()
     {
         std::string folderPath = "../../../log";
@@ -50,11 +59,19 @@ namespace Sean
         }
     }
 
-    // Constructor: Initializes the custom stream buffer with console and file buffers
+    /**
+     * @brief Constructor: Initializes the custom stream buffer with console and file buffers.
+     * @param aConsoleBuf The original console buffer.
+     * @param aFileStream The log file stream.
+     */
     Logger::LoggerBuf::LoggerBuf(std::streambuf *aConsoleBuf, std::ofstream &aFileStream)
         : mConsoleBuf(aConsoleBuf), mFileStream(aFileStream) {}
 
-    // Write a character to both the console and the log file
+    /**
+     * @brief Write a character to both the console and the log file.
+     * @param c The character to write.
+     * @return The character written, or EOF on failure.
+     */
     int Logger::LoggerBuf::overflow(int c)
     {
         if (c == EOF)
@@ -65,25 +82,33 @@ namespace Sean
         {
             int const r1 = mConsoleBuf->sputc(c);     // Write to console
             int const r2 = mFileStream.rdbuf()->sputc(c); // Write to file buffer
-            return r1 == EOF || r2 == EOF ? EOF : c;
+            return r1 == EOF || r2 == EOF ? EOF : c; // Return EOF if either write failed
         }
     }
 
-    // Synchronize the console and file buffers
+    /**
+     * @brief Synchronize the console and file buffers.
+     * @return 0 on success, -1 on failure.
+     */
     int Logger::LoggerBuf::sync()
     {
-        int const r1 = mConsoleBuf->pubsync(); // Sync console buffer
-        int const r2 = mFileStream.rdbuf()->pubsync();  // Sync file buffer
+        int const r1 = mConsoleBuf->pubsync(); // Flush console buffer to the console
+        int const r2 = mFileStream.rdbuf()->pubsync();  // Flush file buffer to the file
         return r1 == 0 && r2 == 0 ? 0 : -1;
     }
 
-    // Static method to replace std::cout buffer
+    /**
+     * @brief Replace the std::cout buffer with the custom logger buffer.
+     */
     void Logger::replaceCout()
     {
         std::cout.rdbuf(instance.rdbuf());
     }
 
-    // Static method to get the original std::cout buffer
+    /**
+     * @brief Get the original std::cout buffer.
+     * @return The original std::cout buffer.
+     */
     std::streambuf* Logger::getOriginalCoutBuf()
     {
         return instance.mOriginalCoutBuf;

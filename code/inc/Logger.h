@@ -9,6 +9,10 @@
 
 namespace Sean {
 
+/**
+ * @class Logger
+ * @brief A custom logger that redirects std::cout to both the console and a log file.
+ */
 class Logger : public std::ostream {
 public:
     Logger();
@@ -27,15 +31,15 @@ private:
         virtual int overflow(int c) override;
         virtual int sync() override;
     private:
-        std::streambuf* mConsoleBuf;
-        std::ofstream& mFileStream;
+        std::streambuf* mConsoleBuf; ///< The original console buffer.
+        std::ofstream& mFileStream;  ///< The log file stream.
     };
 
-    LoggerBuf mLoggerBuf;
-    std::ofstream mLogFile;
-    std::streambuf* mOriginalCoutBuf; // Add this member
+    LoggerBuf mLoggerBuf; ///< The custom stream buffer.
+    std::ofstream mLogFile; ///< The log file stream.
+    std::streambuf* mOriginalCoutBuf; ///< The original std::cout buffer.
 
-    static Logger instance;
+    static Logger instance; ///< The static logger instance.
 };
 
 } // namespace Sean
