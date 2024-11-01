@@ -28,7 +28,7 @@ void clearConsole()
     std::cout << "\033[2J\033[1;1H";
 
     // Restore the logger buffer
-    Sean::Logger::replaceCout();
+    Sean::Logger::replaceCoutCin();
 }
 
 /*
@@ -37,7 +37,7 @@ void clearConsole()
 Game::Game()
     : mPlayer(nullptr), mDungeon(nullptr), mQuit(false)
 {
-    Sean::Logger::replaceCout();
+    Sean::Logger::replaceCoutCin();
 }
 
 /**
